@@ -43,7 +43,7 @@ Eles compartilham o **kernel do host**, o que proporciona **melhor desempenho**,
 3. `docker run -it ubuntu bash`  
    → Cria e executa um contêiner Ubuntu com um terminal interativo (bash).
 
-4. `docker exec -it <nome-ou-id> bash`  
+4. `docker exec -it <nome-ou-id> bash`  || `docker container exec -it <nome-container ou id> /bin/bash` || `docker exec -it <id> /bin/sh`
    → Abre um terminal dentro de um contêiner já em execução.
 
 5. `docker stop <nome-ou-id>`  
@@ -107,8 +107,6 @@ Volumes são a forma recomendada pelo Docker para armazenar dados persistentes. 
    → Inspecionar volume
 4. `docker run -d -v meu-volume:/dados ubuntu`
    → Usar um volume ao rodar um contêiner
-   → `-d`: Serve para rodar o contêiner em background, sem travar o terminal
-   → `-v meu-volume:/dados`: Serve para montar o vlume `meu-volume` dentro do contêiner, no caminho `/dados`
 5. `docker volume rm meu-volume`
    → Remover um volume
 6. `docker volume prune`
