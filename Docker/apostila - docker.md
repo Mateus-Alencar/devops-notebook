@@ -72,3 +72,45 @@ Eles compartilham o **kernel do host**, o que proporciona **melhor desempenho**,
    → Remove uma imagem Docker.
 
 ---
+
+## 📦 O que são Volumes no Docker?
+
+Volumes são a forma recomendada pelo Docker para armazenar dados persistentes. Eles são armazenados fora do sistema de arquivos interno do contêiner e **não são apagados quando o contêiner é removido.**
+
+## Por que usar Volumes?
+
+- Persistência de dados entre execuções do contêiner
+
+- Separação de dados e aplicação
+
+- Permite que múltiplos contêineres compartilhem os mesmos dados
+
+- Evita perda de dados ao remover ou atualizar contêineres
+
+- Permite backup/restauração com facilidade
+
+### Tipos de montagem
+
+| Tipo           | Exemplo                          | Descrição                               |
+| -------------- | -------------------------------- | --------------------------------------- |
+| **Volume**     | `-v volume-nome:/app/dados`      | Armazenamento gerenciado pelo Docker    |
+| **Bind Mount** | `-v /caminho/no/host:/app/dados` | Usa um caminho fixo do host             |
+| **Tmpfs**      | `--tmpfs /app/dados`             | Armazenamento temporário na RAM (Linux) |
+
+## ✅ Comandos principais
+
+1. `docker volume create meu-volume`
+   → Criar um volume
+2. `docker volume ls`
+   → Listar volumes
+3. `docker volume inspect <meu-volume>`
+   → Inspecionar volume
+4. `docker run -d -v meu-volume:/dados ubuntu`
+   → Usar um volume ao rodar um contêiner
+   → `-d`: Serve para rodar o contêiner em background, sem travar o terminal
+   → `-v meu-volume:/dados`: Serve para montar o vlume `meu-volume` dentro do contêiner, no caminho `/dados`
+5. `docker volume rm meu-volume`
+   → Remover um volume
+6. `docker volume prune`
+   → Apagar todos os volumes não utilizados
+---
