@@ -3,14 +3,42 @@
 O Docker usa um esquema de **camadas (layers)**, e para montar essas camadas são usadas técnicas de **Copy-On-Write**.  
 Um **container** é basicamente uma **pilha de camadas** compostas por **N camadas read-only** e **uma camada superior read-write**.
 
+<h2 style="text-align:center";>Definição oficial</h2>
+
+Containers Docker empacotam componentes de software em um sistema de arquivos completo, que contêm tudo necessário para a execução: código, runtime, ferramentas de sistema - qualquer coisa que possa ser instalada em um servidor. Isto garante que o software sempre irá executar da mesma forma, independente do seu ambiente.
+
 ## Containers
 
-Containers são bem similares às máquinas virtuais, porém **mais leves** e mais **integrados ao sistema operacional da máquina host**.  
-Eles compartilham o **kernel do host**, o que proporciona **melhor desempenho**, graças ao gerenciamento único dos recursos e ao **isolamento das imagens**.
+Containers são bem similares às máquinas virtuais, porém **mais leves** e mais **integrados ao sistema operacional da máquina host**. Eles compartilham o **kernel do host**, o que proporciona **melhor desempenho**, graças ao gerenciamento único dos recursos e ao **isolamento das imagens**.
+
+ Um container normalmente roda com o máximo de isolamento possível do host, este isolamento é 11possível através do Docker Engine e diversas características provídas pelo kernel.
+ Mas normalmente não queremos um isolamento total, e sim um **isolamento controlado**, em que os recursos que o container terá acesso são explicitamente indicados.
+ 
+**Principais recursos de controle do isolamento:**
+
+   - Mapeamento de portas
+   - Mapeamento de volumes
+   - Copia de arquivos para o container ou a partir do container
+   - Comunicação entre os containers
+
+
+### Diferenças entre container e imagem
+
+Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (instância), enquanto a imagem seria uma classe (modelo).
+
+
+### [Docker Registry](https://docs.docker.com/registry/)
+
+É uma aplicação *server-side* para guardar e distribuir imagens Docker.
+
+### [Docker Hub](https://hub.docker.com/)
+
+É um serviço de registro de imagens Docker em nuvem, que permite a associação com repositórios para **build automatizado** de imagens. Imagens marcadas como **oficiais** no Docker Hub são criadas pela própria **Docker Inc.**
+
 
 ---
 
-# Comandos - Docker
+<h1 style="text-aling:center";> Comandos - Docker</h1>
 
 ## Docker
 
@@ -62,6 +90,11 @@ Eles compartilham o **kernel do host**, o que proporciona **melhor desempenho**,
 
 ## 📁 Imagens
 
+Processo para gerar uma nova imagem a partir de um arquivo de instruções. O comando docker build é o responsável por ler um Dockerfile e produzir uma nova imagem Docker.
+
+
+📄 [Documentação do Dockerfile](https://docs.docker.com/engine/reference/builder)
+
 1. `docker images`  
    → Lista todas as imagens Docker disponíveis localmente.
 
@@ -70,6 +103,10 @@ Eles compartilham o **kernel do host**, o que proporciona **melhor desempenho**,
 
 3. `docker rmi <nome-ou-id>`  
    → Remove uma imagem Docker.
+
+### Dockerfile
+
+Nome *default* para o arquivo com instruções para o **build** de imagens Docker.
 
 ---
 
