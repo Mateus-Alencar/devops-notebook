@@ -11,7 +11,7 @@ Containers Docker empacotam componentes de software em um sistema de arquivos co
 
 Containers são bem similares às máquinas virtuais, porém **mais leves** e mais **integrados ao sistema operacional da máquina host**. Eles compartilham o **kernel do host**, o que proporciona **melhor desempenho**, graças ao gerenciamento único dos recursos e ao **isolamento das imagens**.
 
- Um container normalmente roda com o máximo de isolamento possível do host, este isolamento é 11possível através do Docker Engine e diversas características provídas pelo kernel.
+ Um container normalmente roda com o máximo de isolamento possível do host, este isolamento é possível através do Docker Engine e diversas características provídas pelo kernel.
  Mas normalmente não queremos um isolamento total, e sim um **isolamento controlado**, em que os recursos que o container terá acesso são explicitamente indicados.
  
 **Principais recursos de controle do isolamento:**
@@ -51,7 +51,7 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
 3. `stress --cpu 1 --vm 1 --vm-bytes 64M`  
    → Executa um teste de estresse utilizando CPU e memória.
 
-4. `docker container run -ti --mount type=bind,source=/home/mateus/giropops,target=/giropops debian`
+4. `docker container run -ti --mount type=bind,source=/home/mateus/giropops,target=/giropops debian`\
    → `-ti`: abre o terminal interativo
    → `--mount`: monta diretório do host do container
       → `type=bind`: tipo de montagem
@@ -103,6 +103,9 @@ Processo para gerar uma nova imagem a partir de um arquivo de instruções. O co
 
 3. `docker rmi <nome-ou-id>`  
    → Remove uma imagem Docker.
+
+4. `docker image inspect <nome-imagem>`
+   → Ver detalhes da imagem
 
 ### Dockerfile
 
