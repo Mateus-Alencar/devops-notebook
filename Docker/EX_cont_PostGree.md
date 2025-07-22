@@ -1,4 +1,4 @@
-## Exercício
+##  📖 Exercício 
 
 Criação de um container com Docker com PostgreSQL, usando um volume para persistir os dados fora do container.
 
@@ -11,15 +11,12 @@ docker volume create pgdata
 2. Criação do container PostgreSQL usando o volume pgdata
 
 ```
-
 docker run -d \
   --name meu-postgres \
   -e POSTGRES_PASSWORD=minhasenha \
   -v pgdata:/var/lib/postgresql/data \
   -p 5432:5432 \
   postgres
-
-
 ```
 
  - -d: roda o container em background.
@@ -35,7 +32,7 @@ docker run -d \
  - postgres: imagem oficial do PostgreSQL.
 
 
- 3. Possibilidade de mapear uma pasta do sistema para armazenar os arquivos do banco:
+ 3. 💡 Possibilidade de mapear uma pasta do sistema para armazenar os arquivos do banco:
 
  ```
 

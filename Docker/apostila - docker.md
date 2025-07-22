@@ -7,8 +7,8 @@
 - [Comandos - Docker](#comandos---docker)
 - [Volumes](#o-que-são-volumes-no-docker)
 - [Docker Compose](#docker-compose)
-
-# Conceitos Fundamentais do Docker
+ 
+# Conceitos Fundamentais do Docker 🐳
 
 O Docker usa um esquema de **camadas (layers)**, e para montar essas camadas são usadas técnicas de **Copy-On-Write**, que evitam duplicação desnecessária de dados ao compartilhar camadas entre containers.
 Um **container** é basicamente uma **pilha de camadas** compostas por **N camadas read-only** e **uma camada superior read-write**.
@@ -83,11 +83,11 @@ O `--mount` no Docker serve para ligar um diretório (ou volume) do host ao cont
 | Tipo          | Descrição                                                               |   
 |---------------|-------------------------------------------------------------------------|
 | `bind`        | Liga um caminho real do host a um diretório no contêiner.               |
-| `volume`      | 	Usa um volume Docker (gerenciado automaticamente).                   |
-| `tmpfs`       |Cria um sistema de arquivos temporário (RAM), útil para dados voláteis.  |
+| `volume`      | Usa um volume Docker (gerenciado automaticamente).                      |
+| `tmpfs`       | Cria um sistema de arquivos temporário (RAM), útil para dados voláteis. |
 ---
 
-## 📦 Containers
+## 📦 Containerss
 
 1. `docker ps`  
    → Lista todos os contêineres em execução. (igual a `docker container ls`)
