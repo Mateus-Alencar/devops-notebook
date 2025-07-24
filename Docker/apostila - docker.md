@@ -76,7 +76,8 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
 
 O `--mount` no Docker serve para ligar um diretório (ou volume) do host ao contêiner, permitindo que os dados sejam compartilhados entre o sistema do host e o contêiner. Isso é essencial para persistência de dados
 
-### 🔍 Tipos de `mount`
+
+#### 🔍 Tipos de `mount`
 
 `docker run --mount type=<tipo>,source=<origem>,target=<destino> <imagem>`
 
@@ -86,6 +87,13 @@ O `--mount` no Docker serve para ligar um diretório (ou volume) do host ao cont
 | `volume`      | Usa um volume Docker (gerenciado automaticamente).                      |
 | `tmpfs`       | Cria um sistema de arquivos temporário (RAM), útil para dados voláteis. |
 ---
+
+ 5. `docker run -d -p 80:80 nginx`
+   → `docker run`: Cria e inicia um novo container
+   → `-d`: significa *detached mode (modo destacado)*, isso faz com que o container rode em segundo plano.
+   → `-p 80:80`: mapeamento de portas
+   → `nginx`: nome da imagem
+
 
 ## 📦 Containerss
 
@@ -107,15 +115,24 @@ O `--mount` no Docker serve para ligar um diretório (ou volume) do host ao cont
 6. `docker rm <nome-ou-id>`  
    → Remove um contêiner parado.
 
-7. `docker logs <nome-ou-id>`  
+7. `docker rm <nome-ou-id> -f`
+   → Remove um contêiner em execução.
+
+8. `docker logs <nome-ou-id>`  
    → Mostra os logs de um contêiner.
 
-8. `docker container stats`  
+9. `docker container stats`  
    → Exibe estatísticas em tempo real de uso dos contêineres ativos (CPU, memória, rede, disco).
 
 ---
 
 ## 📁 Imagens
+
+Imagens *são originadas de arquivos que programamos* para que o Docker crie uma estrutura que execute determinadas ações em containers.
+
+```
+Ao rodar um container baseado na imagem, as instruções serão executadas em camadas.
+```
 
 O comando `docker build` é responsável por ler um Dockerfile e produzir uma nova imagem Docker.
 
