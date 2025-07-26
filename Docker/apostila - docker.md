@@ -163,7 +163,17 @@ RUN npm install
 CMD ["npm", "start"]
 ```
 
----
+**Principais comandos:**
+
+| Comando      | Descrição                                               |
+|--------------|---------------------------------------------------------|
+| `FROM`       | Define a imagem base do container.                      |
+| `COPY`       | Copia um arquivo do filesystem local para o container.  |
+| `RUN`        | Executa um ou mais comandos no container.               |
+| `WORKDIR`    | Define o diret´orio de execu¸c˜ao atual.                |
+| `USER`       | Define o usu´ario executar´a os processos do container. |
+| `ENTRYPOINT` | Define o processo principal do container.               |
+--- 
 
 ## 📦 O que são Volumes no Docker?
 
