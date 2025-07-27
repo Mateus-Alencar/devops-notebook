@@ -155,6 +155,7 @@ O comando `docker build` é responsável por ler um Dockerfile e produzir uma no
 Nome *default* para o arquivo com instruções para o **build** de imagens Docker.
 
 ### Exemplo básico de Dockerfile
+
 ```Dockerfile
 FROM node:20
 WORKDIR /app
@@ -173,6 +174,7 @@ CMD ["npm", "start"]
 | `WORKDIR`    | Define o diret´orio de execu¸c˜ao atual.                |
 | `USER`       | Define o usu´ario executar´a os processos do container. |
 | `ENTRYPOINT` | Define o processo principal do container.               |
+
 --- 
 
 ## 📦 O que são Volumes no Docker?
