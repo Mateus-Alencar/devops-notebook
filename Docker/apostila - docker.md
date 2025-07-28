@@ -149,6 +149,10 @@ O comando `docker build` é responsável por ler um Dockerfile e produzir uma no
 
 4. `docker image inspect <nome-imagem>`  
    → Ver detalhes da imagem
+5. `docker tag httpd:2.4 meuusuario/apache-custom:meu-projeto`
+   → `docker tag`: comando apra renomear (retag) uma image
+   → `httpd:2.4`: nome da imagem original que foi baixada
+   → `meuusuario/apache-custom:meu-projeto`: novo nome (com namespace) e tag que eu irei dar a imagem.
 
 ## Dockerfile
 
@@ -175,13 +179,24 @@ CMD ["npm", "start"]
 | `USER`       | Define o usu´ario executar´a os processos do container. |
 | `ENTRYPOINT` | Define o processo principal do container.               |
 
+
+## Renomeação de uma imagem Docker
+
+No Docker, renomear uma imagem significa dar a ela um novo nome (tag), sem modificar seu conteúdo. Isso é útil para:
+ - Organizar suas imagens localmente;
+ - Subir para registries com nomes específicos;
+ - Versão de imagens;
+ - Trocar o repositório/namespace;
+
+ `docker tag <imagem_original> <novo_nome>`
+ 
 --- 
 
 ## 📦 O que são Volumes no Docker?
 
 Volumes são a forma recomendada pelo Docker para armazenar dados persistentes. Eles são armazenados fora do sistema de arquivos interno do contêiner e **não são apagados quando o contêiner é removido.**
 
-## Por que usar Volumes?
+### Por que usar Volumes?
 
 - Persistência de dados entre execuções do contêiner
 - Separação de dados e aplicação
@@ -197,7 +212,7 @@ Volumes são a forma recomendada pelo Docker para armazenar dados persistentes. 
 | **Bind Mount** | `-v /caminho/no/host:/app/dados` | Usa um caminho fixo do host             |
 | **Tmpfs**      | `--tmpfs /app/dados`             | Armazenamento temporário na RAM (Linux) |
 
-## ✅ Comandos principais
+### ✅ Comandos principais
 
 1. `docker volume create meu-volume`  
    → Criar um volume
