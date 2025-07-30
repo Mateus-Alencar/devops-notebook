@@ -124,6 +124,11 @@ O `--mount` no Docker serve para ligar um diretório (ou volume) do host ao cont
 9. `docker container stats`  
    → Exibe estatísticas em tempo real de uso dos contêineres ativos (CPU, memória, rede, disco).
 
+10. `docker run --rm nome-da-imagem`
+   → O parâmetro --rm no Docker remove automaticamente o container assim que ele for parado.
+11. `docker top <nome-ou-id>`
+   → Verificar processamento do container
+
 ---
 
 ## 📁 Imagens
