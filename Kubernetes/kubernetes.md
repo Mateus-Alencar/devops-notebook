@@ -20,25 +20,58 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
  - No Node Plane são reunidos os componentes que são executados em todos os servidores do Cluster. Nele temos os componentes que gerenciam os container e rede dos servidores. 
  - Por fim, os Addons são componentes que usam recursos do Kubernetes para adicionar capacidades extras ao Cluster.
 
+##### Kube-apiserver
 ```
-Kube-scheduler
+  O Kube-apiserver é o componente que dá acesso ao Control Plane e é a 
+  porta de entrada do cluster. Todo acesso ao cluster é mediado por esta 
+  API. Quando executamos um comando através do executável kubectl, 
+  estamos fazendo uma chamada a API do Kubernetes, que está sendo mantida 
+  pelo kube-apiserver.
+```
+##### ETCD
+```
+  Todos os dados do Kubernetes são mantidos no ETCD, que é um banco de dados
+  do tipo chave-valor baseado em consenso. Nele o Estado do Cluster é 
+  mantido e por isso o ETCD prioriza a consistência dos dados sobre 
+  disponibilidade.
 
-    O Kube-controller-manager é responsável por gerir as tarefas administrativas do cluster. Nele, diversos Controladores com diversas responsabilidades distintas são executados a fim de manter o estado do cluster atualizado.
+  Epossével manter árias réplicas do ETCD ativas ao mesmo tempo, e mesmo a 
+  falha de uma delas não afetará a disponibilidade do ambiente e integridade 
+  dos dados do Kubernetes.
+```
+
+##### Kube-scheduler
+```
+    O Kube-scheduler é o responsável por determinar em que servidor cada 
+    pod será iniciado e executado. Para tomar esta decisão ele leva em 
+    conta diversas questões, como disponibilidade de recursos, políticas 
+    aplicadas às cargas de trabalho e atribuições especiais 
+    vindas do usuário.
  ```
 
+##### Kube controller manager
 ```
-Endpoints Controller
-
-    O Endpoint Controller é responsável por adicionar Endpoints, ou IP’s de Pods, a lista de Endpoint de um Service. Ele observa as regras definidas no campo Selector de um Service para descobrir que Pods devem ser adicionados a lista, tornando possével a descoberta de Serviço de forma fácil e prática usando DNS e Services.
+  O Kube-controller-manager é responsável por gerir as tarefas administrativas do cluster. Nele, diversos Controladores com diversas responsabilidades distintas são executados a fim de manter o estado do cluster atualizado.
+```
+##### Endpoints Controller
+```
+    O Endpoint Controller é responsável por adicionar Endpoints, ou IP’s 
+    de Pods, a lista de Endpoint de um Service. Ele observa as regras 
+    definidas no campo Selector de um Service para descobrir que Pods 
+    devem ser adicionados a lista, tornando possével a descoberta de 
+    Serviço de forma fácil e prática usando DNS e Services.
 ```
 
+##### Kubelet
  ```
-Kubelet
-
-    O Kubelet é o processo responsável por iniciar os containers definidos nos pods. Ele conversa com o Container Runtime instalado no servidor garantindo a execução e a saúde dos containers definidos no Estado do Cluster.
+    O Kubelet é o processo responsável por iniciar os containers definidos 
+    nos pods. Ele conversa com o Container Runtime instalado no servidor 
+    garantindo a execução e a saúde dos containers definidos no Estado do 
+    Cluster.
  ```
 
- ## Principais Conceitos
+
+## Principais Conceitos
 
 ### Cluster
 
