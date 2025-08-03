@@ -96,7 +96,9 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
    → Inspeciona as caracteristicas e configurações do container ou da imagem
 13. `docker stats`
    → é usado para monitorar o uso de recursos dos containers em tempo real.
-
+14. `docker logount` e `docker login`
+   → Servem para gerenciar a autenticação com registros de imagens Docker, como o Docker Hub, GitHub Container Registry e AWS ECR
+   
 ### 📦 Containers
 
 1. `docker pull ubuntu`  
