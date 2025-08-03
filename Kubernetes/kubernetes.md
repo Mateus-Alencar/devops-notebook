@@ -148,6 +148,12 @@ Tipos comuns de volumes:
 Permite organizar e isolar recursos dentro de um mesmo cluster. Muito útil em ambientes com múltiplos times ou projetos.
 Exemplo: `kubectl create namespace meu-projeto`
 
+### Kubectl
+```
+O Kubectl é a forma mais básica de se gerenciar um cluster Kubernetes. Através da combinação de seus comandos é possével gerenciar e monitorar todo o cluster.
+Ele é um executável extremamente leve disponível para a maioria dos sistemas operacionais e pode controlar clusters locais ou remotos.
+```
+
 ## Comandos Básicos com kubectl
 ```
 # Listar pods
