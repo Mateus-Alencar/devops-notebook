@@ -1,4 +1,5 @@
 ## Sumário
+
 - [Conceitos Fundamentais do Docker](#conceitos-fundamentais-do-docker)
 - [Containers](#containers)
 - [Dockerfile](#dockerfile)
@@ -7,17 +8,17 @@
 - [Comandos - Docker](#comandos---docker)
 - [Volumes](#o-que-são-volumes-no-docker)
 - [Docker Compose](#docker-compose)
- 
+
 # Conceitos Fundamentais do Docker 🐳
 
 O Docker usa um esquema de **camadas (layers)**, e para montar essas camadas são usadas técnicas de **Copy-On-Write**, que evitam duplicação desnecessária de dados ao compartilhar camadas entre containers.
 Um **container** é basicamente uma **pilha de camadas** compostas por **N camadas read-only** e **uma camada superior read-write**.
 
-## Definição oficial
+### Definição oficial
 
 Containers Docker empacotam componentes de software em um sistema de arquivos completo, que contêm tudo necessário para a execução: código, runtime, ferramentas de sistema - qualquer coisa que possa ser instalada em um servidor. Isto garante que o software sempre irá executar da mesma forma, independente do seu ambiente.
 
-## Diferenças entre container e VM:
+### Diferenças entre container e VM:
 
 | Característica         | Container                         | Máquina Virtual                   |
 |------------------------|-----------------------------------|-----------------------------------|
@@ -44,11 +45,11 @@ Mas normalmente não queremos um isolamento total, e sim um **isolamento control
 
 Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (instância), enquanto a imagem seria uma classe (modelo).
 
-## [Docker Registry](https://docs.docker.com/registry/)
+#### [Docker Registry](https://docs.docker.com/registry/)
 
 É uma aplicação *server-side* para guardar e distribuir imagens Docker.
 
-## [Docker Hub](https://hub.docker.com/)
+#### [Docker Hub](https://hub.docker.com/)
 
 É um serviço de registro de imagens Docker em nuvem, que permite a associação com repositórios para **build automatizado** de imagens. Imagens marcadas como **oficiais** no Docker Hub são criadas pela própria **Docker Inc.**
 
@@ -57,45 +58,6 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
 # Comandos - Docker
 
 ## Docker
-
-1. `docker pull ubuntu`  
-   → Baixa a imagem oficial do Ubuntu do Docker Hub.
-
-2. `apt-get update && apt-get install -y stress`  
-   → Atualiza o sistema e instala o pacote `stress`.
-
-3. `stress --cpu 1 --vm 1 --vm-bytes 64M`  
-   → Executa um teste de estresse utilizando CPU e memória.
-
-4. `docker container run -ti --mount type=bind,source=/home/mateus/giropops,target=/giropops debian`   
-   → `-ti`: abre o terminal interativo  
-   → `--mount`: monta diretório do host no container  
-   → `type=bind`: tipo de montagem  
-   → `source=/home/mateus/giropops`: caminho do host  
-   → `target=/giropops`: onde aparecerá dentro do container
-
-O `--mount` no Docker serve para ligar um diretório (ou volume) do host ao contêiner, permitindo que os dados sejam compartilhados entre o sistema do host e o contêiner. Isso é essencial para persistência de dados
-
-
-#### 🔍 Tipos de `mount`
-
-`docker run --mount type=<tipo>,source=<origem>,target=<destino> <imagem>`
-
-| Tipo          | Descrição                                                               |   
-|---------------|-------------------------------------------------------------------------|
-| `bind`        | Liga um caminho real do host a um diretório no contêiner.               |
-| `volume`      | Usa um volume Docker (gerenciado automaticamente).                      |
-| `tmpfs`       | Cria um sistema de arquivos temporário (RAM), útil para dados voláteis. |
----
-
- 5. `docker run -d -p 80:80 nginx`
-   → `docker run`: Cria e inicia um novo container
-   → `-d`: significa *detached mode (modo destacado)*, isso faz com que o container rode em segundo plano.
-   → `-p 80:80`: mapeamento de portas
-   → `nginx`: nome da imagem
-
-
-## 📦 Containerss
 
 1. `docker ps`  
    → Lista todos os contêineres em execução. (igual a `docker container ls`)
@@ -126,8 +88,53 @@ O `--mount` no Docker serve para ligar um diretório (ou volume) do host ao cont
 
 10. `docker run --rm nome-da-imagem`
    → O parâmetro --rm no Docker remove automaticamente o container assim que ele for parado.
+
 11. `docker top <nome-ou-id>`
    → Verificar processamento do container
+
+12. `docker inspect <nome-da-imagem>`
+   → Inspeciona as caracteristicas e configurações do container ou da imagem
+13. `docker stats`
+   → é usado para monitorar o uso de recursos dos containers em tempo real.
+
+### 📦 Containers
+
+1. `docker pull ubuntu`  
+   → Baixa a imagem oficial do Ubuntu do Docker Hub.
+
+2. `apt-get update && apt-get install -y stress`  
+   → Atualiza o sistema e instala o pacote `stress`.
+
+3. `stress --cpu 1 --vm 1 --vm-bytes 64M`  
+   → Executa um teste de estresse utilizando CPU e memória.
+
+4. `docker container run -ti --mount type=bind,source=/home/mateus/giropops,target=/giropops debian`   
+   → `-ti`: abre o terminal interativo  
+   → `--mount`: monta diretório do host no container  
+   → `type=bind`: tipo de montagem  
+   → `source=/home/mateus/giropops`: caminho do host  
+   → `target=/giropops`: onde aparecerá dentro do container
+
+   O `--mount` no Docker serve para ligar um diretório (ou volume) do host ao contêiner, permitindo que os dados sejam compartilhados entre o sistema do host e o contêiner. Isso é essencial para persistência de dados
+
+
+#### 🔍 Tipos de `mount`
+
+`docker run --mount type=<tipo>,source=<origem>,target=<destino> <imagem>`
+
+| Tipo          | Descrição                                                               |   
+|---------------|-------------------------------------------------------------------------|
+| `bind`        | Liga um caminho real do host a um diretório no contêiner.               |
+| `volume`      | Usa um volume Docker (gerenciado automaticamente).                      |
+| `tmpfs`       | Cria um sistema de arquivos temporário (RAM), útil para dados voláteis. |
+---
+
+ 5. `docker run -d -p 80:80 nginx`
+   → `docker run`: Cria e inicia um novo container
+   → `-d`: significa *detached mode (modo destacado)*, isso faz com que o container rode em segundo plano.
+   → `-p 80:80`: mapeamento de portas
+   → `nginx`: nome da imagem
+
 
 ---
 

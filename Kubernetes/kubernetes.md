@@ -1,4 +1,4 @@
-# Conceitos de Orquestração
+# Conceitos de Orquestração 🎭📦
 
 Orquestradores de Containers são responsáveis pela implementação, monitoramento e controle de containers em ambientes de múltiplos servidores. Eles são essenciais para ambientes empresariais de hospedagem de aplicações.
 
@@ -6,7 +6,7 @@ Hoje existem diversos Orquestradores de Containers disponíveis tanto na nuvem q
 
 No caso dos Orquestradores de Containers, um projeto é em geral definido de maneira declarativa e é chamado de Estado do Cluster. Basicamente nós decidimos qual é o estado desejado do ambiente e o Orquestrador irá monitorar todo o ambiente fazendo modificações para alcançar o estado desejado.
 
-## Kubernetes
+## Kubernetes 🌐​⚓
 
 O Orquestrador de Containers mais utilizado no mercado atualmente é o Kubernetes. Kubernetes (K8s) é um produto Open Source utilizado para automatizar a implantação, o dimensionamento e o gerenciamento de aplicativos em contêiner.
 
@@ -35,7 +35,7 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
   mantido e por isso o ETCD prioriza a consistência dos dados sobre 
   disponibilidade.
 
-  Epossével manter árias réplicas do ETCD ativas ao mesmo tempo, e mesmo a 
+  E possível manter árias réplicas do ETCD ativas ao mesmo tempo, e mesmo a 
   falha de uma delas não afetará a disponibilidade do ambiente e integridade 
   dos dados do Kubernetes.
 ```
@@ -51,9 +51,12 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
 
 ##### Kube controller manager
 ```
-  O Kube-controller-manager é responsável por gerir as tarefas administrativas do cluster. Nele, diversos Controladores com diversas responsabilidades distintas são executados a fim de manter o estado do cluster atualizado.
+  O Kube-controller-manager é responsável por gerir as tarefas 
+  administrativas do cluster. Nele, diversos Controladores com diversas 
+  responsabilidades distintas são executados a fim de manter o estado do 
+  cluster atualizado.
 ```
-##### Endpoints Controller
+##### Endpoints Controller 📈​
 ```
     O Endpoint Controller é responsável por adicionar Endpoints, ou IP’s 
     de Pods, a lista de Endpoint de um Service. Ele observa as regras 
@@ -71,7 +74,7 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
  ```
 
 
-## Principais Conceitos
+## Principais Conceitos 💻​
 
 ### Cluster
 
