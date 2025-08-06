@@ -94,10 +94,15 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
 
 12. `docker inspect <nome-da-imagem>`
    → Inspeciona as caracteristicas e configurações do container ou da imagem
+
 13. `docker stats`
    → é usado para monitorar o uso de recursos dos containers em tempo real.
+
 14. `docker logount` e `docker login`
    → Servem para gerenciar a autenticação com registros de imagens Docker, como o Docker Hub, GitHub Container Registry e AWS ECR
+   
+15. `docker pull`
+   → O comando docker pull serve para baixar (fazer o download) de uma imagem de container de um registro (como o Docker Hub) para a minha máquina local.
    
 ### 📦 Containers
 

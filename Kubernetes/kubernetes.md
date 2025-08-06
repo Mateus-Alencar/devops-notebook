@@ -150,7 +150,8 @@ Exemplo: `kubectl create namespace meu-projeto`
 
 ### Kubectl
 ```
-O Kubectl é a forma mais básica de se gerenciar um cluster Kubernetes. Através da combinação de seus comandos é possével gerenciar e monitorar todo o cluster.
+O Kubectl é a forma mais básica de se gerenciar um cluster Kubernetes. Através da combinação de seus comandos é possével 
+gerenciar e monitorar todo o cluster.
 Ele é um executável extremamente leve disponível para a maioria dos sistemas operacionais e pode controlar clusters locais ou remotos.
 ```
 
