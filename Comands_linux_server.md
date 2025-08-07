@@ -19,6 +19,8 @@ mv origem destino  # Move ou renomeia arquivos/pastas
 touch nome.txt     # Cria um novo arquivo vazio
 cat arquivo.txt    # Mostra o conteúdo de um arquivo
 less arquivo.log   # Visualiza arquivo com rolagem (para logs grandes)
+grep "palavra" /etc/arquivo.txt # Busca texto em arquivos.
+find /home -name "documento.txt" #Localiza arquivos.
 ```
 
 ---
@@ -33,6 +35,8 @@ htop               # Versão aprimorada do top (pode precisar instalar)
 free -h            # Uso de memória
 df -h              # Espaço em disco
 du -sh pasta/      # Tamanho da pasta
+ps aux             # Lista todos os processos 
+ps aux | grep nginx #verificar se o serviço/processo nginx está em execução no sistema
 ```
 
 ---
@@ -46,6 +50,7 @@ passwd nome        # Altera senha de um usuário
 usermod -aG grupo nome # Adiciona usuário a um grupo
 deluser nome       # Remove um usuário
 groups nome        # Mostra os grupos de um usuário
+chmod +x script.sh # Dá permissão de execução
 ```
 
 ---
@@ -62,7 +67,18 @@ systemctl stop nome      # Para um serviço
 systemctl restart nome   # Reinicia um serviço
 systemctl enable nome    # Ativa serviço na inicialização
 ```
+#### `systemctl` - Gerenciar serviços (SystemD)
+- **Uso:** `systemctl [operação] [serviço]`
+- **Exemplos:**
+  - `systemctl status nginx`
+  - `systemctl start apache2`
+  - `systemctl enable sshd`
 
+#### `journalctl` - Ver logs do sistema
+- **Uso:** `journalctl [opções]`
+- **Exemplos:**
+  - `journalctl -xe` (últimos logs com erros)
+  - `journalctl -u nginx.service` (logs do nginx)
 ---
 
 ## 🌐 Rede

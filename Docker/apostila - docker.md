@@ -155,7 +155,7 @@ Ao rodar um container baseado na imagem, as instruções serão executadas em ca
 
 O comando `docker build` é responsável por ler um Dockerfile e produzir uma nova imagem Docker.
 
-📄 [Documentação do Dockerfile](https://docs.docker.com/engine/reference/builder)
+> 📄 [Documentação do Dockerfile](https://docs.docker.com/engine/reference/builder)
 
 1. `docker images`  
    → Lista todas as imagens Docker disponíveis localmente.
