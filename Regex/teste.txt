@@ -1,0 +1,19 @@
+João da Silva - CPF: 123.456.789-00 - Tel: (11) 98765-4321 - Email: joao.silva@gmail.com  
+Maria Oliveira - CPF: 987.654.321-99 - Tel: (21) 99876-5432 - Email: maria_oliveira@yahoo.com  
+Carlos Souza - CPF: 456.123.789-10 - Tel: (31) 91234-5678 - Email: carlos.souza@empresa.com.br  
+
+Endereços:  
+Rua das Flores, 123 - CEP: 01001-000 - São Paulo/SP  
+Av. Brasil, 4567 - CEP: 20031-050 - Rio de Janeiro/RJ  
+Praça da Liberdade, 89 - CEP: 30140-010 - Belo Horizonte/MG  
+
+Pedidos:  
+#PED12345 - Valor: R$ 1.234,56 - Data: 16/08/2025  
+#PED67890 - Valor: R$ 987,00 - Data: 15/08/2025  
+#PED54321 - Valor: R$ 12.345,67 - Data: 10/08/2025  
+
+Notas rápidas:  
+- Placa de carro: ABC-1234  
+- Placa de moto: XYZ1A23  
+- Código postal americano: 90210  
+- Código aleatório: A1B2C3D4  

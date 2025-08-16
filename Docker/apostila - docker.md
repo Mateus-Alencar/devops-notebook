@@ -20,12 +20,12 @@ Containers Docker empacotam componentes de software em um sistema de arquivos co
 
 ### Diferenças entre container e VM:
 
-| Característica         | Container                         | Máquina Virtual                   |
-|------------------------|-----------------------------------|-----------------------------------|
-| Isolamento             | Compartilha kernel                | Kernel próprio                    |
-| Desempenho            | Leve, inicia em segundos          | Mais pesada, pode demorar minutos |
-| Imagem base            | Menor                             | Maior                             |
-| Gerenciamento          | Docker Engine                     | Hypervisor (Ex: VirtualBox, VMWare) |
+| Característica      | Container                   | Máquina Virtual                     |
+|---------------------|-----------------------------|------------------------------------ |
+| Isolamento          | Compartilha kernel          | Kernel próprio                      |
+| Desempenho          | Leve, inicia em segundos    | Mais pesada, pode demorar minutos   |
+| Imagem base         | Menor                       | Maior                               |
+| Gerenciamento       | Docker Engine               | Hypervisor (Ex: VirtualBox, VMWare) |
 
 ## Containers
 
@@ -199,7 +199,7 @@ CMD ["npm", "start"]
 | `ENTRYPOINT` | Define o processo principal do container.               |
 
 
-## Renomeação de uma imagem Docker
+#-## Renomeação de uma imagem Docker
 
 No Docker, renomear uma imagem significa dar a ela um novo nome (tag), sem modificar seu conteúdo. Isso é útil para:
  - Organizar suas imagens localmente;
@@ -251,8 +251,45 @@ Volumes são a forma recomendada pelo Docker para armazenar dados persistentes. 
 6. `docker volume prune`  
    → Apagar todos os volumes não utilizados
 
+7. `docker run -v volume:/data:ro`
+   → Criação de um volume que tem apenas permissão de leitura.
+   → `:ro` : é a abreviação de only
 ---
 
+## Networks no Docker
+
+ - Uma forma de gerenciar a conexão com Docker com outras plataformas ou até mesmo entre containers
+ - As redes ou networks são criadas separadas do containers, como os volumes
+
+Os container costuma ter três principais tipos de comunicação:
+
+| Tipo                 | Descrição                               |
+| -------------------- | --------------------------------------- |
+| **Externa**          | Conexão com uma API de um servidor remoto |
+| **Com o host**       | Conexão com uma máquina que está executando o docker |
+| **Entre containers** | Comunicação oque utiliza o driver bridge e permite a comunicação entre dois containers |
+
+Tipos de rede (drivers)
+
+|  Rede  |  Descrição  | 
+|--------|-------------|
+| **Bridge**  | o mais comum e default do Docker, utilizado quando ocntainers precisam se conectar|
+| **host**    | permite a conexão entre um container a máquina que está hosteando o Docker|
+| **macvian** | permite a conexão a um container por um MAC address|
+| **none**    | remove todas conexões de rede de um container|
+| **plugins** | permite extensões de terceiros para criar outras redes|
+
+Comandos
+
+1. `docker netword ls`
+   → Listar todas as redes do docker
+2. `network create <nome-da-rede>`
+   → Comando para criar uma rede
+   > `docker network create -d macvlan meu_macvlan`
+   `-d` determina o tipo de rede
+3. `docker network rm <nome-da-rede>`
+   → Remove a rede indicada.
+---
 ## Docker Compose
 
 Docker Compose permite definir e executar multi-containers com um único arquivo YAML (`docker-compose.yml`).
