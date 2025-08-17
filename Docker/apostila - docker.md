@@ -269,7 +269,7 @@ Os container costuma ter três principais tipos de comunicação:
 | **Com o host**       | Conexão com uma máquina que está executando o docker |
 | **Entre containers** | Comunicação oque utiliza o driver bridge e permite a comunicação entre dois containers |
 
-Tipos de rede (drivers)
+Tipos de rede (drivers):
 
 |  Rede  |  Descrição  | 
 |--------|-------------|
