@@ -175,3 +175,13 @@ kubectl logs nome-do-pod
 # Executar comando dentro do pod
 kubectl exec -it nome-do-pod -- bash
 ```
+
+## Portas utilizados pelos componentes do Kubernetes
+
+  - 6443 (TCP) → entrada no cluster (API Server)
+  - 2379–2380 (TCP) → armazenamento do estado (etcd)
+  - 10250 (TCP) → comunicação entre API Server e nós (Kubelet)
+  - 10251 (TCP) → scheduler
+  - 10252 (TCP) → controller manager
+
+  > Uma porta TCP é um número que funciona como um ponto de entrada e saída numa rede, associado a um aplicativo específico num dispositivo
