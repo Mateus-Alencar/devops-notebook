@@ -73,7 +73,6 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
     Cluster.
  ```
 
-
 ## Principais Conceitos 💻​
 
 ### Cluster
@@ -110,25 +109,26 @@ Objeto responsável por definir **como e quantas vezes** uma aplicação deve ro
 
 Exemplo de definição:
 ```yaml
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: apps/v1         # Define a versão da API do Kubernetes que será usada para esse recurso (aqui: apps/v1, usado para Deployments).
+kind: Deployment            # Indica o tipo de recurso que está sendo criado, neste caso um Deployment.
 metadata:
-  name: meu-app
+  name: meu-app             # Nome do Deployment, que serve como identificador dentro do cluster.
 spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: meu-app
-  template:
+  replicas: 3               # Quantidade de réplicas (pods) que o Deployment deve manter em execução.
+  selector:                 # Define como o Deployment vai identificar quais Pods pertencem a ele.
+    matchLabels:            # Critério de correspondência: procura Pods com o rótulo abaixo.
+      app: meu-app          # Rótulo usado para identificar os Pods que fazem parte deste Deployment.
+  template:                 # Template que descreve como os Pods desse Deployment devem ser criados.
     metadata:
       labels:
-        app: meu-app
+        app: meu-app        # Rótulo que será adicionado aos Pods criados (precisa bater com o selector acima).
     spec:
-      containers:
-        - name: nginx
-          image: nginx
+      containers:           # Lista de containers que irão rodar dentro de cada Pod.
+        - name: nginx       # Nome do container (apenas identificador dentro do Pod).
+          image: nginx      # Imagem Docker que será usada para criar o container (nesse caso, a imagem oficial do Nginx do Docker Hub).
           ports:
-            - containerPort: 80
+            - containerPort: 80  # Porta exposta pelo container (nesse caso, o Nginx escuta na porta 80).
+
 ```
 
 ### Service
