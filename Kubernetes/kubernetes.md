@@ -12,6 +12,53 @@ O Orquestrador de Containers mais utilizado no mercado atualmente é o Kubernete
 
 [Documentação Oficial do Kubernetes](https://kubernetes.io/pt-br/docs/home/)
 
+## O Container Engine
+
+  Antes de começar a falar um pouco mais sobre o Kubernetes, nós primeiro precisamos entender
+alguns componentes que são importantes no ecossistema do Kubernetes, um desses componentes
+é o Container Engine.
+  O Container Engine é o responsável por gerenciar as imagens e volumes, ele é o responsável
+por garantir que os os recursos utilizados pelos containers estão devidamente isolados, a
+vida do container, storage, rede, etc.
+  Até pouco tempo atrás tinhamos somente o Docker para esse papel. Mas hoje já temos diversas
+opções para se utilizar como Container Engine.
+  Opções como o Docker, o CRI-O e o Podman são bem conhecidas e preparadas para o ambiente 
+produtivo. O Docker, é o Container Engine mais popular e ele utiliza como Container Runtime o containerd.
+
+#### OCI - Open Container Initiative
+
+A OCI é uma organização sem fins lucrativos que tem como objetivo padronizar a criação de containers, para que possam ser executados em qualquer ambiente. A OCI foi fundada em 2015 pela Docker, CoreOS, Google, IBM, Microsoft, Red Hat e VMware e hoje faz parte da Linux Foundation.
+
+O runc, principal projeto desenvolvido pela OCI, é um container runtime de baixo nível amplamente utilizado por diversos Container Engines, incluindo o Docker. Este projeto, totalmente open source, é escrito em Go e seu código fonte pode ser acessado no GitHub.
+
+Agora sim já podemos falar sobre o que é o Container Runtime.
+
+#### O Container Runtime
+
+Para que seja possível executar os containers nos nós é necessário ter um *Container Runtime* instalado em cada um desses nós.
+
+O *Container Runtime* é o responsável por executar os containers nos nós. Quando você está utilizando ferramentas como Docker ou Podman para executar containers em sua máquina, por exemplo, você está fazendo uso de algum *Container Runtime*, ou melhor, o seu Container Engine está fazendo uso de algum *Container Runtime*.
+
+Temos três tipos de *Container Runtime*:
+
+- Low-level: são os *Container Runtime* que são executados diretamente pelo Kernel, como o runc, o crun e o runsc.
+
+- High-level: são os *Container Runtime* que são executados por um *Container Engine*, como o containerd, o CRI-O e o Podman.
+
+- Sandbox e Virtualized: são os *Container Runtime* que são executados por um *Container Engine* e que são responsáveis por executar containers de forma segura. O tipo Sandbox é executado em unikernels ou utilizando algum proxy para fazer a comunicação com o Kernel. O gVisor é um exemplo de *Container Runtime* do tipo Sandbox. Já o tipo Virtualized é executado em máquinas virtuais. A performance aqui é um pouco menor do que quando executado nativamente. O Kata Containers é um exemplo de *Container Runtime* do tipo Virtualized.
+
+#### Diferenças entre **Control Place** e **Workers**
+
+ O Control Place é o cérebro, responsável por gerenciar o estado desejado. Ele decide o que o cluster deve rodar, monitor e corrigir desvios.
+  O Workeres (Nós de trabalho), sõa os nós onde suas aplicações relmente rodam. ele escuta os Pods (containers da sua aplicação).
+
+|Aspector | Control Place | Workers |
+|---------|---------------|---------|
+| Função| Gerenciar o cluster | Executar aplicações (Pods) |
+| Responsabilidade| Decisões, agendamento, estado do cluster | Rodar containers e serviços |
+| Componentes| API Server, etcd, Scheduler, Controller Manager | Kubelet, Kube Proxy, Runtime |
+| Onde roda apps?| Não (salvo exceções em clusters pequenos, ex. minikube) | Sim, aqui ficam os Pods do usuário |
+
 ### Componentes
 
 O Kubernetes é formado por uma série de componentes que compartilham um mesmo estado em um banco dedados do tipo Chave-Valor, o ETCD. A interação entre esses diversos componentes gerenciam um cluster que pode ser formado por centenas ou até mesmo milhares de containers e servidores. Podemos dividir esses componentes em 3 camadas: Os componentes do Control Plane, os componentes do Node Plane e os Addons.
