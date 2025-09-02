@@ -1,4 +1,4 @@
-## Sumário
+ ## Sumário
 
 - [Conceitos Fundamentais do Docker](#conceitos-fundamentais-do-docker)
 - [Containers](#containers)
@@ -289,6 +289,12 @@ Comandos
    `-d` determina o tipo de rede
 3. `docker network rm <nome-da-rede>`
    → Remove a rede indicada.
+4. `docker network inspect minha_red`
+   → Inspeciona a rede.
+5. `docker network connect minha_rede meu_container`
+   → Conectar container a uma rede
+6. `Desconectar container de uma rede`
+   → docker network disconnect minha_rede meu_container
 ---
 ## Docker Compose
 
