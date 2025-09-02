@@ -177,7 +177,20 @@ O comando `docker build` é responsável por ler um Dockerfile e produzir uma no
 
 Nome *default* para o arquivo com instruções para o **build** de imagens Docker.
 
-### Exemplo básico de Dockerfile
+### Exemplos básicos de Dockerfiles
+
+```Dockerfile
+# Imagem base
+FROM python:3.11
+# Define diretório de trabalho
+WORKDIR /app
+# Copia os arquivos da aplicação
+COPY . .
+# Instala dependências
+RUN pip install -r requirements.txt
+# Comando padrão ao iniciar container
+CMD ["python", "app.py"]
+```
 
 ```Dockerfile
 FROM node:20
