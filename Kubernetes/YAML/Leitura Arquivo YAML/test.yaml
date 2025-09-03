@@ -1,3 +1,21 @@
+# Instruções para o programa
 nome: Mateus
 idade: 20
 curso: Ciência da Computação
+
+objeto:
+  versao: 2
+  arquivo: "teste.txt"
+
+lista: [1,2,3,4,5]
+lista_dois:
+  - "teste"
+  - 10
+  - teste
+  - True
+
+obj: [a:1,b:2,c:3,d:4]
+obj_dois:
+  chave1: 1
+  chave2: 2
+  chave3: 3
