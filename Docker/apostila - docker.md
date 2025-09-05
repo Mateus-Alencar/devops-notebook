@@ -212,7 +212,7 @@ CMD ["npm", "start"]
 | `ENTRYPOINT` | Define o processo principal do container.               |
 
 
-#-## Renomeação de uma imagem Docker
+#### Renomeação de uma imagem Docker
 
 No Docker, renomear uma imagem significa dar a ela um novo nome (tag), sem modificar seu conteúdo. Isso é útil para:
  - Organizar suas imagens localmente;
