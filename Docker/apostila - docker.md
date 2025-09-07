@@ -312,3 +312,45 @@ Comandos
 ## Docker Compose
 
 Docker Compose permite definir e executar multi-containers com um único arquivo YAML (`docker-compose.yml`).
+
+- Com o Docker Compose, teremos apenas um arquivo de configuração, que orquestra todos os contêiners
+- É uma forma de rodar múltiplos builds e runs com um comando
+- O arquivo chamado docker-compose.yml deve ser criado na raiz do projeto. Este arquivo irá cordenar os containers e imagens.
+   - **version**: versão do Compose;
+   - **services**: Containers/serviços que vão rodar essa configuração.
+   - **Volumes**: Possível adição de volumes.
+```
+version: '3.4'
+services:
+  db:
+    image: mysql:5.7.22
+    command: mysqld --default_authentication_plugin=mysql_native_password
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: docker
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      MYSQL_DATABASE: wordpress
+    ports:
+      - 3308:3306
+    networks:
+      - wordpress-network
+  wordpress:
+    image: wordpress:latest
+    volumes:
+      - ./config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./wp-app:/var/www/html
+    environment:
+      TZ: America/Sao_Paulo
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: docker
+    ports:
+      - 80:80
+    networks:
+      - wordpress-network
+networks:
+    wordpress-network:
+      driver: bridge
+```
