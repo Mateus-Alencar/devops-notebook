@@ -68,6 +68,7 @@
 | `set`                 | Mostra variáveis de ambiente              |
 | `echo`                | Exibe mensagens no terminal               |
 | `powershell`          | Abre o terminal PowerShell                |
+| `ssh` `(ssh user@ip)`   | Conecta em outro computador via rede (Secure Shell)
 
 ---
 
