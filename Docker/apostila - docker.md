@@ -175,7 +175,7 @@ O comando `docker build` é responsável por ler um Dockerfile e produzir uma no
 
 ## Dockerfile
 
-Nome *default* para o arquivo com instruções para o **build** de imagens Docker.
+> Nome *default* para o arquivo com instruções para o **build** de imagens Docker.
 
 ### Exemplos básicos de Dockerfiles
 
@@ -208,7 +208,7 @@ CMD ["npm", "start"]
 | `COPY`       | Copia um arquivo do filesystem local para o container.  |
 | `RUN`        | Executa um ou mais comandos no container.               |
 | `WORKDIR`    | Define o diret´orio de execu¸c˜ao atual.                |
-| `USER`       | Define o usu´ario executar´a os processos do container. |
+| `USER`       | Define o usuário que irá executar os processos do container. |
 | `ENTRYPOINT` | Define o processo principal do container.               |
 
 
@@ -280,7 +280,7 @@ Os container costuma ter três principais tipos de comunicação:
 | -------------------- | --------------------------------------- |
 | **Externa**          | Conexão com uma API de um servidor remoto |
 | **Com o host**       | Conexão com uma máquina que está executando o docker |
-| **Entre containers** | Comunicação oque utiliza o driver bridge e permite a comunicação entre dois containers |
+| **Entre containers** | Comunicação que utiliza o driver bridge e permite a comunicação entre dois containers |
 
 Tipos de rede (drivers):
 
