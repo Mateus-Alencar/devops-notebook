@@ -23,6 +23,24 @@ grep "palavra" /etc/arquivo.txt # Busca texto em arquivos.
 find /home -name "documento.txt" #Localiza arquivos.
 ```
 
+### GREP
+O **grep** é como um localizador de texto no Linux, muito útil para analisar arquivos grandes ou filtrar informações específicas. Ele usa expressões regulares para encontrar ocorrências.
+
+Sintaxe básica: `grep [opções] "texto" arquivo`
+Exemplos:
+> Procurar a palavra error dentro do arquivo log.txt
+`grep "error" log.txt`
+
+> Procurar de forma case-insensitive (ignora maiúsculas e minúsculas):
+`grep -i "error" log.txt`
+
+> Mostrar o número da linha onde a palavra aparece:
+`grep -n "error" log.txt`
+
+> Usar com pipe para filtrar a saída de outro comando, por exemplo, encontrar processos do nginx:
+`ps aux | grep nginx`
+
+
 ---
 
 ## 🧠 Informações do sistema
