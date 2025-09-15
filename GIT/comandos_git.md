@@ -86,3 +86,23 @@
 
 ## 💡 Dica
 Use `git --help` ou `git comando --help` para ver mais detalhes.
+
+## ⚡ Comandos avançados em GIT
+
+| Comando                           | Descrição                                                                             |
+| --------------------------------- | ------------------------------------------------------------------------------------- |
+| `git log --oneline --graph --all` | Mostra o histórico de commits de forma resumida, em formato de grafo.                 |
+| `git diff`                        | Mostra as diferenças entre o que foi modificado e o que está no último commit.        |
+| `git stash`                       | Salva alterações não commitadas de forma temporária (como um rascunho).               |
+| `git stash pop`                   | Recupera alterações salvas com `stash`.                                               |
+| `git reset --hard <hash>`         | Volta o repositório para um commit específico, apagando alterações locais. ⚠️         |
+| `git revert <hash>`               | Desfaz um commit específico criando um novo commit que reverte as mudanças.           |
+| `git cherry-pick <hash>`          | Aplica um commit de outra branch no seu histórico atual.                              |
+| `git rebase -i HEAD~3`            | Permite reescrever o histórico dos últimos 3 commits (editar, unir, excluir).         |
+| `git branch -d <nome>`            | Deleta uma branch local.                                                              |
+| `git push origin --delete <nome>` | Deleta uma branch remota.                                                             |
+| `git tag -a v1.0 -m "versão 1.0"` | Cria uma tag anotada (geralmente usada em releases).                                  |
+| `git push origin v1.0`            | Envia a tag para o repositório remoto.                                                |
+| `git fetch --all --prune`         | Atualiza todas as refs locais de branches remotas, removendo as que não existem mais. |
+
+> **Refs** são ponteiros que apontam para commits específicos, EX: 26031f6
