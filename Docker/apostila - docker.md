@@ -319,38 +319,38 @@ Docker Compose permite definir e executar multi-containers com um único arquivo
    - **version**: versão do Compose;
    - **services**: Containers/serviços que vão rodar essa configuração.
    - **Volumes**: Possível adição de volumes.
+
+Exemplo de arquivo de configuração que inicializa dois containers usando Docker, MySql e WordPress, além de criar um arquivo persistente para salvar os dados do MySql.
+
 ```
-version: '3.4'
-services:
-  db:
-    image: mysql:5.7.22
-    command: mysqld --default_authentication_plugin=mysql_native_password
-    environment:
-      TZ: America/Sao_Paulo
-      MYSQL_ROOT_PASSWORD: docker
-      MYSQL_USER: docker
-      MYSQL_PASSWORD: docker
-      MYSQL_DATABASE: wordpress
-    ports:
-      - 3308:3306
-    networks:
-      - wordpress-network
-  wordpress:
-    image: wordpress:latest
-    volumes:
-      - ./config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
-      - ./wp-app:/var/www/html
-    environment:
-      TZ: America/Sao_Paulo
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_NAME: wordpress
-      WORDPRESS_DB_USER: root
-      WORDPRESS_DB_PASSWORD: docker
-    ports:
-      - 80:80
-    networks:
-      - wordpress-network
-networks:
-    wordpress-network:
-      driver: bridge
+version: "3.8"  # Versão da sintaxe do docker-compose (boa prática definir)
+
+services:       # Define os serviços (containers) do projeto
+   db:          # Nome do serviço (container) do banco MySQL
+      image: mysql:5.7              # Imagem oficial do MySQL versão 5.7
+      volumes:                      # Volumes persistentes
+         - db_data:/var/lib/mysql   # Mapeia o volume "db_data" para armazenar dados do MySQL
+      restart: always               # Sempre reinicia o container em caso de falha ou reboot
+      environment:                  # Variáveis de ambiente do MySQL
+         MYSQL_ROOT_PASSWORD: 1234  # Senha do usuário root
+         MYSQL_DATABASE: WordPress  # Cria o banco de dados "WordPress" automaticamente
+         MYSQL_USER: Mateus         # Cria o usuário "Mateus"
+         MYSQL_PASSWORD: 1234       # Senha do usuário "Mateus"
+
+   wordpress:                       # Nome do serviço (container) do WordPress
+      depends_on:                   # Garante que o serviço "db" suba primeiro
+         - db
+      image: wordpress:latest       # Imagem oficial do WordPress na versão mais recente
+      ports:                        # Mapeamento de portas
+         - "8080:80"                # Porta 8080 do host → porta 80 do container
+      restart: always               # Sempre reinicia em caso de falha
+      environment:                  # Variáveis de ambiente do WordPress
+         WORDPRESS_DB_HOST: db:3306 # Endereço do banco (nome do serviço "db" + porta 3306)
+         WORDPRESS_DB_USER: Mateus  # Usuário do banco (precisa ser o mesmo definido no MySQL)
+         WORDPRESS_DB_PASSWORD: 1234 # Senha do banco (mesma definida no MySQL)
+         WORDPRESS_DB_NAME: WordPress # Nome do banco (mesmo definido no MySQL)
+
+volumes:            # Define volumes persistentes
+   db_data: {}      # Volume chamado "db_data" (armazenará os dados do MySQL)
+
 ```
