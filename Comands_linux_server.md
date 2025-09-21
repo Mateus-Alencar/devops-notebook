@@ -3,6 +3,7 @@
 
 Este documento reúne os **principais comandos usados em servidores Linux**, com foco em administração, rede, manipulação de arquivos, processos e pacotes.
 
+> Sintaxe padrão para comandos no Linux: COMANDO -OPCOES ARQUIVOS/DIRETORIOS
 ---
 
 ## 📁 Navegação e manipulação de arquivos
@@ -152,3 +153,10 @@ journalctl -xe             # Ver logs do sistema
 - `CTRL + C` → Interrompe um comando em execução
 - `CTRL + L` → Limpa a tela (igual `clear`)
 - `CTRL + R` → Busca no histórico de comandos
+
+---
+
+## Diferenças entre terminal e shell
+
+Um terminal é a aplicação gráfica que fornce uma janela para interação, é um font-end para o shell. 
+O Shell, é o programa que interpresa e executa os comandos do utilizador, interagindo com o kernel do sistema operativo.
