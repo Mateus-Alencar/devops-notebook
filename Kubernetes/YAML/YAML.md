@@ -1,12 +1,24 @@
 ## YAML
 
- **YAML** é uma linguagem de serialização de dados versátil e legível por humanos, comumente utilizada para criar arquivos de configuração.
-
- > O YAML não é uma linguagem de marcação.
+ **YAML** é uma linguagem de serialização de dados versátil e legível por humanos, comumente utilizada para criar arquivos de configuração. **O YAML não é uma linguagem de marcação.**
 
   Ela é utilizada para arquivos de configuração, inclusive do Docker, para configurar o Docker Compose. Ela é de fácil leitura para humanos.
 
-  ##### Espaçamento e inentação
+Exemplo de um arquivo **YAML**:
+```
+#Comment: This is a supermarket list using YAML
+#Note that - character represents the list
+---
+food: 
+  - vegetables: tomatoes #first list item
+  - fruits: #second list item
+      citrics: oranges 
+      tropical: bananas
+      nuts: peanuts
+      sweets: raisins
+```
+>  (---) Eles sinalizam o início de um documento. Já o final do documento é marcado por três pontos (...).  
+##### Espaçamento e indentação
 
   - O fim de uma linha indica o fim de uma instrução, não há ponto e vírgula;
   - A indentação deve conter um ou mais espaços, e não devemos utilizar tab;
@@ -44,5 +56,12 @@
             - chave: 1
             - chave: 2
     ```
+> É como um dicionário Python ou uma atribuição de variável em um script bash.
+
+#### Análise de dados YAML
+
+A "análise de dados YAML" refere-se ao processo de processar e compreender dados estruturados dentro de arquivos YAML, utilizando a sintaxe legível por humanos e baseada em indentação do YAML para diversas aplicações como configuração, troca de dados e automação, sendo essencial para ferramentas como Kubernetes, Ansible e Docker. A análise envolve a interpretação das estruturas de dados que o YAML suporta, como sequências (listas) e mapeamentos (pares chave-valor), para extrair e utilizar as informações contidas. 
+
+> PyYAML é um analisador e emissor YAML para Python.
 
  
