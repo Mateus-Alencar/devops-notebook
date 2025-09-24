@@ -169,11 +169,11 @@ O comando `docker build` é responsável por ler um Dockerfile e produzir uma no
 4. `docker image inspect <nome-imagem>`  
    → Ver detalhes da imagem
 5. `docker tag httpd:2.4 meuusuario/apache-custom:meu-projeto`
-   → `docker tag`: comando apra renomear (retag) uma image
+   → `docker tag`: comando usado para renomear (retag) uma image
    → `httpd:2.4`: nome da imagem original que foi baixada
    → `meuusuario/apache-custom:meu-projeto`: novo nome (com namespace) e tag que eu irei dar a imagem.
 
-## Dockerfile
+### Dockerfile
 
 > Nome *default* para o arquivo com instruções para o **build** de imagens Docker.
 
@@ -207,7 +207,7 @@ CMD ["npm", "start"]
 | `FROM`       | Define a imagem base do container.                      |
 | `COPY`       | Copia um arquivo do filesystem local para o container.  |
 | `RUN`        | Executa um ou mais comandos no container.               |
-| `WORKDIR`    | Define o diret´orio de execu¸c˜ao atual.                |
+| `WORKDIR`    | Define o diretório de execução atual.                |
 | `USER`       | Define o usuário que irá executar os processos do container. |
 | `ENTRYPOINT` | Define o processo principal do container.               |
 
@@ -286,7 +286,7 @@ Tipos de rede (drivers):
 
 |  Rede  |  Descrição  | 
 |--------|-------------|
-| **Bridge**  | o mais comum e default do Docker, utilizado quando ocntainers precisam se conectar|
+| **Bridge**  | o mais comum e default do Docker, utilizado quando containers precisam se conectar|
 | **host**    | permite a conexão entre um container a máquina que está hosteando o Docker|
 | **macvian** | permite a conexão a um container por um MAC address|
 | **none**    | remove todas conexões de rede de um container|
