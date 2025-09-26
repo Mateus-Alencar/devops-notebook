@@ -7,6 +7,7 @@
 - [Docker Hub](#docker-hub)
 - [Comandos - Docker](#comandos---docker)
 - [Volumes](#o-que-são-volumes-no-docker)
+- [Networks no Docker](#Networks)
 - [Docker Compose](#docker-compose)
 
 # Conceitos Fundamentais do Docker 🐳
@@ -354,3 +355,7 @@ volumes:            # Define volumes persistentes
    db_data: {}      # Volume chamado "db_data" (armazenará os dados do MySQL)
 
 ```
+
+Verificando o que tem no Compose
+
+Podemos fazer a verificação do compose com o comando: `docker-compose ps`. Receberemos um resumo dos serviços que sobem ao rodar o compose, facilitando a leitura do projeto.
