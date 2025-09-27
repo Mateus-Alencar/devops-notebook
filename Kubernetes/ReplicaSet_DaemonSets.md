@@ -84,11 +84,7 @@ nginx-deployment   1/1     1            1           7s
 
 &nbsp;
 
-Simples, eu nós já sabiamos! Jeferson, eu quero saber sobre o `ReplicaSet`!
-
-Calma, pois o nosso querido `Deployment` já criou o `ReplicaSet` para nós.
-
-Vamos visualizar o `ReplicaSet` que foi criado.
+ Visualizando o `ReplicaSet` que foi criado.
 
 ```bash
 kubectl get replicasets
@@ -304,8 +300,6 @@ NewReplicaSet:   nginx-deployment-6dd8d7cfbd (3/3 replicas created)
 
 &nbsp;
 
-Simples demais, não é mesmo?
-
 Então agora você já sabe como fazer o gerenciamento de réplicas do `Pod` do `nginx` usando o `Deployment`, e por consequência o `ReplicaSet`.
 
 &nbsp;
@@ -466,9 +460,6 @@ Essa é uma forma de você listar os `Pods` e as imagens que estão sendo usadas
 
 - `'{range .items[*]}{"\n"}{.metadata.name}{"\t"}{range .spec.containers[*]}{.image}{"\t"}{end}{end}'`: essa é a expressão JSONPath que define o formato de saída do comando. Ela usa a função range para iterar sobre todos os objetos items (ou seja, os Pods) retornados pelo comando kubectl get pods. Em seguida, exibe o nome do Pod `({.metadata.name})` seguido de uma tabulação `(\t)`, e itera sobre todos os contêineres `({range .spec.containers[*]})` dentro do Pod, exibindo a imagem usada por cada um deles `({.image})`. Por fim, insere uma quebra de linha `(\n)` e fecha o segundo range com `{end}{end}`.
 
-Sim, eu sei, continua confuso!
-
-Mas vou te contar um segredo, somente com o tempo e utilizando repetidas vezes, as coisas começam a ficar mais fáceis, então não desista! Pra trás, nem pra pegar impulso!
 
 Ainda vamos falar com mais detalhes sobre como utilizar `metadata` para ter uma saída mais amigável e precisa.
 
@@ -560,7 +551,7 @@ spec: # Especificação do objeto
 
 &nbsp;
 
-Eu deixei o arquivo comentado para facilitar o entendimento, agora vamos criar o `DaemonSet` utilizando o arquivo de manifesto.
+Criação do `DaemonSet` utilizando o arquivo de manifesto.
 
 ```bash
 kubectl apply -f node-exporter-daemonset.yaml
