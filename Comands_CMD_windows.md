@@ -71,6 +71,3 @@
 | `ssh` `(ssh user@ip)`   | Conecta em outro computador via rede (Secure Shell)
 
 ---
-
-
-

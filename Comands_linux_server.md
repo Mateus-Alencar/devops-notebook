@@ -160,3 +160,35 @@ journalctl -xe             # Ver logs do sistema
 
 Um terminal é a aplicação gráfica que fornce uma janela para interação, é um font-end para o shell. 
 O Shell, é o programa que interpresa e executa os comandos do utilizador, interagindo com o kernel do sistema operativo.
+
+## 🗒️ Vim
+
+O vim é uma versão melhorada do vi. Ele não está em 100% das distros por padrão, mas está presente na grande maioria das distribuições modernas (Ubuntu, Debian, Fedora, CentOS, Arch, etc.). Ele é rápido, leve, roda no terminal e é extremamente poderoso para edição de arquivos de texto e código.
+
+>Abertura de arquivos: `vim arquivo.txt`
+
+- Normal → Navegação e execução de comandos (modo inicial).
+- Inserção (Insert) → Edição de texto (tecla i entra nesse modo).
+- Linha de comando (Command-line) → Para salvar, sair, buscar, etc. (ativado com `:` ).
+    - :q → sair (se não houver alterações).
+    - :q! → sair sem salvar.
+    - :wq ou :x → salvar e sair.
+    - ZZ → salvar e sair (atalho, em maiúsculo).
+
+|ESC + | Descrição  |
+| ----- | ---------- |
+| i  | entra no modo inserção antes do cursor     |
+| a  | entra no modo inserção após o cursor.      |
+| o  | nova linha abaixo e entra no modo inserção |
+| dd | apaga a linha atual                        |
+| yy | copia a linha atual.                       |
+| p  | cola o conteúdo copiado.                   |
+| u  | desfaz a última ação                       |
+| CTRL + r  | refaz a ação desfeita.                     |
+| /palavra | busca por “palavra” no texto         |
+| n  | repete a busca                             |
+| x  | apaga o caractere sob o cursor             |
+| gg | vai para o início do arquivo               |
+| G  | vai para o fim do arquivo                  |
+| :set number | exibe números de linha            |
+
