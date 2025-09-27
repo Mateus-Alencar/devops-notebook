@@ -4,7 +4,7 @@
 
 
 Nós já sabemos o que é um `Deployment` e também já sabemos o que é um `Pod` no detalhe, então agora vamos conhecer essas duas figuras que estão super conectadas com o `Deployment` e com o `Pod`.
-Quando falamos sobre `Deployment` é impossível não falar sobre `ReplicaSet`, pois o `Deployment` é um objeto que cria um `ReplicaSet` e o `ReplicaSet` é um objeto que cria um `Pod`, veja que tudo está conectado.
+Quando falamos sobre `Deployment` é impossível não falar sobre `ReplicaSet`, pois **o `Deployment` é um objeto que cria um `ReplicaSet` e o `ReplicaSet` é um objeto que cria um `Pod`**, veja que tudo está conectado.
 
 Já o nosso querido `DaemonSet` é um objeto que cria um `Pod` e esse `Pod` é um objeto que fica rodando em todos os nodes do cluster, super importante para nós, pois é com `DaemonSet` que nós conseguimos garantir que teremos pelo menos um `Pod` rodando em cada node do cluster. Por exemplo, imagine que você precisa de instalar os agente do `Datadog` ou ainda um `exporter` do `Prometheus` em todos os nodes do cluster, para isso você precisa de um `DaemonSet`.
 
@@ -14,15 +14,10 @@ Nós vamos falar sobre `Readiness Probe`, `Liveness Probe` e `Startup Probe`, e 
 
 Hoje é o dia de você aprender sobre esses dois objetos que são super importantes, e ainda, garantir que nós nunca colocaremos os nossos `Pods` em produção sem antes garantir que eles estão rodando corretamente e sendo checados pelas `Probes` do Kubernetes.
 
-Bora lá! #VAIIII
-
 ### ReplicaSet
 
 Uma coisa é super importante de saber, quando estamos criando um `Deployment` no Kubernetes, automaticamente estamos criando além do `Deployment` um `ReplicaSet` e esse `ReplicaSet` é quem vai criar os `Pods` que estão dentro do `Deployment`.
 
-Confuso, não?
-
-Não, não é e vou te explicar.
 
 Quando criamos um `Deployment`, o Kubernetes cria um `ReplicaSet` para criar e fazer o gerenciamento das réplicas dos `Pods` em nosso cluster. Ele é o responsável por ficar observando os `Pods` e garantir o número de réplicas que nós definimos no `Deployment`.
 
