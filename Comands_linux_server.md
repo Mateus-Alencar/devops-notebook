@@ -6,6 +6,21 @@ Este documento reúne os **principais comandos usados em servidores Linux**, com
 > Sintaxe padrão para comandos no Linux: COMANDO -OPCOES ARQUIVOS/DIRETORIOS
 ---
 
+## 🐧 Entendendo o Prompt do terminal linux
+
+### `mateus@linux_server:~$`
+  - **`mateus` (antes do @)** → Nome do usuário logado.
+  - **`linux_server` (depois do @)** → Nome do computador/host.
+  - **`$`** → Indica que o usuário logado é **comum (não root)**.
+
+### `root@linux_server:/home/mateus#`
+- **`root`** → Agora o terminal está logado como o superusuário (**administrador do sistema**).
+- **`linux_server`** → Nome do host (computador).
+- **`/home/mateus`** → Diretório atual continua o mesmo.
+- **`#`** → Indica que o shell atual é de um **usuário root** (diferente do `$`, que é para usuário comum).
+
+---
+
 ## 📁 Navegação e manipulação de arquivos
 
 ```bash
