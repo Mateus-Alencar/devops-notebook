@@ -321,7 +321,18 @@ Docker Compose permite definir e executar multi-containers com um único arquivo
    - **services**: Containers/serviços que vão rodar essa configuração.
    - **Volumes**: Possível adição de volumes.
 
-Exemplo de arquivo de configuração que inicializa dois containers usando Docker, MySql e WordPress, além de criar um arquivo persistente para salvar os dados do MySql.
+O compose funciona em todos os ambientes: produção, preparação, desenvolvimento, teste e fluxos de trabado de CI. Ele também possui comandos para gerenciar todo o ciclo de vida do se aplicativo: 
+- Iniciar, parar e reconstruir serviços
+- Ver o status dos serviços em execução
+- Transmita a saída de log dos serviços em execução
+- Execute um comando único em um serviço
+
+#### Definição de serviços no Docker Compose
+
+Um serviço é uma definição abstrata de um recurso computacional dentro de uma aplicação que pode ser dimensionado ou substituído independentemente de outros componentes. Os serviços são suportados por um conjunto de contêineres, executados pela plataforma de acordo com os requisitos de replicação e restrições de posicionamento. Como os serviços são suportados por contêineres, eles são definidos por uma imagem Docker e um conjunto de argumentos de tempo de execução. Todos os contêineres dentro de um serviço são criados de forma idêntica com esses argumentos.
+
+
+**Exemplo** e arquivo de configuração que inicializa dois containers usando Docker, MySql e WordPress, além de criar um arquivo persistente para salvar os dados do MySql.
 
 ```
 version: "3.8"  # Versão da sintaxe do docker-compose (boa prática definir)
@@ -359,3 +370,15 @@ volumes:            # Define volumes persistentes
 Verificando o que tem no Compose
 
 Podemos fazer a verificação do compose com o comando: `docker-compose ps`. Receberemos um resumo dos serviços que sobem ao rodar o compose, facilitando a leitura do projeto.
+
+> Não precisa obrigatoriamente de um Dockerfile para usar o Docker Compose.
+
+#### Utilização do Dockerfile e do Docker-compose
+
+Se a imagem a ser rodada já estiver pronta no **Docker Hub** basta referenciar a imagem no `docker-compose.yaml`
+Será necessário a construção de um arquivo **Dockerfile** se:
+- Quer personalizar uma imagem (ex.: instalar libs adicionais, copiar código, alterar configuração).
+- Vai rodar um aplicativo próprio (ex.: API em Node, Flask, Java, etc.) que ainda não tem imagem publicada no Docker Hub.
+#### Arquivo Compose
+
+O caminho padrão para um arquivo do Compose é compose.yaml(preferencialmente) ou compose.yml que esteja localizado no diretório de trabalho. O Compose também suporta docker-compose.yaml e docker-compose.yml para compatibilidade com versões anteriores. Se ambos os arquivos existirem, o Compose prefere o arquivo compose.yaml.
