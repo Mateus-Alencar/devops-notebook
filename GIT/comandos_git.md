@@ -106,3 +106,43 @@ Use `git --help` ou `git comando --help` para ver mais detalhes.
 | `git fetch --all --prune`         | Atualiza todas as refs locais de branches remotas, removendo as que não existem mais. |
 
 > **Refs** são ponteiros que apontam para commits específicos, EX: 26031f6
+
+### Corrigindo Mensagem de Commit Incorreta no Git
+
+Durante o desenvolvimento de projetos, pode acontecer de você cometer um **commit com a mensagem errada**. Felizmente, o Git permite corrigir isso facilmente.  
+
+---
+
+#### 1. Alterar a mensagem do **último commit**
+
+  Se o commit incorreto é o mais recente, utilize:
+  
+  ```bash
+  git commit --amend
+  ```
+  Passos:
+  - O Git abrirá o editor configurado (normalmente o Vim) com a mensagem atual do commit.
+  - Edite a mensagem do commit.
+  - Caso o commit já tenha sido enviado ao GitHub, force o push:
+  ```
+  git push --force
+  ```
+#### 2. Alterar a mensagem de commits antigos
+Se o commit errado não é o último, use rebase interativo:
+```
+git rebase -i HEAD~N
+```
+> Substitui `N` pelo número de commits que deseja revisar.
+
+- No editor que abrir:
+- Troque pick por reword no commit cuja mensagem deseja alterar.
+- Salve e feche o editor.
+- O Git abrirá o editor novamente para você modificar a mensagem.
+- Após alterar todas as mensagens desejadas, finalize o rebase:
+```
+git rebase --continue
+```
+- Para commits já enviados para o GitHub, force o push:
+```
+git push --force
+```
