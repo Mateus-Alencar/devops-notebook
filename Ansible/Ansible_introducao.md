@@ -50,10 +50,10 @@ Casos de uso com Ansible:
 
 #### Estrutura de um playbook
 
-- hosts: → onde rodar (grupo do inventário ou host específico)
-- become: → se precisa de sudo
-- tasks: → lista de tarefas
-- modules: → cada tarefa usa um módulo (ex: apt, yum, copy, service, file, etc.)
+- hosts → onde rodar (grupo do inventário ou host específico)
+- become → se precisa de sudo
+- tasks → lista de tarefas
+- modules → cada tarefa usa um módulo (ex: apt, yum, copy, service, file, etc.)
 
 #### Exemplo: Criar um usuário em múltiplos servidores
 ```yaml
