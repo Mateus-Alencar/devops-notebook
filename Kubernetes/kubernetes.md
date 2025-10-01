@@ -119,7 +119,7 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
     garantindo a execução e a saúde dos containers definidos no Estado do 
     Cluster.
  ```
-
+![alt text](image.png)
 ## Principais Conceitos 💻​
 
 ### Cluster

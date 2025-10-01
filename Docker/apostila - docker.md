@@ -174,7 +174,7 @@ O comando `docker build` é responsável por ler um Dockerfile e produzir uma no
    → `httpd:2.4`: nome da imagem original que foi baixada
    → `meuusuario/apache-custom:meu-projeto`: novo nome (com namespace) e tag que eu irei dar a imagem.
 
-### Dockerfile
+#### Dockerfile
 
 > Nome *default* para o arquivo com instruções para o **build** de imagens Docker.
 
@@ -224,6 +224,8 @@ No Docker, renomear uma imagem significa dar a ela um novo nome (tag), sem modif
  `docker tag <imagem_original> <novo_nome>`
  
 --- 
+
+![alt text](image.png)
 
 ## 📦 O que são Volumes no Docker?
 
