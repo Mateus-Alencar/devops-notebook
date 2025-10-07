@@ -18,7 +18,18 @@ Este documento reúne os **principais comandos usados em servidores Linux**, com
 - **`linux_server`** → Nome do host (computador).
 - **`/home/mateus`** → Diretório atual continua o mesmo.
 - **`#`** → Indica que o shell atual é de um **usuário root** (diferente do `$`, que é para usuário comum).
-
+---
+## Estrutura de Diretórios Importantes
+|   Diretório    | Função                   |
+|----------------|--------------------------|
+| `/`            | Raiz do sistema          |
+| `/home`        | Diretórios dos usuário   |
+| `/etc`         | Arquivos de configuração |
+| `var`          | Logs e dados variáveis   |
+| `/usr`         | Programas e bibliotecas  |
+| `bin`, `/sbin` | Binários do sistema      |
+| `/tmp`         | Arquivos temporários     |
+| `opt`          | Softwares opcionais      |
 ---
 
 ## 📁 Navegação e manipulação de arquivos
@@ -37,6 +48,9 @@ cat arquivo.txt    # Mostra o conteúdo de um arquivo
 less arquivo.log   # Visualiza arquivo com rolagem (para logs grandes)
 grep "palavra" /etc/arquivo.txt # Busca texto em arquivos.
 find /home -name "documento.txt" #Localiza arquivos.
+tail -f /var/log/syslog # Acompanha logs em tempo real.
+scp / rsync # Cópia remota do arquivo.
+cron # Agendamento de tarefas
 ```
 
 ### GREP
@@ -124,6 +138,7 @@ curl http://site   # Faz uma requisição HTTP
 wget url           # Baixa um arquivo via terminal
 netstat -tuln      # Lista portas em uso (pode ser necessário instalar)
 ss -tuln           # Alternativa moderna ao netstat
+
 ```
 
 ---
