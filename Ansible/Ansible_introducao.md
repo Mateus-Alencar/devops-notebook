@@ -10,7 +10,7 @@ O Ansible automatiza o gerenciamento de sistemas remotos e controla seu estado d
 **Nó gerenciado**
 - Um sistema remoto, ou host, que o Ansible controla.
 
-O Ansible ofere automação de código que reduz a complexidade e pode ser executado em qualquer lugar. Usar o Ansible permite automatizar praticamente qualquer tarefa.
+O Ansible ofere automação de código que reduz a complexidade e pode ser executado em qualquer lugar. Usar o Ansible permite automatizar praticamente qualquer tarefa. Ele se conecta aos servidores de destino (nós) remotamente, via SSH para sistemas Unix e via Windows Remote Management para Windows, utilizando os módulos para realizar as ações.
 
 Casos de uso com Ansible:
 - Eliminação de repetições e simplificação dos fluxos de trabalho
@@ -20,12 +20,16 @@ Casos de uso com Ansible:
 
 > 👉 O Ansible usa scripts chamados de `playbooks`
 
+Playbooks: São conjuntos de instruções escritas em YAML que descrevem o estado desejado de um sistema. Você escreve o que quer que aconteça, e o Ansible cuida da execução.
+
 ### Conceitos principais do Ansible
 - Idempotência → se você rodar o mesmo playbook várias vezes, o resultado será sempre o mesmo (não instala pacotes repetidos, por exemplo).
 - Agentless → não precisa instalar agente nos servidores; só precisa de SSH e Python básico instalado no destino.
 - Playbook → arquivo YAML onde você descreve as tarefas.
 - Inventário → lista de servidores onde as tarefas serão aplicadas.
 - Módulos → blocos prontos para executar ações (ex: instalar pacotes, copiar arquivos, reiniciar serviços, etc.).
+
+[Documentação Ansible](https://docs.ansible.com/)
 
 #### Playbook para instalar Nginx (playbook.yml)
 ```yaml
