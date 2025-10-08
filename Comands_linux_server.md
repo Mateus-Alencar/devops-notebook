@@ -18,8 +18,14 @@ Este documento reúne os **principais comandos usados em servidores Linux**, com
 - **`linux_server`** → Nome do host (computador).
 - **`/home/mateus`** → Diretório atual continua o mesmo.
 - **`#`** → Indica que o shell atual é de um **usuário root** (diferente do `$`, que é para usuário comum).
----
-## Estrutura de Diretórios Importantes
+
+### Elementos que compõem um tipo de requisição
+
+**ComandName** (nome do comando): a requisição que o usuário deseja executar;
+**Flag** (opção): serve para modificar a operação do comando. Ele pode ser incluído por meio de um ou dois hífens;
+**Argument**: usado para adicionar informações à requisição. Não é obrigatório para todos os comandos. 
+
+### Estrutura de Diretórios Importantes
 |   Diretório    | Função                   |
 |----------------|--------------------------|
 | `/`            | Raiz do sistema          |
@@ -35,22 +41,43 @@ Este documento reúne os **principais comandos usados em servidores Linux**, com
 ## 📁 Navegação e manipulação de arquivos
 
 ```bash
-ls -lh             # Lista arquivos com detalhes e tamanhos legíveis
-cd /caminho        # Entra em um diretório
-pwd                # Mostra o diretório atual
-mkdir nome         # Cria um diretório
-rm arquivo         # Remove um arquivo
-rm -r pasta        # Remove uma pasta e tudo dentro dela
-cp origem destino  # Copia arquivos ou diretórios
-mv origem destino  # Move ou renomeia arquivos/pastas
-touch nome.txt     # Cria um novo arquivo vazio
-cat arquivo.txt    # Mostra o conteúdo de um arquivo
-less arquivo.log   # Visualiza arquivo com rolagem (para logs grandes)
-grep "palavra" /etc/arquivo.txt # Busca texto em arquivos.
-find /home -name "documento.txt" #Localiza arquivos.
-tail -f /var/log/syslog # Acompanha logs em tempo real.
-scp / rsync # Cópia remota do arquivo.
-cron # Agendamento de tarefas
+ls -lh                            # Lista arquivos com detalhes e tamanhos legíveis
+  ls -R                           # Serve para visualizar conteúdos dos subdiretórios;
+  ls -l                           # Exibe uma lista detalhada;
+  ls -a                           # Mostra os arquivos ocultos.
+cd /caminho                       # Entra em um diretório
+  cd..                            # Para retornar para diretórios anteriores
+  cd ~                            # Para acessar a pasta do usuário logado
+  cd -                            # Para subir um diretório acima;
+pwd                               # Mostra o diretório atual
+
+mkdir nome                        # Cria um diretório
+rmdir pasta                       # Ela exclui permanentemente um diretório vazio
+  rmdir -p caminho/pasta          # Utilizado para apagar um diretório e seus subdiretórios
+  rmdir -ignore-fail-on-non-empty # Faz com que o comando ignore o erro caso o diretório não esteja vazio.
+rm arquivo                        # Remove um arquivo
+  rm -r pasta                      # Remove uma pasta e tudo dentro dela
+  rm -i                           # Solicita a confirmação do sistema antes de fazer uma exclusão
+  rm -f                           # Permite que o sistema exclua arquivos sem solicitar confirmação
+
+cp origem destino                 # Copia arquivos ou diretórios
+mv origem destino                 # Move ou renomeia arquivos/pastas
+touch nome.txt                    # Cria um novo arquivo vazio
+cat arquivo.txt                   # Mostra o conteúdo de um arquivo
+stat arquivo.txt                  # Com este comando, é possível visualizar informações detalhadas sobre os arquivos
+less arquivo.log                  # Visualiza arquivo com rolagem (para logs grandes)
+grep "palavra" /etc/arquivo.txt   # Busca texto em arquivos.
+find /home -name "documento.txt"  #Localiza arquivos. (find [diretório] [opção] [ação])
+tail -f /var/log/syslog           # Acompanha logs em tempo real.
+scp / rsync                       # Cópia remota do arquivo.
+cron                              # Agendamento de tarefas
+
+wc [opção] texto.txt              # Ele serve para contar palavras, linhas, caracteres além de também indicar o comprimento da maior linha de um texto.
+  wc -w texto.txt                 # para contar a quantidade de palavras;
+  wc -c texto.txt                 # para contar a quantidade de caracteres;
+  wc -l texto.txt                 # mostra o número de linhas;
+  wc -m texto.txt                 # usado para mostrar o número de caracteres usando o formato Unicode;
+  wc -L texto.txt                 # mostra o comprimento da maior linha do arquivo.
 ```
 
 ### GREP
@@ -163,6 +190,7 @@ chmod +x script.sh         # Torna o arquivo executável
 chown user:grupo arquivo   # Altera dono e grupo de um arquivo
 sudo comando               # Executa comando como root
 su -                       # Troca para o usuário root
+apt get                    # Pode ser utilizada para gerenciar, atualizar, pesquisar, instalar e desinstalar pacotes em um sistema.
 ```
 
 ---
