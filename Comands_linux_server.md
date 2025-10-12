@@ -46,9 +46,9 @@ ls -lh                            # Lista arquivos com detalhes e tamanhos legí
   ls -l                           # Exibe uma lista detalhada;
   ls -a                           # Mostra os arquivos ocultos.
 cd /caminho                       # Entra em um diretório
-  cd..                            # Para retornar para diretórios anteriores
+  cd..                            # Para subir um diretório acima;
   cd ~                            # Para acessar a pasta do usuário logado
-  cd -                            # Para subir um diretório acima;
+  cd -                            # Para retornar para diretórios anteriores
 pwd                               # Mostra o diretório atual
 
 mkdir nome                        # Cria um diretório

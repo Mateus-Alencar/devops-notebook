@@ -19,6 +19,18 @@
 - **Patch Panel**: Organização física dos cabos de rede em racks.
 
 ## 3. Endereçamento IP
+
+Um endereço IP é uma sequência de números separados por pontos, representado por um conjunto de quatro números conhecidos como octetos, como por exemplo 192.158.1.38. 
+Excemplo: **192.168.100.1**
+1st octet: 192  --> 11000000
+2st octet: 168  --> 10101000
+3st octet: 100  --> 01100100
+4th octet: 001  --> 00000001
+
+A máscara de rede tem 32 bits, assim como o endereço IP, tendo como finalidade mascarar uma parte do endereço IP, assim, todo endereço IP tem uma máscara correspondente, servindo para identificar qual parte do endereço é da rede e qual é a do host.
+
+![alt text](image.png)
+
 - **IPv4**: Endereços de 32 bits (ex: 192.168.0.1).
   - Classes: A, B, C, D e E.
   - Sub-redes: Criadas com **máscara de sub-rede** (ex: 255.255.255.0).
@@ -26,11 +38,20 @@
 - **CIDR (Classless Inter-Domain Routing)**: Método de alocação de IPs sem depender de classes fixas.
 
 ### Máscaras de Sub-rede Comuns (IPv4)
+
+![alt text](image-1.png)
+
 - /24 → 255.255.255.0 → 254 hosts possíveis
 - /16 → 255.255.0.0 → 65.534 hosts possíveis
 - /8 → 255.0.0.0 → 16.777.214 hosts possíveis
 
-## 4. Protocolos de Comunicação
+## Protocolos de rede
+
+Funcionam como uma linguagem universal para que dispositivos distribuídos ao redor do mundo possam se comunicar de forma padronizada.
+
+A rede é dividida em camadas, cada uma com uma função específica. Os diversos tipos de protocolos de rede variam de acordo com o tipo de serviço utilizado e a camada correspondente. [36]
+
+### 4. Protocolos de Comunicação
 - **TCP/IP**: Conjunto de protocolos usados na internet e redes corporativas.
 - **UDP**: Mais rápido que TCP, usado em streaming e jogos online.
 - **HTTP/HTTPS**: Protocolo da web.
@@ -70,7 +91,11 @@
 - Implementar **VPN** para acesso remoto seguro.
 - Utilizar **IPv6** em paralelo ao IPv4 (dual stack).
 
-## 9. Tecnologias Avançadas
+### Endereçamento IP
+
+![alt text](image-2.png)
+
+## 10. Tecnologias Avançadas
 - **SDN (Software Defined Networking)**: Controle programável da rede.
 - **Cloud Networking**: Integração com serviços de nuvem (AWS, Azure, GCP).
 - **Edge Computing**: Processamento próximo aos dispositivos finais.
