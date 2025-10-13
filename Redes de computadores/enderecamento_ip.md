@@ -62,7 +62,7 @@ Se dividirmos em /26, teremos 4 sub-redes, cada uma com 62 hosts válidos.
 - **Número de sub-redes**: `2^n` (n = número de bits emprestados da parte de host)
 - **Número de hosts por sub-rede**: `2^h - 2` (h = bits de host, subtraímos 2: rede e broadcast)
 
-### Exemplo 1: Divisão em Sub-redes
+#### Exemplo 1: Divisão em Sub-redes
 - Rede: `192.168.1.0/24`
 - Necessidade: 4 sub-redes
 - Passo 1: `/24` = 8 bits para hosts. Para 4 sub-redes → `2^2 = 4` → emprestamos 2 bits.
@@ -73,15 +73,40 @@ Se dividirmos em /26, teremos 4 sub-redes, cada uma com 62 hosts válidos.
   - `192.168.1.128/26` → hosts de `.129 a .190`
   - `192.168.1.192/26` → hosts de `.193 a .254`
 
-### Exemplo 2: Quantidade de Hosts
+#### Exemplo 2: Quantidade de Hosts
 - Rede: `10.0.0.0/16`
 - Máscara: `/16` → 16 bits para host.
 - Hosts por rede: `2^16 - 2 = 65.534`.
 
-### Exemplo 3: Quantidade de Sub-redes
+#### Exemplo 3: Quantidade de Sub-redes
 - Rede: `172.16.0.0/16`
 - Máscara: `/20` → emprestamos 4 bits (de 16 disponíveis).
 - Sub-redes: `2^4 = 16`.
+
+#### Exmplo 4: Dividir a rede `192.168.1.0` em 4 sub-redes.
+| Etapa | O que fazemos                   | Resultado               |
+| ----- | ------------------------------- | ----------------------- |
+| 1     | Começo: /24 (8 bits para hosts) | 254 hosts               |
+| 2     | Pegar 2 bits para sub-redes     | sobra 6 bits para hosts |
+| 3     | Nova máscara = /24 + 2 = /26    |                         |
+| 4     | Quantas sub-redes criamos       | 2² = 4                  |
+| 5     | Quantos hosts por sub-rede      | 2⁶ - 2 = 62             |
+
+
+| Sub-rede | Endereço de rede | Broadcast     | Faixa de hosts válidos        |
+| -------- | ---------------- | ------------- | ----------------------------- |
+| 1        | 192.168.1.0      | 192.168.1.63  | 192.168.1.1 – 192.168.1.62    |
+| 2        | 192.168.1.64     | 192.168.1.127 | 192.168.1.65 – 192.168.1.126  |
+| 3        | 192.168.1.128    | 192.168.1.191 | 192.168.1.129 – 192.168.1.190 |
+| 4        | 192.168.1.192    | 192.168.1.255 | 192.168.1.193 – 192.168.1.254 |
+
+---
+### 💡 Dica para decorar
+| O que quer descobrir | Fórmula                        |
+| -------------------- | ------------------------------ |
+| Quantas sub-redes    | 2ⁿ (n = bits emprestados)      |
+| Hosts por sub-rede   | 2ʰ − 2 (h = bits restantes)    |
+| Incremento           | 256 − último octeto da máscara |
 
 ---
 

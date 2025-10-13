@@ -29,7 +29,6 @@ Excemplo: **192.168.100.1**
 
 A máscara de rede tem 32 bits, assim como o endereço IP, tendo como finalidade mascarar uma parte do endereço IP, assim, todo endereço IP tem uma máscara correspondente, servindo para identificar qual parte do endereço é da rede e qual é a do host.
 
-![alt text](image.png)
 
 - **IPv4**: Endereços de 32 bits (ex: 192.168.0.1).
   - Classes: A, B, C, D e E.
@@ -41,15 +40,31 @@ A máscara de rede tem 32 bits, assim como o endereço IP, tendo como finalidade
 
 ![alt text](image-1.png)
 
-- /24 → 255.255.255.0 → 254 hosts possíveis
-- /16 → 255.255.0.0 → 65.534 hosts possíveis
-- /8 → 255.0.0.0 → 16.777.214 hosts possíveis
+![alt text](image.png)
+
+### Classes
+Quando o IPv4 foi criado, os endereços IP foram divididos em faixas chamadas de “classes”, para organizar o tamanho das redes.
+Cada classe define:
+- Quantos bits são usados para a parte da rede e a parte do host;
+- Quantos hosts (computadores) podem existir;
+- E qual faixa de endereços IP ela usa.
+
+| Classe | Primeiro octeto | Faixa de IPs                | Bits de Rede | Bits de Host | Nº de Hosts por Rede | Exemplo     |
+| ------ | --------------- | --------------------------- | ------------ | ------------ | -------------------- | ----------- |
+| **A**  | 1 – 126         | 1.0.0.0 – 126.255.255.255   | 8            | 24           | 16.777.214           | 10.0.0.0    |
+| **B**  | 128 – 191       | 128.0.0.0 – 191.255.255.255 | 16           | 16           | 65.534               | 172.16.0.0  |
+| **C**  | 192 – 223       | 192.0.0.0 – 223.255.255.255 | 24           | 8            | 254                  | 192.168.0.0 |
+
+- /24 → 255.255.255.0 → 254 hosts possíveis (Classe C)
+- /16 → 255.255.0.0 → 65.534 hosts possíveis (Classe B)
+- /8 → 255.0.0.0 → 16.777.214 hosts possíveis (Classe A)
+
 
 ## Protocolos de rede
 
 Funcionam como uma linguagem universal para que dispositivos distribuídos ao redor do mundo possam se comunicar de forma padronizada.
 
-A rede é dividida em camadas, cada uma com uma função específica. Os diversos tipos de protocolos de rede variam de acordo com o tipo de serviço utilizado e a camada correspondente. [36]
+A rede é dividida em camadas, cada uma com uma função específica. Os diversos tipos de protocolos de rede variam de acordo com o tipo de serviço utilizado e a camada correspondente.
 
 ### 4. Protocolos de Comunicação
 - **TCP/IP**: Conjunto de protocolos usados na internet e redes corporativas.
