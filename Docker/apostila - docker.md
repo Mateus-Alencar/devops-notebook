@@ -69,20 +69,21 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
 3. `docker run -it ubuntu bash`  
    → Cria e executa um contêiner Ubuntu com um terminal interativo (bash).
 
-4. `docker exec -it <nome-ou-id> bash`  
+4. `docker exec -it <nome-ou-id> bash` ou `docker exec -it <nome-ou-id> sh`
    → Abre um terminal dentro de um contêiner já em execução.
+   → O comando com SH deve ser executado caso o container não tenha `bash`
 
 5. `docker stop <nome-ou-id>`  
    → Para um contêiner em execução.
 
-6. `docker rm <nome-ou-id>`  
-   → Remove um contêiner parado.
+6. `docker start meu-container`
+   → Reinicia um container que estava parado
 
 7. `docker rm <nome-ou-id> -f`
    → Remove um contêiner em execução.
 
-8. `docker logs <nome-ou-id>`  
-   → Mostra os logs de um contêiner.
+8. `docker rm <nome-ou-id>`  
+   → Remove um contêiner parado.
 
 9. `docker container stats`  
    → Exibe estatísticas em tempo real de uso dos contêineres ativos (CPU, memória, rede, disco).
@@ -104,19 +105,30 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
    
 15. `docker pull`
    → O comando docker pull serve para baixar (fazer o download) de uma imagem de container de um registro (como o Docker Hub) para a minha máquina local.
-   
+
+16. `docker logs <nome-ou-id>`  
+   → Mostra os logs de um contêiner.
+> Use `docker logs -f meu-container` para acompanhar os logs em tempo real.
+
+17. `docker pause meu-container` `docker unpause meu-container`
+   → Comandos para pausar e despausar containers respectivamente.
+
+18. `docker rename <antigo-nome> <novo-nome>`
+   → Renomear container.
+
+19. `docker create --name <meu-container> nginx`
+   → Criar container sem iniciar
+20. `docker <comando> --help`
+   → Para saber mais sobre qualquer comando.
+##### Copiar arquivos
+- Do host para o container: `docker cp arquivo.txt meu-container:/home/` 
+- Do container para o host: `docker cp meu-container:/home/arquivo.txt .`
 ### 📦 Containers
 
 1. `docker pull ubuntu`  
    → Baixa a imagem oficial do Ubuntu do Docker Hub.
 
-2. `apt-get update && apt-get install -y stress`  
-   → Atualiza o sistema e instala o pacote `stress`.
-
-3. `stress --cpu 1 --vm 1 --vm-bytes 64M`  
-   → Executa um teste de estresse utilizando CPU e memória.
-
-4. `docker container run -ti --mount type=bind,source=/home/mateus/giropops,target=/giropops debian`   
+2. `docker container run -ti --mount type=bind,source=/home/mateus/giropops,target=/giropops debian`   
    → `-ti`: abre o terminal interativo  
    → `--mount`: monta diretório do host no container  
    → `type=bind`: tipo de montagem  
@@ -126,18 +138,18 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
    O `--mount` no Docker serve para ligar um diretório (ou volume) do host ao contêiner, permitindo que os dados sejam compartilhados entre o sistema do host e o contêiner. Isso é essencial para persistência de dados
 
 
-#### 🔍 Tipos de `mount`
+   ##### 🔍 Tipos de `mount`
 
-`docker run --mount type=<tipo>,source=<origem>,target=<destino> <imagem>`
+   `docker run --mount type=<tipo>,source=<origem>,target=<destino> <imagem>`
 
-| Tipo          | Descrição                                                               |   
-|---------------|-------------------------------------------------------------------------|
-| `bind`        | Liga um caminho real do host a um diretório no contêiner.               |
-| `volume`      | Usa um volume Docker (gerenciado automaticamente).                      |
-| `tmpfs`       | Cria um sistema de arquivos temporário (RAM), útil para dados voláteis. |
----
+   | Tipo          | Descrição                                                               |   
+   |---------------|-------------------------------------------------------------------------|
+   | `bind`        | Liga um caminho real do host a um diretório no contêiner.               |
+   | `volume`      | Usa um volume Docker (gerenciado automaticamente).                      |
+   | `tmpfs`       | Cria um sistema de arquivos temporário (RAM), útil para dados voláteis. |
 
- 5. `docker run -d -p 80:80 nginx`
+
+ 3. `docker run -d -p 80:80 nginx`
    → `docker run`: Cria e inicia um novo container
    → `-d`: significa *detached mode (modo destacado)*, isso faz com que o container rode em segundo plano.
    → `-p 80:80`: mapeamento de portas
@@ -145,6 +157,8 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
 
 
 ---
+
+![alt text](image.png)
 
 ## 📁 Imagens
 
@@ -224,8 +238,6 @@ No Docker, renomear uma imagem significa dar a ela um novo nome (tag), sem modif
  `docker tag <imagem_original> <novo_nome>`
  
 --- 
-
-![alt text](image.png)
 
 ## 📦 O que são Volumes no Docker?
 
@@ -383,4 +395,4 @@ Será necessário a construção de um arquivo **Dockerfile** se:
 - Vai rodar um aplicativo próprio (ex.: API em Node, Flask, Java, etc.) que ainda não tem imagem publicada no Docker Hub.
 #### Arquivo Compose
 
-O caminho padrão para um arquivo do Compose é compose.yaml(preferencialmente) ou compose.yml que esteja localizado no diretório de trabalho. O Compose também suporta docker-compose.yaml e docker-compose.yml para compatibilidade com versões anteriores. Se ambos os arquivos existirem, o Compose prefere o arquivo compose.yaml.
+O caminho padrão para um arquivo do Compose é compose.yaml (preferencialmente) ou compose.yml que esteja localizado no diretório de trabalho. O Compose também suporta docker-compose.yaml e docker-compose.yml para compatibilidade com versões anteriores. Se ambos os arquivos existirem, o Compose prefere o arquivo compose.yaml.
