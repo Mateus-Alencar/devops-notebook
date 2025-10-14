@@ -217,7 +217,7 @@ journalctl -xe             # Ver logs do sistema
 ## Diferenças entre terminal e shell
 
 Um terminal é a aplicação gráfica que fornce uma janela para interação, é um font-end para o shell. 
-O Shell, é o programa que interpresa e executa os comandos do utilizador, interagindo com o kernel do sistema operativo.
+O Shell, é o programa que interpreta e executa os comandos do utilizador, interagindo com o kernel do sistema operativo.
 
 ## 🗒️ Vim
 
