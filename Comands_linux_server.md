@@ -42,7 +42,8 @@ O comando **echo** é utilizado para exibir um texto ou conteúdo na tela, por e
 
 ### Variáveis especiais do shell Linux
 
-As variáveis especiais do shell Linux são definidas pelo próprio sistema e são usadas para armazenar informações como o ID do processo atual ($$), o número de argumentos em um script ($#), o status de saída do último comando ($?), o nome do próprio script ($0) e o diretório de trabalho atual ($PWD). Essas variáveis são cruciais para scripts e para o gerenciamento do ambiente do usuário. 
+As variáveis especiais do shell Linux são definidas pelo próprio sistema e são usadas para armazenar informações como o ID do processo atual (`$$`), o número de argumentos em um script (`$#`), o status de saída do último comando (`$?`), o nome do próprio script (`$0`) e o diretório de trabalho atual (`$PWD`). Essas variáveis são cruciais para scripts e para o gerenciamento do ambiente do usuário.
+
 
 |   Variável     | Descrição                   |
 |----------------|--------------------------|
