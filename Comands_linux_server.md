@@ -5,7 +5,9 @@
 - [Entendendo o Prompt do terminal linux](#entendendo-o-prompt-do-terminal-linux)
 - [Navegação e manipulação de arquivos](#navegacao-e-manipulacao-de-arquivos)
   - [GREP](#grep)
+  - [QUOTING](#quoting)
 - [Informações do sistema](#informacoes-do-sistema)
+  - [TAIL](#tail)
 - [Gerenciamento de usuários](#gerenciamento-de-usuarios)
 - [Processos e serviços](#processos-e-servicos)
 - [Rede](#rede)
@@ -13,6 +15,7 @@
 - [Permissões e acesso](#permissoes-e-acesso)
 - [Limpeza e manutenção](#limpeza-e-manutencao)
 - [Atalhos úteis](#atalhos-uteis)
+  - [Caracteres curinga no shell](#caracteres-curinga-no-shell)
 - [Vim](#vim)
 
 
@@ -125,7 +128,7 @@ echo "último argumento" seguido de echo $_ resulta em último argumento
 | `opt`          | Softwares opcionais      |
 ---
 
-## Navegação e manipulação de arquivos
+## Navegacao e manipulacao de arquivos
 
 ```bash
 ls -lh                            # Lista arquivos com detalhes e tamanhos legíveis
@@ -188,6 +191,7 @@ tar [opções] [nome_do_arquivo.tar] [arquivos_ou_diretórios] # Serve para agru
 
 gzip [opções] arquivo      # Comando para compressão de arquivos no Linux.
 gunzip [opções] arquivo    # Comando para descompactar arquivos.
+
 ```
 #### SPLIT
 O comando split no Linux é usado para dividir um arquivo grande em vários arquivos menores. Por padrão, ele divide o arquivo em pedaços de 1.000 linhas, a menos que você especifique um tamanho diferente. O arquivo original não é modificado.
@@ -250,6 +254,12 @@ EX: `echo "Olá, $USER!"` imprimirá "Olá, [nome do usuário]!"
 EX: ` echo "O diretório atual é: $(pwd)" `
 
 > ` ls -l "/caminho/do meu/diretorio" ` é igual a: ` ls -l /caminho/do\ meu/diretorio `
+
+#### DD
+O comando `dd` realiza cópias byte a byte, ou seja, realiza cópia sequencial de qualquer origem para qualquer destino. Por isso, é especialmente útil para fazer cópias completas de discos ou partições.
+
+> Criar uma copia da partição sda1:
+`dd if=/dev/sda1 of=/tmp/part_sda1.hd`
 ---
 
 ## Informacoes do sistema
@@ -397,6 +407,17 @@ journalctl -xe             # Ver logs do sistema
 - `CTRL + C` → Interrompe um comando em execução
 - `CTRL + L` → Limpa a tela (igual `clear`)
 - `CTRL + R` → Busca no histórico de comandos
+#### Caracteres curinga no shell
+| Caractere | Descrição | Exemplo | Resultado / Explicação |
+|-----------|-----------|---------|------------------------|
+| `*`       | Representa zero ou mais caracteres | `ls *.txt` | Lista todos os arquivos que terminam com `.txt` |
+| `?`       | Representa um único caractere | `ls file?.txt` | Lista `file1.txt`, `fileA.txt`, mas não `file10.txt` |
+| `[]`      | Representa qualquer caractere dentro dos colchetes; pode usar intervalos | `ls file[1-3].txt` | Lista `file1.txt`, `file2.txt`, `file3.txt` |
+| `{}`      | Lista múltiplos padrões separados por vírgula | `ls {file1,file2,file3}.txt` | Lista `file1.txt`, `file2.txt`, `file3.txt` |
+| `~`       | Representa o diretório home do usuário | `cd ~` | Vai para `/home/seu_usuario` |
+| `[!...]`  | Negação de um conjunto de caracteres | `ls file[!0-3].txt` | Lista arquivos que não terminam com 0,1,2 ou 3 antes de `.txt` |
+| `[a-z]`   | Intervalo de caracteres | `ls file[a-c].txt` | Lista `filea.txt`, `fileb.txt`, `filec.txt` |
+| `[0-9]`   | Intervalo de números | `ls file[0-5].txt` | Lista arquivos de `file0.txt` a `file5.txt` |
 
 ---
 
