@@ -1,5 +1,23 @@
+## Sumário
 
-# 🖥️ Comandos Essenciais do Terminal Linux (Servidor)
+- [Diferenças entre terminal e shell](#diferencas-entre-terminal-e-shell)
+- [Variáveis em Shell](#variaveis-em-shell)
+- [Entendendo o Prompt do terminal linux](#entendendo-o-prompt-do-terminal-linux)
+- [Navegação e manipulação de arquivos](#navegacao-e-manipulacao-de-arquivos)
+  - [GREP](#grep)
+- [Informações do sistema](#informacoes-do-sistema)
+- [Gerenciamento de usuários](#gerenciamento-de-usuarios)
+- [Processos e serviços](#processos-e-servicos)
+- [Rede](#rede)
+- [Gerenciamento de pacotes (Debian/Ubuntu)](#gerenciamento-de-pacotes-debianubuntu)
+- [Permissões e acesso](#permissoes-e-acesso)
+- [Limpeza e manutenção](#limpeza-e-manutencao)
+- [Atalhos úteis](#atalhos-uteis)
+- [Vim](#vim)
+
+
+
+# Comandos Essenciais do Terminal Linux (Servidor)
 
 Este documento reúne os **principais comandos usados em servidores Linux**, com foco em administração, rede, manipulação de arquivos, processos e pacotes.
 
@@ -32,6 +50,11 @@ Quando falamos em variáveis em "shell" temos que ter em mente a divisão entre 
 
 O comando **echo** é utilizado para exibir um texto ou conteúdo na tela, por exemplo para exibir o conteúdo de uma variável.
 > EX: echo $PATH
+```
+echo $HOME      # Diretório home do usuário
+echo $PATH      # Caminhos de diretórios para buscar executáveis
+echo $USER      # Nome do usuário logado
+```
 
 " var " -> Consegue ler o conteúdo das variáveis
 ' var ' -> Não interpreta os valores das variáveis
@@ -69,7 +92,7 @@ ls arquivo_inexistente; echo "Status: $?"
 echo "último argumento" seguido de echo $_ resulta em último argumento
 ```
 
-### 🐧 Entendendo o Prompt do terminal linux
+### Entendendo o Prompt do terminal linux
 
 ### `mateus@linux_server:~$`
   - **`mateus` (antes do @)** → Nome do usuário logado.
@@ -102,7 +125,7 @@ echo "último argumento" seguido de echo $_ resulta em último argumento
 | `opt`          | Softwares opcionais      |
 ---
 
-## 📁 Navegação e manipulação de arquivos
+## Navegação e manipulação de arquivos
 
 ```bash
 ls -lh                            # Lista arquivos com detalhes e tamanhos legíveis
@@ -229,7 +252,7 @@ EX: ` echo "O diretório atual é: $(pwd)" `
 > ` ls -l "/caminho/do meu/diretorio" ` é igual a: ` ls -l /caminho/do\ meu/diretorio `
 ---
 
-## 🧠 Informações do sistema
+## Informacoes do sistema
 
 ```bash
 uname -a           # Informações do kernel e arquitetura
@@ -259,7 +282,7 @@ O comando tail no Linux exibe as últimas linhas de um arquivo de texto, sendo �
 
 ---
 
-## 👥 Gerenciamento de usuários
+## Gerenciamento de usuarios
 
 ```bash
 whoami             # Mostra o usuário atual
@@ -273,7 +296,7 @@ chmod +x script.sh # Dá permissão de execução
 
 ---
 
-## ⚙️ Processos e serviços
+## Processos e servicos
 
 ```bash
 ps aux             # Lista todos os processos
@@ -319,7 +342,7 @@ Isso retornaria algo como d41d8cd98f00b204e9800998ecf8427e minha_imagem.iso.
 
 ---
 
-## 🌐 Rede
+## Rede
 
 ```bash
 ip a               # Mostra interfaces de rede e IPs
@@ -333,7 +356,7 @@ ss -tuln           # Alternativa moderna ao netstat
 
 ---
 
-## 📦 Gerenciamento de pacotes (Debian/Ubuntu)
+## Gerenciamento de pacotes (Debian/Ubuntu)
 
 ```bash
 apt update                 # Atualiza lista de pacotes
@@ -346,7 +369,7 @@ apt autoremove             # Remove pacotes não utilizados
 
 ---
 
-## 🔐 Permissões e acesso
+## Permissoes e acesso
 
 ```bash
 chmod +x script.sh         # Torna o arquivo executável
@@ -358,7 +381,7 @@ apt get                    # Pode ser utilizada para gerenciar, atualizar, pesqu
 
 ---
 
-## 🧹 Limpeza e manutenção
+## Limpeza e manutencao
 
 ```bash
 history                    # Mostra histórico de comandos
@@ -368,7 +391,7 @@ journalctl -xe             # Ver logs do sistema
 
 ---
 
-## 🐚 Atalhos úteis
+## Atalhos uteis
 
 - `TAB` → Autocompleta comandos e nomes de arquivos
 - `CTRL + C` → Interrompe um comando em execução
@@ -378,7 +401,7 @@ journalctl -xe             # Ver logs do sistema
 ---
 
 
-## 🗒️ Vim
+## Vim
 
 O vim é uma versão melhorada do vi. Ele não está em 100% das distros por padrão, mas está presente na grande maioria das distribuições modernas (Ubuntu, Debian, Fedora, CentOS, Arch, etc.). Ele é rápido, leve, roda no terminal e é extremamente poderoso para edição de arquivos de texto e código.
 
