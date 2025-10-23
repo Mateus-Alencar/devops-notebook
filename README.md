@@ -17,6 +17,11 @@
 - Comparação entre containers e VMs
 - Boas práticas em ambientes containerizados
 
+### 🐧 Comandos do terminal Linux e Windows
+- Introdução sobre a utilização do shell pelo terminal
+- Comandos essenciais
+- Simulações de casos de uso de cada comando
+
 ### ☸️ Kubernetes
 - Conceitos de orquestração
 
