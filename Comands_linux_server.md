@@ -1,7 +1,9 @@
 ## Sumário
 
 - [Diferenças entre terminal e shell](#diferencas-entre-terminal-e-shell)
+  - [Funcionamento do Shell Bash](#funcionamento-do-shell-bash)
 - [Variáveis em Shell](#variaveis-em-shell)
+  - [ Variaveis especiais do shell Linux](#variaveis-especiais-do-shell-linux)
 - [Entendendo o Prompt do terminal linux](#entendendo-o-prompt-do-terminal-linux)
 - [Estrutura de Diretórios Importantes](#estrutura-de-diretorios-importantes)
   - [Controle de bibliotecas compartilhadas](#controle-de-bibliotecas-compartilhadas)
@@ -39,36 +41,40 @@ Este documento reúne os **principais comandos usados em servidores Linux**, com
 ---
 ### Diferencas entre terminal e shell
 
-Um terminal é a aplicação gráfica que fornce uma janela para interação, é um font-end para o shell. 
-O Shell, é o programa que interpreta e executa os comandos do utilizador, interagindo com o kernel do sistema operativo.
+Um terminal é a aplicação (geralmente gráfica) que fornece uma janela para interação com o sistema.
+Ele funciona como uma interface (front-end) para o shell.
 
-**SHELL dentro do sistema**
+O shell, por sua vez, é o programa responsável por interpretar e executar os comandos do usuário, interagindo diretamente com o kernel do sistema operacional.
+
+**Funcionamento do Shell Bash**
 ```
-4 -             Programas/Comandos
-3 -  SHELL - interpretador de comandos / bibliotecas
-2 -                   Kernel
-1 -                  Hardware
+4 - Programas / Comandos
+3 - SHELL — Interpretador de comandos / Bibliotecas
+2 - Kernel
+1 - Hardware
 ```
 > Comando para verificar qual shell está disponível no sistema: **chsh -l** ou **cat /etc/shells**
 
 Quando o shell bash é executado após o usuário fazer login no sistema o mesmo aguarda um ou mais comandos na entrada pardrão para interagir com o sistema, este comandos podem ser:
 
-- **Internos (Builtins) -** Estes comandos fazem parte do interpretador de comandos bash, ou seja, estão imbutidos no bash, e quando são executados são lidos antes de qualquer outro comando externo.
+- **Internos (Builtins) -** Estes comandos fazem parte do interpretador de comandos bash, ou seja, estão imbutidos no bash, e quando são executados são lidos antes de qualquer outro comando externo. Exemplo: `cd`, `echo`, `exit`
 
-- **Externos** Estes tipos de comandos são programas armazenados no HD e precisam ser chamados por linha de comando informando o caminho absoluto ou o diretório que o armazena pode está dentro da variável **PATH**.
+- **Externos** Estes tipos de comandos são programas armazenados no HD e precisam ser chamados por linha de comando informando o caminho absoluto ou o diretório que o armazena pode está dentro da variável **PATH**. Exemplo: `/bin/ls`, `/usr/bin/grep`
 
 > Para saber se o comando é externo ou interno(builtin) execute o  **comando type**, por exemplo.
 
+---
 ### Variaveis em Shell
 Quando falamos em variáveis em "shell" temos que ter em mente a divisão entre variáveis locais e de ambiente (ou globais). A diferença entre elas é que uma variável locla tem visibilidade restrita, apenas a sessão do shell onde ela foi definida, e uma variável de ambiente tem visibilidade não só na sessão do shell em que foi definida mas também em ambientes derivados, ou seja, subshells.
 
 O comando **echo** é utilizado para exibir um texto ou conteúdo na tela, por exemplo para exibir o conteúdo de uma variável.
-> EX: echo $PATH
+EX: `echo $PWD`
 ```
 echo $HOME      # Diretório home do usuário
 echo $PATH      # Caminhos de diretórios para buscar executáveis
 echo $USER      # Nome do usuário logado
 ```
+> 💡 Dica: Para ver o caminho dos diretórios onde o sistema busca executáveis, use echo $PATH.
 
 " var " -> Consegue ler o conteúdo das variáveis
 ' var ' -> Não interpreta os valores das variáveis
@@ -98,16 +104,30 @@ As variáveis especiais do shell Linux são definidas pelo próprio sistema e s�
 
 ```
 #!/bin/bash
+
 echo "Este script se chama: $0"
 echo "Ele recebeu $# argumentos."
 echo "O PID do shell é: $$"
 echo "O diretório atual é: $PWD"
 echo "O status de saída do último comando foi: $?"
-for arg in "$@"; do echo "$arg"; done
-echo "Todos os argumentos: $*"
-ls arquivo_inexistente; echo "Status: $?"
-echo "último argumento" seguido de echo $_ resulta em último argumento
+
+echo "Argumentos recebidos:"
+for arg in "$@"; do
+  echo "$arg"
+done
+
+echo "Todos os argumentos (como string única): $*"
+
+# Testando variável $? com um comando inexistente
+ls arquivo_inexistente
+echo "Status de saída após erro: $?"
+
+# Exemplo de uso da variável $_
+echo "Último argumento do comando anterior: $_"
+
 ```
+
+---
 
 ### Entendendo o Prompt do terminal linux
 
@@ -128,6 +148,8 @@ echo "último argumento" seguido de echo $_ resulta em último argumento
 **ComandName** (nome do comando): a requisição que o usuário deseja executar;
 **Flag** (opção): serve para modificar a operação do comando. Ele pode ser incluído por meio de um ou dois hífens;
 **Argument**: usado para adicionar informações à requisição. Não é obrigatório para todos os comandos. 
+
+---
 
 ### Estrutura de Diretorios Importantes
 |   Diretório    | Função                   |
@@ -195,6 +217,7 @@ Bibliotecas no Linux são coleções de códigos pré-compilados que fornecem fu
 
 Quando o comando `ldconfig -p` é executado ele busca as bibliotecas na localização definida pelo arquivo `/etc/ld.so.conf`
 
+---
 ### Pacotes
 Pacotes no Linux são arquivos que contêm todos os componentes necessários para instalar e executar um software, como o código do programa, bibliotecas, arquivos de configuração e documentação
 
@@ -227,7 +250,7 @@ rpm -qa                      # Lista todos os pacotes instalados.
 dnf update                   # Atualiza todos os pacotes no sistema. 
 yun update                   # Atualiza todos os pacotes no sistema. 
 ```
-
+---
 ### Gerenciamento de particoes
 
 O `fdisk` é um utilitário de linha de comando usado para gerenciar tabelas de partição em dispositivos de armazenamento no Linux, como discos rígidos e pen drives. Ele opera em modo interativo e é ideal para manipular partições no estilo MBR (DOS), mas também suporta GPT em algumas versões.
@@ -506,6 +529,66 @@ Segundo terminal:
 # kill 10554 # Finaliza o processo.
 ```
 
+#### killall
+
+**Função:** Encerra processos pelo **nome completo** do processo.
+
+##### Sintaxe
+```bash
+killall nome_do_processo
+```
+
+##### Exemplo
+```bash
+killall firefox
+```
+> Encerra todos os processos chamados `firefox`.
+
+**Observação:** Precisa de permissão adequada (`sudo`) para encerrar processos de outros usuários.
+
+---
+
+#### pkill
+
+**Função:** Encerra processos usando **o nome completo ou parte do nome** do processo.
+
+##### Sintaxe
+```bash
+pkill [opções] nome_do_processo
+```
+
+##### Exemplos
+```bash
+pkill firefox        # Encerra todos os processos que contêm "firefox"
+pkill -9 firefox     # Força encerramento imediato (sinal SIGKILL)
+```
+
+**Observação:** Permite usar padrões parciais do nome do processo e sinais específicos.
+
+---
+
+#### bg
+
+**Função:** Retoma a execução de um programa **parado (suspenso) no background**, mantendo-o no segundo plano.
+
+##### Sintaxe
+```bash
+bg [número_do_job]
+```
+
+##### Exemplo prático
+```bash
+sleep 100        # Executa um comando longo
+Ctrl+Z           # Suspende o processo
+jobs             # Lista processos suspensos
+bg %1            # Coloca o job 1 em execução no background
+```
+
+> O processo continuará executando no background, permitindo que o terminal seja usado normalmente.
+
+---
+
+
 #### NICE e RECEIVER
 
 Os comandos nice e renice são ferramentas do Linux para gerenciar a prioridade de execução de processos. O valor que determina essa prioridade é chamado de "nice value" (valor de gentileza). 
@@ -773,7 +856,7 @@ Apenas Leitura | vim -R arquivo.txt ou view arquivo.txt |	Abre o arquivo no modo
 | G  | vai para o fim do arquivo                  |
 | :set number | exibe números de linha            |
 
-
+---
 ### Redirecionamento de Entrada Saida e Erros padrao
 
 Processos Unix (e consequentemente Linux) geralmente abrem três descritores padrão de arquivos,que os permitem processar entrada e saída de dados. Esses descritores podem ser redirecionados de e para outros arquivos ou processos. 
@@ -787,9 +870,12 @@ Por padrão, o descritor de entrada, stdin é o teclado representado também pel
 > Após realizar um comando ele criar um arquivo chamado error.out para colocar a saída de erro encontrada.
 `cat /etc/group1 2> ~/tmp/error.out`
 
+> Lê todo o conteúdo de file1.txt, e adiciona esse conteúdo ao final de file2.txt.
+`cat file1.txt >> file2.txt`
+
 #### PIPE
 
-O pipe "|", simplesmente envia a saída de um comando para a entrada do próximo comando para continuídade do processamento. O uso mais comum dele é quando desejamos procurar por algo no sistema cujooresultadoémaiorque nossa tela, então fazemos um pipe com os comandos:
+O pipe "|", simplesmente envia a saída de um comando para a entrada do próximo comando para continuídade do processamento. O uso mais comum dele é quando desejamos procurar por algo no sistema cujo o resultado é maior que nossa tela, então fazemos um pipe com os comandos:
 
 `dpkg -l | grep -i iptables`
 `ps -aux|grep -i suporte`
@@ -805,6 +891,7 @@ O comando tee permite redirecionar a saída padrão e erro simultaneamente para 
 > Para anexar a saída de uma comando dentro de um arquivo sem sobrescrever o conteúdoexistente
 `cat /etc/group | tee -a /tmp/passwd_copy`
 
+---
 ## Camadas da arquitetura do linux
 
 #### Hardware
