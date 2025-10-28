@@ -236,9 +236,21 @@ O SystemD monitora processos usando cgroups do Linux, garantindo que ao parar um
 ### Estrutura de Diretorios Importantes
 
 A partir do kernel 2.6 o Linux apresenta o sistema de arquivo **sysfs**. O sistema de arquivo sysfs é descrito como a união dos sistemas de arquivo **proc**, **devfs** e **devpty**. O sistema de arquivos sysfs enumera os dispositivos e canais conectados ao sistema numa hierarquia de sistema de arquivo que podeser acessadapelo espaço do usuário.
- O sistema de arquivo sysfs é montado em /sys/ e contém diretórios que organizamos dispositivos conectados ao sistema de diversas maneiras diferentes. Dentro do diretório /sys podemos encontrar o quase o mesmo conteúdo do proc, mas de uma forma bem mais organizada para nós administradores.
+> O arquivo que contém informações sobre a CPU no Linux é: `/proc/cpuinfo`
+
+O arquivo cpuinfo exibe detalhes do processador, como:
+
+- Modelo (model name)
+- Fabricante (vendor_id)
+- Quantidade de núcleos (cpu cores)
+- Velocidade (cpu MHz)
+- Cache (cache size)
+
+O `sysfs` é um sistema de arquivos virtual no Linux, montado geralmente em /sys. Ele foi criado para fornecer uma interface entre o kernel e o espaço do usuário, permitindo que informações sobre dispositivos, drivers e subsistemas do kernel sejam acessadas de forma organizada como arquivos e diretórios.
+ 
  Trantando-se de dispositivos, outro diretório muito importante é o /dev. Nele encontramos arquivos especiais que representam a maioria dos dispositivos do sistema, particulamente dispositivos de armazenamento. Isso quer dizer que a maioria dos dispositivos conectados no servidor é representando por uma rquivo dentro do diretório /dev. 
- Um Disco conectado a uma controadora IDE, por exemplo, quando conectado ao primeirocanal IDE da placa mãe, é representado pelo arquivo de dispositivo /dev/hda. Cada partição nesse disco será identificada como/dev/hda1, /dev/hda2 e até a última partição encontrada.
+ Um Disco conectado a uma controadora IDE, por exemplo, quando conectado ao primeiro canal IDE da placa mãe, é representado pelo arquivo de dispositivo /dev/hda. Cada partição nesse disco será identificada como /dev/hda1, /dev/hda2 e até a última partição encontrada.
+ 
  O diretório /proc é um diretório criado pelo kernel na memória do computador apenas durante a inicialização, e contém informações sobre diversas informações do sistema, como processos em execuçãono sistema, incluindo detalhes sobre os dispositivos detectados. 
 
 
