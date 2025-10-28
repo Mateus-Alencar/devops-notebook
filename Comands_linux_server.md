@@ -2,36 +2,45 @@
 
 - [Diferenças entre terminal e shell](#diferencas-entre-terminal-e-shell)
   - [Funcionamento do Shell Bash](#funcionamento-do-shell-bash)
+  - [Arquivos de configuracao do Bash](#arquivos-de-configuracao-do-bash)
 - [Variáveis em Shell](#variaveis-em-shell)
   - [ Variaveis especiais do shell Linux](#variaveis-especiais-do-shell-linux)
+  - [Caracteres curinga no shell](#caracteres-curinga-no-shell)
 - [Entendendo o Prompt do terminal linux](#entendendo-o-prompt-do-terminal-linux)
+- [Camadas da arquitetura do Linux](#camadas-da-arquitetura-do-linux)
 - [Estrutura de Diretórios Importantes](#estrutura-de-diretorios-importantes)
   - [Controle de bibliotecas compartilhadas](#controle-de-bibliotecas-compartilhadas)
 - [Pacotes](#pacotes)
+- [Tarefas administrativas](#tarefas-administrativas-de-seguranca)
+  - [Funções no linux](#funcoes-no-linux)
+  - [Agendador de tarefas no Linux](#agendador-de-tarefas-no-linux)
 - [Gerenciamento de particoes](#gerenciamento-de-particoes)
 - [Navegação e manipulação de arquivos](#navegacao-e-manipulacao-de-arquivos)
   - [QUOTING](#quoting)
+  - [DD](#dd)
+  - [TYPE](#type)
+  - [FILE](#file)
+  - [WHEREIS](#whereis)
+  - [LCOATE](#locate)
 - [Informações do sistema](#informacoes-do-sistema)
    - [TAIL](#tail)
-- [Gerenciamento de usuários](#gerenciamento-de-usuarios)
 - [Processos e serviços](#processos-e-servicos)
   - [Kill](#kill)
   - [NICE e RECEIVER](#nice-e-receiver)
   - [Execucao de processos em primeiro e segundo plano](#execucao-de-processos-em-primeiro-e-segundo-plano)
 - [Rede](#rede)
-- [Gerenciamento de pacotes (Debian/Ubuntu)](#gerenciamento-de-pacotes-debianubuntu)
-- [Permissões e acesso](#permissoes-e-acesso)
+- [Gerenciamento de usuários](#gerenciamento-de-usuarios)
+  - [CHMOD](#chmod)
+  - [CHOWN](#chown)
 - [Limpeza e manutenção](#limpeza-e-manutencao)
-- [Atalhos úteis](#atalhos-uteis)
-  - [Caracteres curinga no shell](#caracteres-curinga-no-shell)
 - [Expressoes regulares](#expressoes-regulares)
   - [FIND](#find)
   - [GREP](#grep)
 - [Vim](#vim)
 - [Redirecionamento de Entrada, Saida e Errospadrao](#redirecionamento-de-entrada-saida-e-errospadrao)
   - [PIPE](#pipe)
-- [Camadas da arquitetura do Linux](#camadas-da-arquitetura-do-linux)
   - [Inicializacao do sistema](#inicializacao-do-sistema)
+- [Estruturas condicionais](#estruturas-condicionais)
 
 # Comandos Essenciais do Terminal Linux (Servidor)
 
@@ -62,6 +71,24 @@ Quando o shell bash é executado após o usuário fazer login no sistema o mesmo
 - **Externos** Estes tipos de comandos são programas armazenados no HD e precisam ser chamados por linha de comando informando o caminho absoluto ou o diretório que o armazena pode está dentro da variável **PATH**. Exemplo: `/bin/ls`, `/usr/bin/grep`
 
 > Para saber se o comando é externo ou interno(builtin) execute o  **comando type**, por exemplo.
+
+
+#### Arquivos de configuracao do Bash
+
+É possível automatizar a criação de variáveis, aliases, funções e outras personalizaçõesdobash, tantoparaentrada do usuário no sistema quanto para cada nova instância do bash. Para uso de todos os usuários que se autenticarem temos:
+
+`/etc/profile` - Esse arquivo contém comandos que são executados para todos os usuários do sistemanomomentodo login. Somente o usuário administrador(root) pode fazer alterações nesse arquivo. Essearquivoélidoantesdos arquivos de configurações individual de cada usuário.
+`/etc/bashrc` ou `/etc/bash.bashrc` - Esse arquivo tem a mesma utilidade do arquivo `/etc/profile`, mas é lido por shells que não precisam de autenticação para iniciar uma nova sessão no terminal, como por exemplo,gnome-terminal que emula um shell no ambiente gráfico.
+
+
+Além dos arquivos já vistos podemos personalizar o ambiente shell de cada usuário individualmenteusandoosseguintes arquivos: 
+- `~/.bash_profile` - Semelhante ao arquivo `/etc/profile`, mas o arquivo `~/.bash_profile` é válidoparaousuárioefica no diretório pessoal de cada e contém comandos, aliases, funções que são executados para o usuário no momento do login no sistema após a leitura do arquivo `/etc/profile`. 
+- `~/.bash_login` - Em algumas distribuições esse arquivo substitui o ~/.bash_profile. 
+- `~/.profile` - Em algumas distribuições esse arquivo substitui o ~/.bash_profile. 
+- `~/.bashrc` - Faz o mesmo que o arquivo `/etc/bashrc` ou `/etc/bash.bashrc`, mas nesse caso sóseaplicaaousuárioindividualmente e que não precisa de autenticação, por exemplo, usando o gnome-terminal. 
+> Note que antes de cada arquivo foi incluso o sinal "~", que indica o diretório HOME do usuário.
+
+A linha #!/bin/bash, conhecida como shebang (ou hashbang), tem a função de indicar ao sistema operacional qual interpretador deve ser usado para executar um script. Ele deve ser a primeira linha de qualquer script executável.
 
 ---
 ### Variaveis em Shell
@@ -127,6 +154,17 @@ echo "Último argumento do comando anterior: $_"
 
 ```
 
+#### Caracteres curinga no shell
+| Caractere | Descrição | Exemplo | Resultado / Explicação |
+|-----------|-----------|---------|------------------------|
+| `*`       | Representa zero ou mais caracteres | `ls *.txt` | Lista todos os arquivos que terminam com `.txt` |
+| `?`       | Representa um único caractere | `ls file?.txt` | Lista `file1.txt`, `fileA.txt`, mas não `file10.txt` |
+| `[]`      | Representa qualquer caractere dentro dos colchetes; pode usar intervalos | `ls file[1-3].txt` | Lista `file1.txt`, `file2.txt`, `file3.txt` |
+| `{}`      | Lista múltiplos padrões separados por vírgula | `ls {file1,file2,file3}.txt` | Lista `file1.txt`, `file2.txt`, `file3.txt` |
+| `~`       | Representa o diretório home do usuário | `cd ~` | Vai para `/home/seu_usuario` |
+| `[!...]`  | Negação de um conjunto de caracteres | `ls file[!0-3].txt` | Lista arquivos que não terminam com 0,1,2 ou 3 antes de `.txt` |
+| `[a-z]`   | Intervalo de caracteres | `ls file[a-c].txt` | Lista `filea.txt`, `fileb.txt`, `filec.txt` |
+| `[0-9]`   | Intervalo de números | `ls file[0-5].txt` | Lista arquivos de `file0.txt` a `file5.txt` |
 ---
 
 ### Entendendo o Prompt do terminal linux
@@ -149,9 +187,61 @@ echo "Último argumento do comando anterior: $_"
 **Flag** (opção): serve para modificar a operação do comando. Ele pode ser incluído por meio de um ou dois hífens;
 **Argument**: usado para adicionar informações à requisição. Não é obrigatório para todos os comandos. 
 
+#### Atalhos uteis
+
+- `TAB` → Autocompleta comandos e nomes de arquivos
+- `CTRL + C` → Interrompe um comando em execução
+- `CTRL + L` → Limpa a tela (igual `clear`)
+- `CTRL + R` → Busca no histórico de comandos
+
+
+---
+
+## Camadas da arquitetura do linux
+
+#### Hardware
+É a camada física, que inclui a CPU, memória RAM, discos rígidos, placas de rede, dispositivos de entrada/saída, etc. O Kernel Linux interage diretamente com esta camada.
+#### Kernel (núcleo do sistema operacional)
+O Kernel é o coração do Linux e é o componente mais importante. Ele reside em um espaço de memória protegido (o Espaço do Kernel) e atua como uma ponte entre o hardware e o software de aplicação.
+
+O Kernel Linux é classificado como monolítico modular:
+- Monolítico: Todos os serviços principais (gerenciamento de memória, gerenciamento de processos, sistema de arquivos, drivers de dispositivo) estão contidos em um único programa.
+- Modular: Permite que novas funcionalidades (como drivers para novos hardwares) sejam carregadas ou descarregadas dinamicamente como módulos de kernel carregáveis (LKM), sem a necessidade de reiniciar o sistema.
+
+Funções principais do Kernel:
+
+Gerenciamento de Processos (Escalonador): Cria, encerra e gerencia a execução de todos os programas, alocando tempo de CPU entre eles.
+
+Gerenciamento de Memória: Aloca e protege a memória do sistema, implementando memória virtual (incluindo o uso de swap).
+
+#### Chamadas de Sistema (System Calls)
+Esta camada é a interface que permite aos programas (que rodam no Espaço do Usuário) solicitar serviços do Kernel. Uma aplicação não acessa o hardware diretamente; ela usa uma chamada de sistema que passa a requisição para o Kernel, que a executa e retorna o resultado.
+
+##### Inicializacao do sistema
+
+O **Systemd** é um gerenciador de sistema e serviços para sistemas operacionais Liux. Podendo ser executado como um sistema init para inicializar o sistema.
+
+O SystemD monitora processos usando cgroups do Linux, garantindo que ao parar um determinado serviço, todos os processos que tenham sido iniciados por ele sejam finalizados;
+
+**SysVinit** é um sistema de inicialização (sistema init) usado em muitas distribuições GNU/Linux por padrão. No SysVinit existe um processo que é iniciado primeiro após o carregamento do kernel e, portanto, recebe o primeiro PID (Identificador de processo).
+
+##### Características do UEFI
+- Secure Boot (Inicialização Segura);
+- Velocidade de Boot;
+- Módulo de Suporte à compatibilidade;
+- ESP (EFI System Partition)
+
 ---
 
 ### Estrutura de Diretorios Importantes
+
+A partir do kernel 2.6 o Linux apresenta o sistema de arquivo **sysfs**. O sistema de arquivo sysfs é descrito como a união dos sistemas de arquivo **proc**, **devfs** e **devpty**. O sistema de arquivos sysfs enumera os dispositivos e canais conectados ao sistema numa hierarquia de sistema de arquivo que podeser acessadapelo espaço do usuário.
+ O sistema de arquivo sysfs é montado em /sys/ e contém diretórios que organizamos dispositivos conectados ao sistema de diversas maneiras diferentes. Dentro do diretório /sys podemos encontrar o quase o mesmo conteúdo do proc, mas de uma forma bem mais organizada para nós administradores.
+ Trantando-se de dispositivos, outro diretório muito importante é o /dev. Nele encontramos arquivos especiais que representam a maioria dos dispositivos do sistema, particulamente dispositivos de armazenamento. Isso quer dizer que a maioria dos dispositivos conectados no servidor é representando por uma rquivo dentro do diretório /dev. 
+ Um Disco conectado a uma controadora IDE, por exemplo, quando conectado ao primeirocanal IDE da placa mãe, é representado pelo arquivo de dispositivo /dev/hda. Cada partição nesse disco será identificada como/dev/hda1, /dev/hda2 e até a última partição encontrada.
+ O diretório /proc é um diretório criado pelo kernel na memória do computador apenas durante a inicialização, e contém informações sobre diversas informações do sistema, como processos em execuçãono sistema, incluindo detalhes sobre os dispositivos detectados. 
+
+
 |   Diretório    | Função                   |
 |----------------|--------------------------|
 | `/`            | Raiz do sistema          |
@@ -161,47 +251,11 @@ echo "Último argumento do comando anterior: $_"
 | `/usr`         | Programas e bibliotecas  |
 | `bin`, `/sbin` | Binários do sistema      |
 | `/tmp`         | Arquivos temporários     |
-| `opt`          | Softwares opcionais      |
-| `/media`        | Ponto de montagem para dispositivos removíveis |
+| `/opt`          | Softwares opcionais      |
+| `/media`       | Ponto de montagem para dispositivos removíveis |
+| `/etc/shadow`  | armazena senhas de usuários de forma criptografada, junto com outras informações como data de validade da senha e configurações de segurança |
 
 Todos esses diretórios não podem está em uma partição diferente do diretório "/", por que durante o boot o kernel linux monta primeiro a partição vinculada ao diretório "/"
-
-##### Conceitos de LVM
-
-O Gerenciador de Volume Lógico (LVM) é uma tecnologia de gerenciamento de armazenamento no Linux que oferece flexibilidade e abstração em relação aos dispositivos de armazenamento físico subjacentes. Em vez de trabalhar diretamente com partições fixas, o LVM permite criar volumes lógicos que podem ser facilmente redimensionados, movidos ou combinados, mesmo com o sistema em funcionamento
-
-Volume físico (PV) - Dispositivo de armazenamento físico.
-
-```bash
-pvcreate [dispositivo]  # Inicializa um dispositivo (por exemplo, /dev/sdb1) como um Volume Físico.
-pvdisplay               # Mostra informações detalhadas sobre todos os volumes físicos.
-pvs                     # Fornece um resumo conciso dos volumes físicos.
-pvremove [dispositivo]  # Remove a inicialização LVM de um Volume Físico. 
-```   
-
-Grupos de volume (VG) - Agrupamento de diferentes discos e partições
-
-```bash
-vgcreate [nome-do-vg] [dispositivo]  # Cria um novo Grupo de Volume a partir de um ou mais Volumes Físicos.
-vgdisplay                            # Exibe informações detalhadas sobre os grupos de volume.
-vgs                                  # Mostra um resumo dos grupos de volume.
-vgextend [nome-do-vg] [dispositivo]  # Adiciona um novo Volume Físico a um Grupo de Volume existente.
-vgreduce [nome-do-vg] [dispositivo]  # Remove um Volume Físico de um Grupo de Volume.
-vgremove [nome-do-vg]                # Remove um Grupo de Volume.
-vgchange -a y [nome-do-vg]           # Ativa o Grupo de Volume, tornando seus volumes lógicos acessíveis.
-vgchange -a n [nome-do-vg]           # Desativa o Grupo de Volume.
-```
-
-Volume lógico (LG) - Partição virtual
-```bash
-lvcreate -L [tamanho] -n [nome-do-lv] [nome-do-vg] # Cria um novo Volume Lógico com um tamanho específico.
-lvdisplay                                          # Mostra informações detalhadas sobre os volumes lógicos.
-lvs                                                # Fornece um resumo dos volumes lógicos.
-lvextend -L +[tamanho] [caminho-do-lv]             # Expande o tamanho de um Volume Lógico.
-lvreduce -L -[tamanho] [caminho-do-lv]             # Reduz o tamanho de um Volume Lógico. Atenção: Reduzir um LV é perigoso e requer que o sistema de arquivos seja reduzido primeiro.
-lvremove [caminho-do-lv]                           # Remove um Volume Lógico.
-```
-
 
 
 ##### Controle de bibliotecas compartilhadas
@@ -238,6 +292,7 @@ apt update                   #  Atualiza a lista de pacotes disponíveis nos rep
 apt upgrade                  # Atualiza os pacotes instalados para as versões mais recentes disponíveis nos repositórios. 
 apt install <nome-do-pacote> # Instala um pacote específico. 
 apt remove <nome-do-pacote>  # Remove um pacote, mas mantém os arquivos de configuração. 
+apt autoremove               # Remove pacotes não utilizados
 apt purge <nome-do-pacote>   # Remove um pacote e seus arquivos de configuração. 
 apt search <termo>           # Procura por pacotes. 
 apt show <nome-do-pacote>    # Exibe informações detalhadas sobre um pacote, como versão, descrição e dependências. 
@@ -250,8 +305,142 @@ rpm -qa                      # Lista todos os pacotes instalados.
 dnf update                   # Atualiza todos os pacotes no sistema. 
 yun update                   # Atualiza todos os pacotes no sistema. 
 ```
+
+---
+
+### Tarefas administrativas de seguranca
+
+- Contas de usuário: Criação (`useradd`), exclusão (`userdel`) e modificação (`usermod`) de contas de usuário. O arquivo `/etc/passwd` armazena as informações básicas dos usuários.
+- Grupos: Gerenciamento de grupos (`groupadd`, `groupdel`, `groupmod`) para organizar usuários e controlar permissões de acesso a arquivos e diretórios.
+- Permissões de acesso: Alteração de permissões de arquivos (`chmod`) e de propriedade (`chown`) para garantir que os usuários tenham o acesso correto aos recursos do sistema.
+- Privilégios: Utilização do comando sudo para permitir que usuários executem tarefas administrativas com privilégios de super usuário (root), garantindo a segurança do sistema.
+
+> Criando um grupo básico
+`sudo groupadd desenvolvedores`
+
+> Criando um grupo com um GID (Group ID) específico:
+`sudo groupadd -g 2000 contabilidade`
+
+>  Excluindo um grupo:
+`sudo groupdel dev_backend`
+
+> Atribuir usuários a um grupo
+`sudo usermod -aG desenvolvedores joao` # Adiciona o usuário 'joao' ao grupo 'desenvolvedores'
+
+> Alterar a propriedade de grupo de um diretório
+`sudo chgrp desenvolvedores /var/www/projetos` # Altera a propriedade do grupo do diretório 'projetos' para 'desenvolvedores'
+
+> Modificar as permissões do diretório
+`sudo chmod g+rwx /var/www/projetos` # Permite que o grupo 'desenvolvedores' tenha permissões de leitura, escrita e execução no diretório 'projetos'
+
+
+##### SUID e SGID
+SUID e SGID são permissões especiais de arquivo no Linux que permitem que um arquivo executável seja executado com os privilégios do seu proprietário (SUID) ou grupo (SGID), independentemente de qual usuário o está executando
+
+> Comando para encontrar e listar todos os arquivos com os bits SUID ou SGID ativados em todo o sistema de arquivos, a partir do diretório raiz (/).
+`find / -type f -a \( -perm -4000 -o -perm -2000 \) -ls`
+
+- `find /`: Inicia a busca a partir do diretório raiz (/), ou seja, em todo o sistema de arquivos.
+- `-type f`: Restringe a busca apenas a arquivos regulares, ignorando diretórios e outros tipos de arquivos.
+- `-a`: Representa um operador "AND", que combina as duas condições seguintes. Ele é implícito, então o comando funcionaria da mesma forma sem ele.
+- `\( ... \)`: Agrupa as duas condições de permissão. As barras invertidas (\) são necessárias para escapar os parênteses, de forma que o shell os interprete como parte do comando find, e não como metacaracteres do shell.
+- `-perm -4000`: Encontra arquivos com o bit SUID (Set User ID) ativado. Quando um arquivo com SUID é executado, ele é executado com os privilégios do proprietário do arquivo, e não com os privilégios do usuário que o executa.
+- `-o`: Representa um operador "OR", que encontra arquivos que correspondem à condição anterior ou à seguinte.
+- `-perm -2000`: Encontra arquivos com o bit SGID (Set Group ID) ativado. Quando um arquivo com SGID é executado, ele é executado com os privilégios do grupo do arquivo, e não com os privilégios do grupo do usuário que o executa.
+- `-ls`: Exibe os resultados encontrados em um formato de listagem detalhada, similar ao que o comando ls -l faz.
+
+#### Funcoes no linux
+
+O arquivo /etc/profile é um script de configuração do sistema Linux que define variáveis de ambiente e configurações de inicialização para todos os usuários. Ele é executado por shells de login (como Bash) sempre que um usuário faz login no sistema, seja por meio de um terminal, console ou SSH. 
+
+##### Funções em shell script
+No dia a dia: É possível definir funções no arquivo de configuração do seu shell (como .bashrc ou .zshrc) para criar atalhos para comandos longos e usados com frequência.
+
+Exemplo:
+```bash
+# Define uma função chamada "saudacao"
+saudacao() {
+    echo "Olá, $1!" # $1 é o primeiro parâmetro passado
+    echo "Bem-vindo ao shell script."
+}
+
+# Chama a função "saudacao" passando o parâmetro "usuário"
+saudacao "usuário"
+
+```
+
+#### Agendador de tarefas no Linux
+
+O `cron` é o agendador de tarefas padrão do Linux, usado para automatizar a execução de comandos ou scripts em horários e intervalos específicos. A configuração dessas tarefas é feita através de um arquivo chamado crontab, abreviação de "cron table".
+
+Estrutura do comando crontab
+
+O utilitário `crontab` permite gerenciar as tarefas agendadas. 
+- `crontab -e`: Abre o arquivo crontab do usuário atual em um editor de texto para que você possa adicionar, modificar ou remover tarefas.
+- `crontab -l`: Lista todas as tarefas agendadas para o usuário atual.
+- `crontab -r`: Remove todas as tarefas agendadas para o usuário atual.
+
+> EX: Executar um script a cada 5 minutos:
+`*/5 * * * * /caminho/para/meu_script.sh`
+
+> EX: Executar um script todos os dias à 1h da manhã:
+`0 1 * * * /caminho/para/backup_diario.sh`
+
+>EX: Executar um script toda segunda-feira, às 7h
+`0 7 * * 1 /caminho/para/relatorio_semanal.sh`
+
+##### Atualizar a data e hora manualmente com date
+
+O comando date permite visualizar e definir a data e a hora do sistema. Para alterar a data e hora, é preciso ter privilégios de superusuário (sudo)
+
+> Exemplo: Definir a data e hora para 27 de outubro de 2025, às 17:00
+`sudo date 102717002025` # A sintaxe para definir a data é: date MMDDHHMMYYYY.
+
+A forma mais recomendada e precisa de manter a data e hora atualizadas é usando a sincronização automática via NTP, que ajusta o relógio do sistema de acordo com servidores de tempo confiáveis. O timedatectl é a ferramenta para gerenciar essa configuração na maioria das distribuições Linux modernas. 
+
+`timedatectl status` # status do serviço de sincronização
+
+Para ligar a sincronização automática, use o seguinte comando: `sudo timedatectl set-ntp true`
+
+
 ---
 ### Gerenciamento de particoes
+
+##### Conceitos de LVM
+
+O Gerenciador de Volume Lógico (LVM) é uma tecnologia de gerenciamento de armazenamento no Linux que oferece flexibilidade e abstração em relação aos dispositivos de armazenamento físico subjacentes. Em vez de trabalhar diretamente com partições fixas, o LVM permite criar volumes lógicos que podem ser facilmente redimensionados, movidos ou combinados, mesmo com o sistema em funcionamento
+
+Volume físico (PV) - Dispositivo de armazenamento físico.
+
+```bash
+pvcreate [dispositivo]  # Inicializa um dispositivo (por exemplo, /dev/sdb1) como um Volume Físico.
+pvdisplay               # Mostra informações detalhadas sobre todos os volumes físicos.
+pvs                     # Fornece um resumo conciso dos volumes físicos.
+pvremove [dispositivo]  # Remove a inicialização LVM de um Volume Físico. 
+```   
+
+Grupos de volume (VG) - Agrupamento de diferentes discos e partições
+
+```bash
+vgcreate [nome-do-vg] [dispositivo]  # Cria um novo Grupo de Volume a partir de um ou mais Volumes Físicos.
+vgdisplay                            # Exibe informações detalhadas sobre os grupos de volume.
+vgs                                  # Mostra um resumo dos grupos de volume.
+vgextend [nome-do-vg] [dispositivo]  # Adiciona um novo Volume Físico a um Grupo de Volume existente.
+vgreduce [nome-do-vg] [dispositivo]  # Remove um Volume Físico de um Grupo de Volume.
+vgremove [nome-do-vg]                # Remove um Grupo de Volume.
+vgchange -a y [nome-do-vg]           # Ativa o Grupo de Volume, tornando seus volumes lógicos acessíveis.
+vgchange -a n [nome-do-vg]           # Desativa o Grupo de Volume.
+```
+
+Volume lógico (LG) - Partição virtual
+```bash
+lvcreate -L [tamanho] -n [nome-do-lv] [nome-do-vg] # Cria um novo Volume Lógico com um tamanho específico.
+lvdisplay                                          # Mostra informações detalhadas sobre os volumes lógicos.
+lvs                                                # Fornece um resumo dos volumes lógicos.
+lvextend -L +[tamanho] [caminho-do-lv]             # Expande o tamanho de um Volume Lógico.
+lvreduce -L -[tamanho] [caminho-do-lv]             # Reduz o tamanho de um Volume Lógico. Atenção: Reduzir um LV é perigoso e requer que o sistema de arquivos seja reduzido primeiro.
+lvremove [caminho-do-lv]                           # Remove um Volume Lógico.
+```
 
 O `fdisk` é um utilitário de linha de comando usado para gerenciar tabelas de partição em dispositivos de armazenamento no Linux, como discos rígidos e pen drives. Ele opera em modo interativo e é ideal para manipular partições no estilo MBR (DOS), mas também suporta GPT em algumas versões.
 
@@ -383,6 +572,11 @@ find /home -name "documento.txt"  # Localiza arquivos. (find [diretório] [opç�
 scp / rsync                       # Cópia remota do arquivo.
 cron                              # Agendamento de tarefas
 
+diff arquivo1 arquivo2            # mostra a diferença entre os arquivos
+diff arquivo1 arquivo2| cat -A    # mostra a diferença incluindo os caracteres especiais
+diff -w arquivo1 arquivo2         # mostra a diferença desconsiderando os espaços em branco
+diff -r dir1 dir2                 # mostra a diferença entre diretórios
+
 wc [opção] texto.txt              # Ele serve para contar palavras, linhas, caracteres além de também indicar o comprimento da maior linha de um texto.
   wc -w texto.txt                 # para contar a quantidade de palavras;
   wc -c texto.txt                 # para contar a quantidade de caracteres;
@@ -429,6 +623,30 @@ O comando `dd` realiza cópias byte a byte, ou seja, realiza cópia sequencial d
 
 OBS: LPIC-1 - Preparatório para os Exames 101 e 102 V5 ATUALIZADO (aula: 27.103.3)
 
+
+#### TYPE
+
+O comando `type` no Linux é um comando de shell integrado usado para descobrir como um nome de comando será interpretado, informando se ele é um comando interno (built-in), um alias, uma função ou um executável externo. 
+```BASH
+type ls       # Mostra como o comando ls é interpretado.
+type cd       # Mostra que cd é um built-in do shell.
+type python   # Se o python estiver instalado e no PATH, ele mostrará o caminho do arquivo executável, por exemplo: python is /usr/bin/python.
+```
+
+#### FILE
+
+O comando file no Linux é usado para determinar o tipo de um arquivo, analisando seu conteúdo em vez de sua extensão. Ele verifica o arquivo usando três testes: sistema de arquivos, magic number e linguagem, retornando informações como se é um diretório, texto ASCII, executável ou uma imagem.
+
+#### WHEREIS 
+
+O comando whereis em Linux localiza a localização de binários, arquivos-fonte e páginas de manual de um programa especificado. Ele procura em diretórios padrão do sistema, como $PATH e $MANPATH, e pode ser usado para encontrar arquivos relacionados a um comando. 
+
+#### LCOATE 
+
+`locate nome_do_arquivo. `
+
+O comando locate no Linux é usado para encontrar arquivos rapidamente, pois busca em um banco de dados pré-existente, em vez de percorrer o sistema de arquivos a cada vez. 
+
 ---
 
 ## Informacoes do sistema
@@ -468,20 +686,6 @@ O comando tail no Linux exibe as últimas linhas de um arquivo de texto, sendo �
 
 > Exibir a 15° linha até a última
 `nl /etc/passwd | tail -n +15` 
-
----
-
-## Gerenciamento de usuarios
-
-```bash
-whoami             # Mostra o usuário atual
-adduser nome       # Adiciona novo usuário
-passwd nome        # Altera senha de um usuário
-usermod -aG grupo nome # Adiciona usuário a um grupo
-deluser nome       # Remove um usuário
-groups nome        # Mostra os grupos de um usuário
-chmod +x script.sh # Dá permissão de execução
-```
 
 ---
 
@@ -546,7 +750,6 @@ killall firefox
 
 **Observação:** Precisa de permissão adequada (`sudo`) para encerrar processos de outros usuários.
 
----
 
 #### pkill
 
@@ -564,8 +767,6 @@ pkill -9 firefox     # Força encerramento imediato (sinal SIGKILL)
 ```
 
 **Observação:** Permite usar padrões parciais do nome do processo e sinais específicos.
-
----
 
 #### bg
 
@@ -585,9 +786,6 @@ bg %1            # Coloca o job 1 em execução no background
 ```
 
 > O processo continuará executando no background, permitindo que o terminal seja usado normalmente.
-
----
-
 
 #### NICE e RECEIVER
 
@@ -665,34 +863,25 @@ netstat -tuln      # Lista portas em uso (pode ser necessário instalar)
 ss -tuln           # Alternativa moderna ao netstat
 
 ```
-
 ---
 
-## Gerenciamento de pacotes (Debian/Ubuntu)
+## Gerenciamento de usuarios
 
 ```bash
-apt update                 # Atualiza lista de pacotes
-apt upgrade                # Atualiza pacotes instalados
-apt install nome           # Instala pacote
-apt remove nome            # Remove pacote
-apt purge nome             # Remove completamente (incluindo configs)
-apt autoremove             # Remove pacotes não utilizados
-```
-
----
-
-## Permissoes e acesso
-
-```bash
+whoami             # Mostra o usuário atual
+adduser nome       # Adiciona novo usuário
+passwd nome        # Altera senha de um usuário
+usermod -aG grupo nome # Adiciona usuário a um grupo
+deluser nome       # Remove um usuário
+groups nome        # Mostra os grupos de um usuário
 chmod +x script.sh         # Torna o arquivo executável
 chown user:grupo arquivo   # Altera dono e grupo de um arquivo
 sudo comando               # Executa comando como root
 su -                       # Troca para o usuário root
-apt get                    # Pode ser utilizada para gerenciar, atualizar, pesquisar, instalar e desinstalar pacotes em um sistema.
 ```
-As permissões são as informações que indicam que tipo de acesso pode ser realizado emdeterminadodiretórioou arquivo. No GNU/Linux cada arquivo e/ou diretório tem definido seu controle de acessoempermissõesatribuídas a:
+As permissões são as informações que indicam que tipo de acesso pode ser realizado em determinado diretório ou arquivo. No GNU/Linux cada arquivo e/ou diretório tem definido seu controle de acesso em permissões atribuídas a:
 
-- Usuário(user) - É o usuário que criou o arquivo ou o diretório. O nome do dono(proprietário)doarquivo/diretório é o mesmo do usuário usado para entrar no sistema GNU/Linux. Somenteodonopodemodificar as permissões de acesso do seu arquivo/diretório, além do usuário root.
+- Usuário(user) - É o usuário que criou o arquivo ou o diretório. O nome do dono(proprietário)doarquivo/diretório é o mesmo do usuário usado para entrar no sistema GNU/Linux. Somente o dono pode modificar as permissões de acesso do seu arquivo/diretório, além do usuário root.
 - Grupo(group) - Permissão atribuída a um grupo, permitindo que vários usuários membrosdogrupotenhamacesso a um mesmo arquivo/diretório (já que somente o dono poderia ter acesso ao arquivo). Cadausuáriopode fazer parte de um ou mais grupos de usuários. 
 - Outros(other) - Todos os usuários que não são donos ou não pertencem ao grupo do arquivo
 
@@ -703,8 +892,54 @@ As permissões em arquivos/diretórios são sequências de 12 bits, ou seja, bit
 | w | 2 | Escrita| Modificar e deletar o arquivo | Criar/Apagar arquivos/diretórios |
 | x | 1 | Execução/Acesso para diretório| Execução do arquivo como programa | Entrar no diretório |
 
----
+#### CHMOD
 
+`chmod [opções] alteração arquivo`
+
+```
+-c          # informa quais arquivos estão tendo as permissões alteradas.
+-v          # informa quais arquivos estão sendo processados (não necessariamente alterados).
+-R          # altera, recursivamente, as permissões de arquivos.
+−−help      # exibe opções do comando.
+−−version   # exibe informações sobre o aplicativo.
+```
+
+```bash
+chmod +x nome_do_arquivo   #  Adiciona a permissão de execução. 
+chmod -w nome_do_arquivo   #  Remove a permissão de escrita. 
+chmod u+x nome_do_arquivo  #  Adiciona permissão de execução apenas para o proprietário (u = user). 
+chmod <grupo>-w nome_do_arquivo  #  Remove permissão de escrita apenas para o grupo (g = group). 
+```
+
+A combinação das letras rwxst no comando chmod especifica as permissões de acesso.
+
+```
+r = leitura.
+w = gravação.
+x = execução (para arquivos) ou autorização de acesso (para diretórios).
+u = as permissões do dono do arquivo.
+g = as permissões do grupo.
+o = as permissões dos outros usuários do sistema.
+s = permissão especial de execução de um arquivo ou de acesso a um diretório.
+```
+
+#### CHOWN
+
+Chown é uma abreviação para change owner, que traduzido fica “mudar o dono”. O Comando chown é usado para alterar o dono do arquivo ou diretório, podendo também incluir qual grupo será o proprietário do arquivo ou diretório. o comando chown tem a seguinte sintaxe:
+
+`chown <dono>.<grupo> nome(arquivo ou diretório)`
+
+> Para definir que o usuário root será o proprietário do arquivo /tmp/file.txt:
+`chown root /tmp/file.txt`
+
+> Para definir que todos os arquivos e sub-diretórios dentro de /tmp terão o usuário root como dono e o grupo root como grupo proprietário adicione a opção "-R"
+`chown root.root -R /tmp`
+
+#### UMASK
+
+`umask` é um comando em sistemas Unix e similares que define ou mostra a "máscara de usuário", determinando as permissões padrão para arquivos e diretórios recém-criados. Ele funciona subtraindo um valor de permissão (geralmente em formato octal, como \(022\)) do conjunto de permissões padrão para criar arquivos (\(666\) para arquivos, \(777\) para diretórios). 
+
+---
 ## Limpeza e manutencao
 
 ```bash
@@ -714,29 +949,9 @@ journalctl -xe             # Ver logs do sistema
 ```
 
 ---
-
-## Atalhos uteis
-
-- `TAB` → Autocompleta comandos e nomes de arquivos
-- `CTRL + C` → Interrompe um comando em execução
-- `CTRL + L` → Limpa a tela (igual `clear`)
-- `CTRL + R` → Busca no histórico de comandos
-#### Caracteres curinga no shell
-| Caractere | Descrição | Exemplo | Resultado / Explicação |
-|-----------|-----------|---------|------------------------|
-| `*`       | Representa zero ou mais caracteres | `ls *.txt` | Lista todos os arquivos que terminam com `.txt` |
-| `?`       | Representa um único caractere | `ls file?.txt` | Lista `file1.txt`, `fileA.txt`, mas não `file10.txt` |
-| `[]`      | Representa qualquer caractere dentro dos colchetes; pode usar intervalos | `ls file[1-3].txt` | Lista `file1.txt`, `file2.txt`, `file3.txt` |
-| `{}`      | Lista múltiplos padrões separados por vírgula | `ls {file1,file2,file3}.txt` | Lista `file1.txt`, `file2.txt`, `file3.txt` |
-| `~`       | Representa o diretório home do usuário | `cd ~` | Vai para `/home/seu_usuario` |
-| `[!...]`  | Negação de um conjunto de caracteres | `ls file[!0-3].txt` | Lista arquivos que não terminam com 0,1,2 ou 3 antes de `.txt` |
-| `[a-z]`   | Intervalo de caracteres | `ls file[a-c].txt` | Lista `filea.txt`, `fileb.txt`, `filec.txt` |
-| `[0-9]`   | Intervalo de números | `ls file[0-5].txt` | Lista arquivos de `file0.txt` a `file5.txt` |
-
----
 ## Expressoes regulares
 
-Expressões regulares são elementos de texto, palavras-chave e modificares que formamumpadrão,usadopara encontrar e opcionalmente alterar um padrão correspondente. As expressões regularesutilizammetacaracteres, que são caracteres especiais que podem ser usados para ajudar na formacomoéfeitaumabusca.
+Expressões regulares são elementos de texto, palavras-chave e modificares que formam um padrão,usado para encontrar e opcionalmente alterar um padrão correspondente. As expressões regularesutilizammetacaracteres, que são caracteres especiais que podem ser usados para ajudar na formacomoéfeitaumabusca.
 ```
    Caracteres especiais em expressões regulares:
 
@@ -771,6 +986,23 @@ No sed, a expressão fica circunscrita entre barras(/). Por exemplo: Deletar as 
 O **grep** é como um localizador de texto no Linux, muito útil para analisar arquivos grandes ou filtrar informações específicas. Ele usa expressões regulares para encontrar ocorrências.
 
 Sintaxe básica: `grep [opções] "texto" arquivo`
+
+```bash
+grep NOME arquivo      # procura pelo NOME no arquivo
+grep NOME arquivo*     # procura pelo NOME em todos os arquivos que começam com arquivo*
+grep "NOME COMPLETO" arquivo # procura pela string entre aspas
+grep -i NOME arquivo   # procura pelo NOME desconsiderando maiúsculas e minúsculas
+grep -c NOME arquivo   # conta quantas vezes encontrou NOME
+grep -v NOME arquivo   # não mostra a linha onde aparece o NOME, somente outras linhas
+grep -r NOME *         # procura por NOME dentro de todos os arquivos dentro de todos os subdiretórios relativos ao caminho atual
+grep -rl NOME *        # procura por NOME dentro de todos os arquivos e mostra somente o caminho do arquivo
+cat arquivo| grep NOME # procura por nome no arquivo
+grep -A3 NOME arquivo  # procura por NOME e mostra 3 linhas após a ocorrência do NOME
+grep -B3 NOME arquivo  # procura por NOME e mostra 3 linhas antes da ocorrência do NOME
+fgrep                  # não aceita expressões regulares
+egrep                  # aceita expressões regulares extendidas
+```
+
 Exemplos:
 > Procurar a palavra error dentro do arquivo log.txt
 `grep "error" log.txt`
@@ -808,17 +1040,56 @@ O comando find é uma ferramenta poderosa do Linux para pesquisar arquivos e dir
 > Mostrar todos os arquivos modificados no último minuto:
 `find . -mmin -1`
 ---
-## Vim (Visual Editor)
 
-O vim é uma versão melhorada do vi. Ele não está em 100% das distros por padrão, mas está presente na grande maioria das distribuições modernas (Ubuntu, Debian, Fedora, CentOS, Arch, etc.). Ele é rápido, leve, roda no terminal e é extremamente poderoso para edição de arquivos de texto e código.
+### 📝 Vim (Visual Editor)
 
->Abertura de arquivos: `vim arquivo.txt`
+O **Vim** é uma versão aprimorada do clássico editor **vi**. Ele está
+presente na maioria das distribuições Linux modernas (Ubuntu, Debian,
+Fedora, CentOS, Arch, etc.). É um editor **leve, rápido, poderoso e
+totalmente baseado em terminal**, ideal para editar arquivos de texto e
+código de forma eficiente.
 
-**Modo de inserção**: Usado para inserção comum de textos no qual as letras são letras mesmo. Paraentrarnesse modo podemos usar qualquer uma das teclas: "a" , "A" , "i" , "I" , "o" , "O" , "s" e"S". O modode inserção é identificado pela mensagem INSERT na parte inferior esquerda do editor. 
+> 🔹 **Abrir um arquivo:** `vim arquivo.txt`
 
-**Modo de comando**: Entramos nesse modo pelo pressionamento das teclas [esc] [:](TeclaESCedoispontos) e ele é usado para execução de comandos complexos e sequências especiais para edição de textos no arquivo. 
+#### ⚙️ Modos de Operação do Vim
 
-**Modo de navegação**: Entramos nesse modo pelo pressionamento da tecla [esc] se estivermos no modo de inserção, caso contrário, ele é o modo padrão do editor vi. E ele é usado para inserçãodecomandosnaqual cada letra tem uma função especifica.
+O Vim trabalha com **modos**, e entender essa estrutura é essencial para
+usá-lo bem.
+
+##### 🖋️ Modo de Inserção
+
+Usado para **escrever texto normalmente** (as teclas digitam
+caracteres).\
+Para entrar nesse modo, use uma das seguintes teclas: - `i` → insere
+antes do cursor\
+- `a` → insere após o cursor\
+- `o` → cria nova linha abaixo e entra em inserção\
+- (versões maiúsculas: `I`, `A`, `O`, etc. também funcionam com pequenas
+variações)
+
+💡 O modo de inserção é indicado pela palavra **INSERT** no canto
+inferior esquerdo da tela.\
+Para sair dele, pressione **Esc**.
+
+##### 🧭 Modo de Navegação (Normal)
+
+Este é o **modo padrão** ao abrir o Vim.\
+Nele, cada tecla tem uma função específica --- mover o cursor, copiar,
+colar, apagar, etc.
+
+👉 Para entrar neste modo, basta pressionar **Esc** (caso esteja em
+outro modo).
+
+##### 💻 Modo de Comando
+
+Usado para **executar comandos mais complexos**, como salvar, sair ou
+buscar texto.\
+Para acessá-lo:\
+1. Pressione **Esc** (para garantir que está no modo normal);\
+2. Digite **:** (dois-pontos).
+
+Exemplo:\
+`:wq` → salva e sai do editor.
 
 **Parâmetros para inicialização:**
 |Parâmetro/Opção|Comando de Exemplo|Descrição|
@@ -827,34 +1098,38 @@ Abrir Arquivo	| vim arquivo.txt |	Abre o arquivo para edição.|
 Apenas Leitura | vim -R arquivo.txt ou view arquivo.txt |	Abre o arquivo no modo somente leitura (read-only).|
 
 **Comandos executados no vim**
-|Comando/Tecla|Modo|Descrição|
-|-------------|----|---------|
-|Salvar e sair| :wq| Salva as alterações (w - write) e sai (q - quit).|
-|Salvar|:w| Salvar arquivo sem sair do editor|
-|Sair (Sem Salvar)|	:q!|	Sai do editor forçadamente, descartando as alterações não salvas.|
-|Salvar como	|:w novo_nome.txt |	Salva o arquivo com um novo nome.|
-|Sair (Normal)	:q	| Sai do editor, mas só funciona se não houver alterações não salvas.|
-|Modo Normal	Esc	| Sai do modo de inserção e volta ao modo de comando (ou modo Normal).|
-| Desfazer	| u	| Desfaz a última alteração no Modo Normal.
-|Ajuda	| :help |	Abre o sistema de ajuda do Vim.
+| Comando/Tecla      | Modo    | Descrição                                                   |
+| ------------------ | ------- | ----------------------------------------------------------- |
+| `:wq`              | Comando | Salva e sai do editor (`w` = write, `q` = quit).            |
+| `:w`               | Comando | Salva o arquivo sem sair.                                   |
+| `:q!`              | Comando | Sai forçando o fechamento, **sem salvar alterações**.       |
+| `:w novo_nome.txt` | Comando | Salva o arquivo com outro nome.                             |
+| `:q`               | Comando | Sai do editor (somente se não houver alterações pendentes). |
+| `Esc`              | Normal  | Sai do modo de inserção e volta ao modo normal.             |
+| `u`                | Normal  | Desfaz a última ação.                                       |
+| `Ctrl + r`         | Normal  | Refaz a ação desfeita.                                      |
+| `:help`            | Comando | Abre o sistema de ajuda do Vim.                             |
 
 
-|ESC + | Descrição  |
-| ----- | ---------- |
-| i  | entra no modo inserção antes do cursor     |
-| a  | entra no modo inserção após o cursor.      |
-| o  | nova linha abaixo e entra no modo inserção |
-| dd | apaga a linha atual                        |
-| yy | copia a linha atual.                       |
-| p  | cola o conteúdo copiado.                   |
-| u  | desfaz a última ação                       |
-| CTRL + r  | refaz a ação desfeita.                     |
-| /palavra | busca por “palavra” no texto         |
-| n  | repete a busca                             |
-| x  | apaga o caractere sob o cursor             |
-| gg | vai para o início do arquivo               |
-| G  | vai para o fim do arquivo                  |
-| :set number | exibe números de linha            |
+##### ⚡ Atalhos e Ações Comuns
+
+| Tecla/Comando | Descrição                                        |
+| ------------- | ------------------------------------------------ |
+| `i`           | Entra no modo inserção antes do cursor.          |
+| `a`           | Entra no modo inserção após o cursor.            |
+| `o`           | Cria nova linha abaixo e entra no modo inserção. |
+| `dd`          | Apaga a linha atual.                             |
+| `yy`          | Copia a linha atual.                             |
+| `p`           | Cola o conteúdo copiado.                         |
+| `u`           | Desfaz a última ação.                            |
+| `Ctrl + r`    | Refaz a ação desfeita.                           |
+| `/palavra`    | Busca pela palavra no texto.                     |
+| `n`           | Repete a busca.                                  |
+| `x`           | Apaga o caractere sob o cursor.                  |
+| `gg`          | Vai para o início do arquivo.                    |
+| `G`           | Vai para o fim do arquivo.                       |
+| `:set number` | Exibe números de linha.                          |
+
 
 ---
 ### Redirecionamento de Entrada Saida e Erros padrao
@@ -892,40 +1167,6 @@ O comando tee permite redirecionar a saída padrão e erro simultaneamente para 
 `cat /etc/group | tee -a /tmp/passwd_copy`
 
 ---
-## Camadas da arquitetura do linux
-
-#### Hardware
-É a camada física, que inclui a CPU, memória RAM, discos rígidos, placas de rede, dispositivos de entrada/saída, etc. O Kernel Linux interage diretamente com esta camada.
-#### Kernel (núcleo do sistema operacional)
-O Kernel é o coração do Linux e é o componente mais importante. Ele reside em um espaço de memória protegido (o Espaço do Kernel) e atua como uma ponte entre o hardware e o software de aplicação.
-
-O Kernel Linux é classificado como monolítico modular:
-- Monolítico: Todos os serviços principais (gerenciamento de memória, gerenciamento de processos, sistema de arquivos, drivers de dispositivo) estão contidos em um único programa.
-- Modular: Permite que novas funcionalidades (como drivers para novos hardwares) sejam carregadas ou descarregadas dinamicamente como módulos de kernel carregáveis (LKM), sem a necessidade de reiniciar o sistema.
-
-Funções principais do Kernel:
-
-Gerenciamento de Processos (Escalonador): Cria, encerra e gerencia a execução de todos os programas, alocando tempo de CPU entre eles.
-
-Gerenciamento de Memória: Aloca e protege a memória do sistema, implementando memória virtual (incluindo o uso de swap).
-
-#### Chamadas de Sistema (System Calls)
-Esta camada é a interface que permite aos programas (que rodam no Espaço do Usuário) solicitar serviços do Kernel. Uma aplicação não acessa o hardware diretamente; ela usa uma chamada de sistema que passa a requisição para o Kernel, que a executa e retorna o resultado.
-
-##### Inicializacao do sistema
-
-O **Systemd** é um gerenciador de sistema e serviços para sistemas operacionais Liux. Podendo ser executado como um sistema init para inicializar o sistema.
-
-O SystemD monitora processos usando cgroups do Linux, garantindo que ao parar umdeterminadoserviço, todos os processos que tenham sido iniciados por ele sejam finalizados;
-
-**SysVinit** é um sistema de inicialização (sistema init) usado em muitas distribuições GNU/Linux por padrão. No SysVinit existe um processo que é iniciado primeiro após o carregamento do kernel e, portanto, recebe o primeiro PID (Identificador de processo).
-
-##### Características do UEFI
-- Secure Boot (Inicialização Segura);
-- Velocidade de Boot;
-- Módulo de Suporte à compatibilidade;
-- ESP (EFI System Partition)
-
 #### Desligando e reiniciando o sistema
 ```bash
 shutdown            # Agenda o desligamento para 1 minuto por padrão
@@ -939,3 +1180,275 @@ init                # Um comando versátil que, quando executado com um número 
 systemctl reboot    # Ele envia um sinal ao systemd para iniciar o processo de reinicialização
 systemctl poweroff  # Ele instrui o systemd a iniciar o processo de desligamento seguro do hardware
 ```
+
+---
+
+### Estruturas condicionais
+
+As estruturas condicionais em shell script, como if, then, else e fi, são usadas para controlar o fluxo de execução com base em condições. Elas permitem que um script execute comandos diferentes dependendo se uma condição é verdadeira ou falsa. As condições são avaliadas com operadores de comparação para números, strings e arquivos. Outra estrutura importante é o case, que simplifica a verificação de múltiplas condições em uma única variável. 
+
+##### Operadores
+- Comparação numérica: -eq (igual a), -ne (diferente de), -gt (maior que), -lt (menor que).
+- Comparação de string: = (igual a), != (diferente de), -z (tamanho zero).
+- Verificação de arquivo: -e (arquivo existe), -f (é um arquivo regular), -d (é um diretório), -r (é legível), -w (é gravável).
+- Operadores lógicos: && (E lógico), || (OU lógico), ! (NOT lógico). 
+
+##### if
+```bash
+if <comando>
+then
+	comando1
+	comando2
+	comando3
+fi
+
+if <comando>
+then
+	comando1
+else
+	comando2
+fi
+
+if <comando>
+then
+	comando1
+elif <comando>
+then 
+	comando2
+else
+	comando3
+fi
+```
+Exemplo:
+```bash
+if [ 10 -gt 5 ]; then
+  echo "10 é maior que 5"
+else
+  echo "10 não é maior que 5"
+fi
+```
+
+##### test
+* `test <expressão>` : testa a expressão e retorna 0 para sucesso ou outra coisa para erro
+* `test 50 -qt 100` : se 50 é maior que 100
+* `[ 50 -gt 100]` : omite a palavra teste e usa []
+* exemplo com if:
+```bash
+VAR1=12
+if test "$VAR1" -gt 10
+then
+	echo sucesso
+fi
+
+if ["$VAR1"-gt 10]
+then
+	echo sucsso
+fi
+```
+
+##### ! - negação
+```bash
+VAR=12
+if [! "$VAR1" -gt 10]
+then
+	# não entra nessa condição
+	echo sucesso
+fi
+```
+
+##### -a - e (and)
+```bash
+#!/bin/bash
+# ---------------------------------------------
+# Enunciado:
+# Crie um script que verifique se uma variável
+# numérica está entre 10 e 20 (exclusivo).
+# Se estiver, exiba "sucesso".
+# ---------------------------------------------
+
+VAR=12  # A variável recebe o valor 12
+
+# Verifica se VAR é maior que 10 E menor que 20
+# -gt  -> greater than (maior que)
+# -lt  -> less than (menor que)
+# -a   -> operador lógico AND (E)
+if [ "$VAR" -gt 10 -a "$VAR" -lt 20 ]; then
+    echo "sucesso"
+fi
+```
+
+##### -o - ou (or)
+```bash
+VAR=12
+if ["$VAR1" -gt 10 -o "$VAR1" -eq 5] # OR 
+then
+        echo sucesso
+fi
+```
+
+#### Case
+```bash
+case $valor in
+	padrão1)
+		comandos
+		;;
+	padrão2)
+		comandos
+		;;
+	*)
+		comandos
+		;;
+esac
+
+case $opcao in
+	1)
+		echo "opção incluir"
+		;;
+	2)
+		echo "opção remover"
+		;;
+	*)
+		echo "opção inexistente"
+		;;
+esac
+
+case $caracter in
+	[0-9])
+		echo "o caractere informado é um número"
+		;;
+	[A-Z])
+		echo "o caractere informado é uma letra maiúscula"
+		;;
+	[a-z])
+		echo "o caractere informado é uma letra minúscula"
+		;;
+esac
+```
+
+### 🔁 Loops `for` no Bash
+
+
+------------------------------------------------------------------------
+
+##### 🧩 Estrutura básica:
+
+``` bash
+for var in val1 val2 ... valn
+do
+    comando1
+    comando2
+    ...
+done
+```
+
+🔹 O loop atribui cada valor (`val1`, `val2`, ...) à variável `var` e
+executa os comandos dentro do bloco `do ... done` para cada um deles.
+
+------------------------------------------------------------------------
+
+#### 📘 Exemplos práticos:
+
+##### Lista simples de valores
+
+``` bash
+for num in 1 2 3 4 5
+do
+    echo "O número atual é $num!"
+done
+```
+
+➡️ Percorre manualmente os valores `1 2 3 4 5`.
+
+------------------------------------------------------------------------
+
+##### Percorrer arquivos com um padrão
+
+``` bash
+for arquivo in alunos*
+do
+    echo "O arquivo atual é $arquivo"
+done
+```
+
+➡️ Percorre todos os arquivos cujo nome começa com **"alunos"** no
+diretório atual.
+
+------------------------------------------------------------------------
+
+##### Usando `seq` para gerar uma sequência numérica
+
+``` bash
+for sequencia in $(seq 5 10)
+do
+    echo "O número é $sequencia"
+done
+```
+
+➡️ Gera números de **5 a 10** usando o comando `seq`.
+
+------------------------------------------------------------------------
+
+##### Usando **chaves `{}`** para gerar intervalos
+
+``` bash
+for sequencia in {5..10}
+do
+    echo "O número é $sequencia"
+done
+```
+
+➡️ Faz o mesmo que o `seq 5 10`, mas sem precisar chamar outro comando.\
+É mais rápido e mais usado atualmente.
+
+------------------------------------------------------------------------
+
+##### Sequência com passo definido
+
+``` bash
+for sequencia in $(seq 1 5 50)
+do
+    echo "num $sequencia"
+done
+
+# Ou de forma mais moderna:
+for sequencia in {1..50..5}
+do
+    echo "O número é $sequencia"
+done
+```
+
+➡️ O primeiro número é o **início**, o segundo é o **passo**, e o
+terceiro é o **fim**.\
+👉 Exemplo: {1..50..5} → 1, 6, 11, 16, ..., 46
+
+------------------------------------------------------------------------
+
+##### Lendo valores de um arquivo
+
+``` bash
+for i in $(cat arquivo.txt)
+do
+    echo "O valor atual é $i"
+done
+```
+
+➡️ Lê o conteúdo de `arquivo.txt` e executa o loop para cada palavra (ou
+linha, se não houver espaços).
+
+------------------------------------------------------------------------
+
+##### Sintaxe aritmética estilo C
+
+``` bash
+for ((i=5; i<=20; i++))
+do
+    echo "O número é $i"
+done
+```
+
+➡️ Parecido com o `for` da linguagem C:\
+- `i=5` → valor inicial\
+- `i<=20` → condição de parada\
+- `i++` → incremento a cada iteração
+
+------------------------------------------------------------------------
