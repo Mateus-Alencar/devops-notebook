@@ -8,12 +8,11 @@
   - [Caracteres curinga no shell](#caracteres-curinga-no-shell)
 - [Entendendo o Prompt do terminal linux](#entendendo-o-prompt-do-terminal-linux)
 - [Camadas da arquitetura do Linux](#camadas-da-arquitetura-do-linux)
+  - [Inicializacao do sistema](#inicializacao-do-sistema)
 - [Estrutura de Diretórios Importantes](#estrutura-de-diretorios-importantes)
   - [Controle de bibliotecas compartilhadas](#controle-de-bibliotecas-compartilhadas)
 - [Pacotes](#pacotes)
-- [Tarefas administrativas](#tarefas-administrativas-de-seguranca)
-  - [Funções no linux](#funcoes-no-linux)
-  - [Agendador de tarefas no Linux](#agendador-de-tarefas-no-linux)
+  - [Comandos para gerenciar pacotes](#comandos-para-gerenciar-pacotes)
 - [Gerenciamento de particoes](#gerenciamento-de-particoes)
 - [Navegação e manipulação de arquivos](#navegacao-e-manipulacao-de-arquivos)
   - [QUOTING](#quoting)
@@ -29,9 +28,15 @@
   - [NICE e RECEIVER](#nice-e-receiver)
   - [Execucao de processos em primeiro e segundo plano](#execucao-de-processos-em-primeiro-e-segundo-plano)
 - [Rede](#rede)
+  - [Protocolos da camada de aplicacao](#protocolos-da-camada-de-aplicacao)
+  - [Protocolos das camadas de transporte e rede](#protocolos-das-camadas-de-transporte-e-rede)
+  - [Portas de Serviços](#portas-de-servicos)
 - [Gerenciamento de usuários](#gerenciamento-de-usuarios)
   - [CHMOD](#chmod)
   - [CHOWN](#chown)
+- [Tarefas administrativas](#tarefas-administrativas-de-seguranca)
+  - [Funções no linux](#funcoes-no-linux)
+  - [Agendador de tarefas no Linux](#agendador-de-tarefas-no-linux)
 - [Limpeza e manutenção](#limpeza-e-manutencao)
 - [Expressoes regulares](#expressoes-regulares)
   - [FIND](#find)
@@ -41,14 +46,15 @@
   - [PIPE](#pipe)
   - [Inicializacao do sistema](#inicializacao-do-sistema)
 - [Estruturas condicionais](#estruturas-condicionais)
+- [SSH](#ssh)
 
-# Comandos Essenciais do Terminal Linux (Servidor)
+## Comandos Essenciais do Terminal Linux (Servidor)
 
 Este documento reúne os **principais comandos usados em servidores Linux**, com foco em administração, rede, manipulação de arquivos, processos e pacotes.
 
 > Sintaxe padrão para comandos no Linux: COMANDO -OPCOES ARQUIVOS/DIRETORIOS
 ---
-### Diferencas entre terminal e shell
+## Diferencas entre terminal e shell
 
 Um terminal é a aplicação (geralmente gráfica) que fornece uma janela para interação com o sistema.
 Ele funciona como uma interface (front-end) para o shell.
@@ -75,24 +81,25 @@ Quando o shell bash é executado após o usuário fazer login no sistema o mesmo
 
 #### Arquivos de configuracao do Bash
 
-É possível automatizar a criação de variáveis, aliases, funções e outras personalizaçõesdobash, tantoparaentrada do usuário no sistema quanto para cada nova instância do bash. Para uso de todos os usuários que se autenticarem temos:
+É possível automatizar a criação de variáveis, aliases, funções e outras personalizações do bash, tanto para entrada do usuário no sistema quanto para cada nova instância do bash. Para uso de todos os usuários que se autenticarem temos:
 
-`/etc/profile` - Esse arquivo contém comandos que são executados para todos os usuários do sistemanomomentodo login. Somente o usuário administrador(root) pode fazer alterações nesse arquivo. Essearquivoélidoantesdos arquivos de configurações individual de cada usuário.
-`/etc/bashrc` ou `/etc/bash.bashrc` - Esse arquivo tem a mesma utilidade do arquivo `/etc/profile`, mas é lido por shells que não precisam de autenticação para iniciar uma nova sessão no terminal, como por exemplo,gnome-terminal que emula um shell no ambiente gráfico.
+`/etc/profile` - Esse arquivo contém comandos que são executados para todos os usuários do sistema no momento do login. Somente o usuário administrador(root) pode fazer alterações nesse arquivo. Esse arquivo é lido antes dos arquivos de configurações individual de cada usuário.
+`/etc/bashrc` ou `/etc/bash.bashrc` - Esse arquivo tem a mesma utilidade do arquivo `/etc/profile`, mas é lido por shells que não precisam de autenticação para iniciar uma nova sessão no terminal, como por exemplo, gnome-terminal que emula um shell no ambiente gráfico.
 
 
-Além dos arquivos já vistos podemos personalizar o ambiente shell de cada usuário individualmenteusandoosseguintes arquivos: 
-- `~/.bash_profile` - Semelhante ao arquivo `/etc/profile`, mas o arquivo `~/.bash_profile` é válidoparaousuárioefica no diretório pessoal de cada e contém comandos, aliases, funções que são executados para o usuário no momento do login no sistema após a leitura do arquivo `/etc/profile`. 
+Além dos arquivos já vistos podemos personalizar o ambiente shell de cada usuário individualmente usando os seguintes arquivos: 
+- `~/.bash_profile` - Semelhante ao arquivo `/etc/profile`, mas o arquivo `~/.bash_profile` é válido para ousuário e fica no diretório pessoal de cada e contém comandos, aliases, funções que são executados para o usuário no momento do login no sistema após a leitura do arquivo `/etc/profile`. 
 - `~/.bash_login` - Em algumas distribuições esse arquivo substitui o ~/.bash_profile. 
 - `~/.profile` - Em algumas distribuições esse arquivo substitui o ~/.bash_profile. 
-- `~/.bashrc` - Faz o mesmo que o arquivo `/etc/bashrc` ou `/etc/bash.bashrc`, mas nesse caso sóseaplicaaousuárioindividualmente e que não precisa de autenticação, por exemplo, usando o gnome-terminal. 
+- `~/.bashrc` - Faz o mesmo que o arquivo `/etc/bashrc` ou `/etc/bash.bashrc`, mas nesse caso só se aplica ao usuário individualmente e que não precisa de autenticação, por exemplo, usando o gnome-terminal. 
+
 > Note que antes de cada arquivo foi incluso o sinal "~", que indica o diretório HOME do usuário.
 
 A linha #!/bin/bash, conhecida como shebang (ou hashbang), tem a função de indicar ao sistema operacional qual interpretador deve ser usado para executar um script. Ele deve ser a primeira linha de qualquer script executável.
 
 ---
-### Variaveis em Shell
-Quando falamos em variáveis em "shell" temos que ter em mente a divisão entre variáveis locais e de ambiente (ou globais). A diferença entre elas é que uma variável locla tem visibilidade restrita, apenas a sessão do shell onde ela foi definida, e uma variável de ambiente tem visibilidade não só na sessão do shell em que foi definida mas também em ambientes derivados, ou seja, subshells.
+## Variaveis em Shell
+Quando falamos em variáveis em "shell" temos que ter em mente a divisão entre variáveis locais e de ambiente (ou globais). A diferença entre elas é que uma variável local tem visibilidade restrita, apenas a sessão do shell onde ela foi definida, e uma variável de ambiente tem visibilidade não só na sessão do shell em que foi definida mas também em ambientes derivados, ou seja, subshells.
 
 O comando **echo** é utilizado para exibir um texto ou conteúdo na tela, por exemplo para exibir o conteúdo de uma variável.
 EX: `echo $PWD`
@@ -166,15 +173,14 @@ echo "Último argumento do comando anterior: $_"
 | `[a-z]`   | Intervalo de caracteres | `ls file[a-c].txt` | Lista `filea.txt`, `fileb.txt`, `filec.txt` |
 | `[0-9]`   | Intervalo de números | `ls file[0-5].txt` | Lista arquivos de `file0.txt` a `file5.txt` |
 ---
+## Entendendo o Prompt do terminal linux
 
-### Entendendo o Prompt do terminal linux
-
-### `mateus@linux_server:~$`
+#### `mateus@linux_server:~$`
   - **`mateus` (antes do @)** → Nome do usuário logado.
   - **`linux_server` (depois do @)** → Nome do computador/host.
   - **`$`** → Indica que o usuário logado é **comum (não root)**.
 
-### `root@linux_server:/home/mateus#`
+#### `root@linux_server:/home/mateus#`
 - **`root`** → Agora o terminal está logado como o superusuário (**administrador do sistema**).
 - **`linux_server`** → Nome do host (computador).
 - **`/home/mateus`** → Diretório atual continua o mesmo.
@@ -196,7 +202,6 @@ echo "Último argumento do comando anterior: $_"
 
 
 ---
-
 ## Camadas da arquitetura do linux
 
 #### Hardware
@@ -232,27 +237,7 @@ O SystemD monitora processos usando cgroups do Linux, garantindo que ao parar um
 - ESP (EFI System Partition)
 
 ---
-
-### Estrutura de Diretorios Importantes
-
-A partir do kernel 2.6 o Linux apresenta o sistema de arquivo **sysfs**. O sistema de arquivo sysfs é descrito como a união dos sistemas de arquivo **proc**, **devfs** e **devpty**. O sistema de arquivos sysfs enumera os dispositivos e canais conectados ao sistema numa hierarquia de sistema de arquivo que podeser acessadapelo espaço do usuário.
-> O arquivo que contém informações sobre a CPU no Linux é: `/proc/cpuinfo`
-
-O arquivo cpuinfo exibe detalhes do processador, como:
-
-- Modelo (model name)
-- Fabricante (vendor_id)
-- Quantidade de núcleos (cpu cores)
-- Velocidade (cpu MHz)
-- Cache (cache size)
-
-O `sysfs` é um sistema de arquivos virtual no Linux, montado geralmente em /sys. Ele foi criado para fornecer uma interface entre o kernel e o espaço do usuário, permitindo que informações sobre dispositivos, drivers e subsistemas do kernel sejam acessadas de forma organizada como arquivos e diretórios.
- 
- Trantando-se de dispositivos, outro diretório muito importante é o /dev. Nele encontramos arquivos especiais que representam a maioria dos dispositivos do sistema, particulamente dispositivos de armazenamento. Isso quer dizer que a maioria dos dispositivos conectados no servidor é representando por uma rquivo dentro do diretório /dev. 
- Um Disco conectado a uma controadora IDE, por exemplo, quando conectado ao primeiro canal IDE da placa mãe, é representado pelo arquivo de dispositivo /dev/hda. Cada partição nesse disco será identificada como /dev/hda1, /dev/hda2 e até a última partição encontrada.
- 
- O diretório /proc é um diretório criado pelo kernel na memória do computador apenas durante a inicialização, e contém informações sobre diversas informações do sistema, como processos em execuçãono sistema, incluindo detalhes sobre os dispositivos detectados. 
-
+## Estrutura de Diretorios Importantes
 
 |   Diretório    | Função                   |
 |----------------|--------------------------|
@@ -270,9 +255,100 @@ O `sysfs` é um sistema de arquivos virtual no Linux, montado geralmente em /sys
 Todos esses diretórios não podem está em uma partição diferente do diretório "/", por que durante o boot o kernel linux monta primeiro a partição vinculada ao diretório "/"
 
 
+A partir do kernel 2.6 o Linux apresenta o sistema de arquivo **sysfs**. O sistema de arquivo sysfs é descrito como a união dos sistemas de arquivo **proc**, **devfs** e **devpty**. O sistema de arquivos sysfs enumera os dispositivos e canais conectados ao sistema numa hierarquia de sistema de arquivo que podeser acessadapelo espaço do usuário.
+> O arquivo que contém informações sobre a CPU no Linux é: `/proc/cpuinfo`
+
+O arquivo cpuinfo exibe detalhes do processador, como:
+
+- Modelo (model name)
+- Fabricante (vendor_id)
+- Quantidade de núcleos (cpu cores)
+- Velocidade (cpu MHz)
+- Cache (cache size)
+
+**sysfs**
+O `sysfs` é um sistema de arquivos virtual no Linux, montado geralmente em `/sys`. Ele foi criado para fornecer uma interface entre o kernel e o espaço do usuário, permitindo que informações sobre dispositivos, drivers e subsistemas do kernel sejam acessadas de forma organizada como arquivos e diretórios.
+**dev** 
+Trantando-se de dispositivos, outro diretório muito importante é o `/dev`. Nele encontramos arquivos especiais que representam a maioria dos dispositivos do sistema, particulamente dispositivos de armazenamento. Isso quer dizer que a maioria dos dispositivos conectados no servidor é representando por uma rquivo dentro do diretório /dev. 
+Um Disco conectado a uma controadora IDE, por exemplo, quando conectado ao primeiro canal IDE da placa mãe, é representado pelo arquivo de dispositivo /dev/hda. Cada partição nesse disco será identificada como `/dev/hda1`, `/dev/hda2` e até a última partição encontrada.
+**proc**
+O diretório `/proc` é um diretório criado pelo kernel na memória do computador apenas durante a inicialização, e contém informações sobre diversas informações do sistema, como processos em execuçãono sistema, incluindo detalhes sobre os dispositivos detectados. 
+
+**Diretório /var/log**
+
+O diretório padrão dos arquivos de logs é /var/log e geralmente utiliza dois formatos dearquivos: oformatotexto puro como usado em arquivos como /var/log/messages, /var/log/secure(emoutrasdistroséoarquivo/var/log/auth) e que são visualizados com comandos como cat/tac, more, less, head e tail.
+
+##### logger
+O comando `logger` é uma ferramenta de linha de comando no Linux que permite enviar mensagens diretamente para o sistema de logs (syslog). É muito útil para administradores de sistema e desenvolvedores que precisam registrar informações de scripts ou de tarefas agendadas no mesmo local que os logs do sistema, como `/var/log/syslog` ou `/var/log/messages`.
+
+Sintaxe: `logger <opções> [-p facility.priority] [-t tag] [mensagem]`
+
+| Opções | Descrição |
+| ------ | --------- |
+| -p | Especifica uma facilidade e prioridade para a mensagem a qual pode ser especificadanoseguinteformato: "facility.priority". |
+| -t | Adiciona uma marcação (tag) em cada linha do arquivo de log. |
+| -i | Mostra o ID do processo do logger junto em cada linha. |
+| -f | Envia a mensagem de log para o arquivo especificado. |
+
+`facility.priority  destino`
+
+- facilidade(facility) - É usada para especificar o serviço ou programa que está enviando a mensagem. 
+- prioridade(priority) - Especifica o nível de gravidade da mensagem. 
+- destino - Especifica para onde deve ser mandada a mensagem de log.
+
+| facility(facilidade) | Descrição |
+|--------------------- |-----------|
+| auth | Mensagens de segurança, autorização, autenticação. 
+| authpriv | Mensagens de segurança, autorização, autenticação (privadas). 
+| cron | Serviços de agendamento (cron e at). |
+| daemon | Outros serviços do sistema que não possuem facilidades específicas. 
+| ftp | Serviço de ftp do sistema. 
+| kern | Mensagens do kernel.
+| lpr | Subsistema de impressão. mail Subsistema de e-mail. 
+| syslog | Mensagens internas geradas pelo syslog. 
+|*| Confere com todas as facilidades.
+
+| Prioridade | Descrição |
+|----------- |-----------|
+| emerg, panic |O sistema está inutilizável. |
+|alert |  Uma ação deve ser tomada imediatamente para resolver o problema. 
+| crit | Condições críticas. |
+|err, error | Condições de erro. | 
+| warning, warn | Condições de alerta. | 
+| notice | Condição normal, mas significante.|
+| info | Mensagens informativas.
+
+| Destinos | Descrição|
+| -------- | -------- |
+| arquivo | O syslog enviará os logs para um arquivo. Essa opção é a mais comum. |
+| @ | Com a arroba "@", o syslog enviará seus logs para um computador remoto, utilizando hostname ou endereço IP. | 
+| user1,user2 | Especificando o usuário, o syslog enviará a mensagem para os usuários especificados. Múltiplos usuários são separados por vírgula.| 
+| * | Com o asterisco "*", o syslog enviará os logs para todos usuários logados nomomento, atravésdo comando "wall".|
+
+
+> Registrando uma mensagem simples
+`logger "Servidor reiniciado com sucesso."`
+
+##### Rotação de logs no Linux
+
+No Linux, aplicativos e processos em segundo plano geram logs constantemente. É importante manter esses logs sob controle, ajustando-os em um cronograma específico. No entanto, fazer isso manualmente é trabalhoso. Para reduzir a intervenção manual, podemos automatizar o processo usando `logrotate` .
+
+`logrotate` é uma ferramenta de linha de comando para gerenciamento de logs no Linux. Os administradores escrevem as regras e políticas para lidar com diferentes arquivos de log em arquivos de configuração. Por meio do arquivo de configuração,o logrotate executará a função apropriada para gerenciar os arquivos de log correspondentes.
+
+##### `journalctl`
+O comando principal para interagir com logs no Linux é o journalctl, que permite visualizar e gerenciar registros do systemd, um sistema de inicialização e gerenciamento de serviços. Você pode usá-lo para ver logs recentes, logs de uma inicialização específica ou filtrar logs por data, servido para diagnosticar problemas no sistema. 
+
+> `journalctl -f` # Exibe os logs em tempo real
+> `journalctl -b` # Mostra todos os logs da inicialização atual
+> `ournalctl -u <nome_do_serviço>` # Mostra os logs de um serviço específico
+> `journalctl --until "YYYY-MM-DD HH:MM:SS"` # Exibe logs até uma data e hora específicas.
 ##### Controle de bibliotecas compartilhadas
 
 Bibliotecas no Linux são coleções de códigos pré-compilados que fornecem funcionalidades reutilizáveis para diversos programas. Elas permitem que os desenvolvedores não precisem reescrever funções comuns do zero, agilizando o desenvolvimento e otimizando o uso de recursos.
+
+Localização comum:
+- /lib, /usr/lib, /usr/local/lib
+- Bibliotecas de 64 bits: /lib64 ou /usr/lib64
 
 | Bibliotecas estáticas | Bibliotecas dinâmicas|
 | --------------------- | -------------------- |
@@ -284,10 +360,27 @@ Bibliotecas no Linux são coleções de códigos pré-compilados que fornecem fu
 Quando o comando `ldconfig -p` é executado ele busca as bibliotecas na localização definida pelo arquivo `/etc/ld.so.conf`
 
 ---
-### Pacotes
+## Pacotes
 Pacotes no Linux são arquivos que contêm todos os componentes necessários para instalar e executar um software, como o código do programa, bibliotecas, arquivos de configuração e documentação
 
 > Esses programas, como o APT (para sistemas Debian/Ubuntu) e o YUM ou DNF (para sistemas baseados em Red Hat), são usados para instalar, remover e atualizar pacotes de forma eficiente. 
+
+Dependendo da distribuição, o Linux usa formatos diferentes:
+
+| Distribuição     | Formato de pacote      | Gerenciador de pacotes |
+| ---------------- | ---------------------- | ---------------------- |
+| Debian / Ubuntu  | `.deb`                 | `dpkg`, `apt`          |
+| Red Hat / CentOS | `.rpm`                 | `rpm`, `yum`, `dnf`    |
+| Arch Linux       | `.pkg.tar.zst`         | `pacman`               |
+| Gentoo           | `.ebuild` (script)     | `emerge`               |
+| Universal        | `.tar.gz`, `.AppImage` | Manual/Execução direta |
+| Snap             | `.snap`                | `snap`                 |
+| Flatpak          | `.flatpak`             | `flatpak`              |
+
+Conceitos importantes: 
+- Dependências → outros pacotes necessários para o funcionamento.
+- Repositório → local online com pacotes confiáveis para instalação.
+- Fonte / Binário → pacotes podem vir já compilados (binários) ou como código-fonte para compilar.
 
 ##### `apt-get`
 
@@ -296,127 +389,32 @@ O `apt-get` é um comando de linha para gerenciar pacotes em distribuições Lin
 ##### `dpkg`
 O comando `dpkg` é uma ferramenta de gerenciamento de pacotes de baixo nível usada em distribuições Linux baseadas em Debian, como o Ubuntu, para instalar, remover e gerenciar pacotes de software em arquivos .deb. Exemplos comuns incluem `dpkg -i` para instalar, `dpkg -l` para listar pacotes instalados e `dpkg --purge` para remover um pacote e todos os seus arquivos de configuração
 
-##### Comandos para gerenciar pacotes.
+##### Comandos para gerenciar pacotes
 `dnf`/`yum`: Gerenciadores de pacotes de alto nível para distribuições baseadas em RPM, como Fedora e CentOS
 
 ```shell
-apt update                   #  Atualiza a lista de pacotes disponíveis nos repositórios. 
-apt upgrade                  # Atualiza os pacotes instalados para as versões mais recentes disponíveis nos repositórios. 
-apt install <nome-do-pacote> # Instala um pacote específico. 
-apt remove <nome-do-pacote>  # Remove um pacote, mas mantém os arquivos de configuração. 
-apt autoremove               # Remove pacotes não utilizados
-apt purge <nome-do-pacote>   # Remove um pacote e seus arquivos de configuração. 
-apt search <termo>           # Procura por pacotes. 
-apt show <nome-do-pacote>    # Exibe informações detalhadas sobre um pacote, como versão, descrição e dependências. 
-dpkg -i <arquivo.deb>        # Instala um pacote .deb usando o dpkg. 
-dpkg -r <nome-do-pacote>     # Remove um pacote. 
-dpkg -l                      # Lista todos os pacotes instalados. 
-rpm -i <arquivo.rpm>         # Instala um pacote .rpm. 
-rpm -e <nome-do-pacote>      # Remove um pacote. 
-rpm -qa                      # Lista todos os pacotes instalados. 
-dnf update                   # Atualiza todos os pacotes no sistema. 
-yun update                   # Atualiza todos os pacotes no sistema. 
+           # Apt (Debian / Ubuntu)
+apt update                   # Atualiza a lista de pacotes disponíveis nos repositórios.
+apt upgrade                  # Atualiza os pacotes instalados para as versões mais recentes disponíveis nos repositórios.
+apt install <nome-do-pacote> # Instala um pacote específico.
+apt remove <nome-do-pacote>  # Remove um pacote, mas mantém os arquivos de configuração.
+apt purge <nome-do-pacote>   # Remove um pacote e seus arquivos de configuração.
+apt autoremove               # Remove pacotes não utilizados.
+apt search <termo>           # Procura por pacotes.
+apt show <nome-do-pacote>    # Exibe informações detalhadas sobre um pacote, como versão, descrição e dependências.
+
+dpkg -i <arquivo.deb>        # Instala um pacote .deb usando o dpkg.
+dpkg -r <nome-do-pacote>     # Remove um pacote.
+dpkg -l                      # Lista todos os pacotes instalados.
+
+          # RPM (Red Hat / CentOS / Fedora)
+rpm -i <arquivo.rpm>         # Instala um pacote .rpm.
+rpm -e <nome-do-pacote>      # Remove um pacote.
+rpm -qa                      # Lista todos os pacotes instalados.
 ```
 
 ---
-
-### Tarefas administrativas de seguranca
-
-- Contas de usuário: Criação (`useradd`), exclusão (`userdel`) e modificação (`usermod`) de contas de usuário. O arquivo `/etc/passwd` armazena as informações básicas dos usuários.
-- Grupos: Gerenciamento de grupos (`groupadd`, `groupdel`, `groupmod`) para organizar usuários e controlar permissões de acesso a arquivos e diretórios.
-- Permissões de acesso: Alteração de permissões de arquivos (`chmod`) e de propriedade (`chown`) para garantir que os usuários tenham o acesso correto aos recursos do sistema.
-- Privilégios: Utilização do comando sudo para permitir que usuários executem tarefas administrativas com privilégios de super usuário (root), garantindo a segurança do sistema.
-
-> Criando um grupo básico
-`sudo groupadd desenvolvedores`
-
-> Criando um grupo com um GID (Group ID) específico:
-`sudo groupadd -g 2000 contabilidade`
-
->  Excluindo um grupo:
-`sudo groupdel dev_backend`
-
-> Atribuir usuários a um grupo
-`sudo usermod -aG desenvolvedores joao` # Adiciona o usuário 'joao' ao grupo 'desenvolvedores'
-
-> Alterar a propriedade de grupo de um diretório
-`sudo chgrp desenvolvedores /var/www/projetos` # Altera a propriedade do grupo do diretório 'projetos' para 'desenvolvedores'
-
-> Modificar as permissões do diretório
-`sudo chmod g+rwx /var/www/projetos` # Permite que o grupo 'desenvolvedores' tenha permissões de leitura, escrita e execução no diretório 'projetos'
-
-
-##### SUID e SGID
-SUID e SGID são permissões especiais de arquivo no Linux que permitem que um arquivo executável seja executado com os privilégios do seu proprietário (SUID) ou grupo (SGID), independentemente de qual usuário o está executando
-
-> Comando para encontrar e listar todos os arquivos com os bits SUID ou SGID ativados em todo o sistema de arquivos, a partir do diretório raiz (/).
-`find / -type f -a \( -perm -4000 -o -perm -2000 \) -ls`
-
-- `find /`: Inicia a busca a partir do diretório raiz (/), ou seja, em todo o sistema de arquivos.
-- `-type f`: Restringe a busca apenas a arquivos regulares, ignorando diretórios e outros tipos de arquivos.
-- `-a`: Representa um operador "AND", que combina as duas condições seguintes. Ele é implícito, então o comando funcionaria da mesma forma sem ele.
-- `\( ... \)`: Agrupa as duas condições de permissão. As barras invertidas (\) são necessárias para escapar os parênteses, de forma que o shell os interprete como parte do comando find, e não como metacaracteres do shell.
-- `-perm -4000`: Encontra arquivos com o bit SUID (Set User ID) ativado. Quando um arquivo com SUID é executado, ele é executado com os privilégios do proprietário do arquivo, e não com os privilégios do usuário que o executa.
-- `-o`: Representa um operador "OR", que encontra arquivos que correspondem à condição anterior ou à seguinte.
-- `-perm -2000`: Encontra arquivos com o bit SGID (Set Group ID) ativado. Quando um arquivo com SGID é executado, ele é executado com os privilégios do grupo do arquivo, e não com os privilégios do grupo do usuário que o executa.
-- `-ls`: Exibe os resultados encontrados em um formato de listagem detalhada, similar ao que o comando ls -l faz.
-
-#### Funcoes no linux
-
-O arquivo /etc/profile é um script de configuração do sistema Linux que define variáveis de ambiente e configurações de inicialização para todos os usuários. Ele é executado por shells de login (como Bash) sempre que um usuário faz login no sistema, seja por meio de um terminal, console ou SSH. 
-
-##### Funções em shell script
-No dia a dia: É possível definir funções no arquivo de configuração do seu shell (como .bashrc ou .zshrc) para criar atalhos para comandos longos e usados com frequência.
-
-Exemplo:
-```bash
-# Define uma função chamada "saudacao"
-saudacao() {
-    echo "Olá, $1!" # $1 é o primeiro parâmetro passado
-    echo "Bem-vindo ao shell script."
-}
-
-# Chama a função "saudacao" passando o parâmetro "usuário"
-saudacao "usuário"
-
-```
-
-#### Agendador de tarefas no Linux
-
-O `cron` é o agendador de tarefas padrão do Linux, usado para automatizar a execução de comandos ou scripts em horários e intervalos específicos. A configuração dessas tarefas é feita através de um arquivo chamado crontab, abreviação de "cron table".
-
-Estrutura do comando crontab
-
-O utilitário `crontab` permite gerenciar as tarefas agendadas. 
-- `crontab -e`: Abre o arquivo crontab do usuário atual em um editor de texto para que você possa adicionar, modificar ou remover tarefas.
-- `crontab -l`: Lista todas as tarefas agendadas para o usuário atual.
-- `crontab -r`: Remove todas as tarefas agendadas para o usuário atual.
-
-> EX: Executar um script a cada 5 minutos:
-`*/5 * * * * /caminho/para/meu_script.sh`
-
-> EX: Executar um script todos os dias à 1h da manhã:
-`0 1 * * * /caminho/para/backup_diario.sh`
-
->EX: Executar um script toda segunda-feira, às 7h
-`0 7 * * 1 /caminho/para/relatorio_semanal.sh`
-
-##### Atualizar a data e hora manualmente com date
-
-O comando date permite visualizar e definir a data e a hora do sistema. Para alterar a data e hora, é preciso ter privilégios de superusuário (sudo)
-
-> Exemplo: Definir a data e hora para 27 de outubro de 2025, às 17:00
-`sudo date 102717002025` # A sintaxe para definir a data é: date MMDDHHMMYYYY.
-
-A forma mais recomendada e precisa de manter a data e hora atualizadas é usando a sincronização automática via NTP, que ajusta o relógio do sistema de acordo com servidores de tempo confiáveis. O timedatectl é a ferramenta para gerenciar essa configuração na maioria das distribuições Linux modernas. 
-
-`timedatectl status` # status do serviço de sincronização
-
-Para ligar a sincronização automática, use o seguinte comando: `sudo timedatectl set-ntp true`
-
-
----
-### Gerenciamento de particoes
+## Gerenciamento de particoes
 
 ##### Conceitos de LVM
 
@@ -458,7 +456,7 @@ O `fdisk` é um utilitário de linha de comando usado para gerenciar tabelas de 
 
 > Aviso: Fazer alterações em partições pode causar perda de dados. Sempre faça backup dos dados importantes antes de usar o fdisk.
 
-##### Comandos principais do fdisk
+Comandos principais do fdisk
 ```bash
 sudo fdisk -l # Listar todas as partições de todos os discos
 sudo fdisk -l /dev/sdX # Listar partições de um dispositivo específico (substitua sdX)
@@ -470,11 +468,11 @@ w # Salvar mudanças e sair (modo interativo)
 q # Sair sem salvar mudanças (modo interativo)
 ```
 
-##### Gerenciar partições GPT com gdisk
+Gerenciar partições GPT com gdisk
 
 O `gdisk` é uma alternativa para `fdisk`, especificamente projetada para discos com tabela de partições GPT. Oferece funcionalidades avançadas para manipular partições em discos modernos.
 
-##### Comandos principais do gdisk
+Comandos principais do gdisk
 ```bash
 sudo gdisk /dev/sdX # Abrir gdisk para o disco especificado
 p # Mostrar a tabela de partições atual
@@ -484,7 +482,7 @@ t # Alterar o tipo da partição
 w # Gravar alterações e sair
 q # Sair sem salvar alterações
 ```
-##### Comandos úteis para formatação e montagem de partições
+Comandos úteis para formatação e montagem de partições
 ```bash
 sudo mkfs.ext4 /dev/sdXN # Formatar a partição no sistema de arquivos ext4
 sudo mkdir /mnt/ponto_de_montagem # Criar diretório para montar a partição
@@ -514,7 +512,7 @@ A partição Swap no Linux é um espaço reservado no disco rígido que funciona
 > Formata uma partição ou arquivo para ser usado como swap.
 `sudo mkswap /dev/sdb1` || `sudo mkswap /swapfile` 
 
-#### XFS
+##### **XFS**
 **XFS** é um sistema de arquivos de 64 bits, otimizado para arquivos grandes e cargas de trabalho paralelas. Ele é frequentemente usado em servidores, bancos de dados e armazenamento em massa devido à sua capacidade de lidar com arquivos e sistemas de arquivos massivos e suas operações de entrada/saída (E/S) paralelas, que melhoram o desempenho em tarefas como processamento de mídia. 
 
 Usa um sistema de registro de metadados para garantir a consistência dos dados em caso de falha de energia ou travamento do sistema. As alterações são primeiro registradas em um log e, depois, aplicadas ao sistema de arquivos. 
@@ -539,7 +537,6 @@ mount [opções] <dispositivo> <ponto de montagem>
 > Listar todas as unidades (units) de montagem (mount points) que estão atualmente ativas no sistema gerenciado pelo systemd.
 ` systemctl list-units --type=mount`
 ---
-
 ## Navegacao e manipulacao de arquivos
 
 ```bash
@@ -610,14 +607,13 @@ gzip [opções] arquivo      # Comando para compressão de arquivos no Linux.
 gunzip [opções] arquivo    # Comando para descompactar arquivos.
 
 ```
-[FIND](#find)
-#### SPLIT
+##### SPLIT
 O comando split no Linux é usado para dividir um arquivo grande em vários arquivos menores. Por padrão, ele divide o arquivo em pedaços de 1.000 linhas, a menos que você especifique um tamanho diferente. O arquivo original não é modificado.
 `split [OPÇÕES] [ARQUIVO] [PREFIXO]` 
 - [ARQUIVO]: O nome do arquivo grande a ser dividido.
 - [PREFIXO]: O prefixo para os nomes dos novos arquivos. Se não for especificado, o split usará x como padrão, se quiser expedificar o número e linhas é só usar o prefixo -l seguido pelo número de linhas.
 
-#### quoting
+##### quoting
 O **quoting" no Linux é o ato de usar caracteres especiais, como aspas (simples, duplas ou backticks) e a barra invertida, para instruir o shell a tratar o texto de forma literal, ignorando seu significado especial e evitando a interpretação de comandos, variáveis ou caracteres especiais.
 - Aspas Simples ('): Protegem todo o texto entre elas, tratando-o como um literal.
 - Aspas Duplas ("): Protegem o texto, mas permitem a expansão de variáveis (como $USER) e a      substituição de comandos (usando $(comando)). Elas também desabilitam o significado especial de curingas (como * ou ?). 
@@ -627,7 +623,7 @@ EX: ` echo "O diretório atual é: $(pwd)" `
 
 > ` ls -l "/caminho/do meu/diretorio" ` é igual a: ` ls -l /caminho/do\ meu/diretorio `
 
-#### DD
+##### DD
 O comando `dd` realiza cópias byte a byte, ou seja, realiza cópia sequencial de qualquer origem para qualquer destino. Por isso, é especialmente útil para fazer cópias completas de discos ou partições.
 
 > Criar uma copia da partição sda1:
@@ -636,7 +632,7 @@ O comando `dd` realiza cópias byte a byte, ou seja, realiza cópia sequencial d
 OBS: LPIC-1 - Preparatório para os Exames 101 e 102 V5 ATUALIZADO (aula: 27.103.3)
 
 
-#### TYPE
+##### TYPE
 
 O comando `type` no Linux é um comando de shell integrado usado para descobrir como um nome de comando será interpretado, informando se ele é um comando interno (built-in), um alias, uma função ou um executável externo. 
 ```BASH
@@ -645,24 +641,29 @@ type cd       # Mostra que cd é um built-in do shell.
 type python   # Se o python estiver instalado e no PATH, ele mostrará o caminho do arquivo executável, por exemplo: python is /usr/bin/python.
 ```
 
-#### FILE
+##### FILE
 
 O comando file no Linux é usado para determinar o tipo de um arquivo, analisando seu conteúdo em vez de sua extensão. Ele verifica o arquivo usando três testes: sistema de arquivos, magic number e linguagem, retornando informações como se é um diretório, texto ASCII, executável ou uma imagem.
 
-#### WHEREIS 
+##### WHEREIS 
 
 O comando whereis em Linux localiza a localização de binários, arquivos-fonte e páginas de manual de um programa especificado. Ele procura em diretórios padrão do sistema, como $PATH e $MANPATH, e pode ser usado para encontrar arquivos relacionados a um comando. 
 
-#### LCOATE 
+##### LOCATE 
 
 `locate nome_do_arquivo. `
 
 O comando locate no Linux é usado para encontrar arquivos rapidamente, pois busca em um banco de dados pré-existente, em vez de percorrer o sistema de arquivos a cada vez. 
 
+```bash
+locate arquivo.txt            # Retorna todos os caminhos que contêm arquivo.txt.
+locate '*.log'                # Encontra todos os arquivos que terminam com .log.
+locate *.conf | grep nginx    # Lista apenas arquivos de configuração que contêm “nginx” no caminho.
+locate --basename arquivo.txt # Procura apenas pelo nome do arquivo, ignorando o caminho completo.
+```
+
 ---
-
 ## Informacoes do sistema
-
 ```bash
 uname -a           # Informações do kernel e arquitetura
 uptime             # Tempo de atividade do sistema
@@ -686,6 +687,22 @@ ps aux | grep nginx #verificar se o serviço/processo nginx está em execução 
 tail -f /var/log/syslog   # Acompanha logs em tempo real.
 man <comando>             # É usado para exibir as páginas de manual de qualquer outro comando
 apropos list directory    # É usado para pesquisar nas páginas de manual (man pages) por comandos cujas descrições contêm uma palavra-chave.
+last                      # exibe um histórico cronológico reverso dos usuários que fizeram login e logout no sistema
+fdisk -l                  # Informações detalhadas sobre discos e partições (requer root)
+lsblk                     # Mostra discos e partições
+
+cat /etc/os-release       # Visualização de informações do sistema.
+cat /proc/meminfo         # Detalhes completos sobre memória
+cat /proc/cpuinfo         # Informação detalhada do processador
+
+ip addr show              # Exibe interfaces de rede e endereços IP
+ifconfig                  # Interface de rede (antigo, ainda usado)
+netstat -tulnp            # Mostra portas em uso e serviços ligados
+ping <host>               # Testa conectividade com outro host
+
+lshw                      # Lista detalhes completos do hardware (precisa root)
+lsusb                     # Lista dispositivos USB conectados
+lspci                     # Lista dispositivos PCI
 ```
 #### TAIL
 O comando tail no Linux exibe as últimas linhas de um arquivo de texto, sendo útil para monitorar arquivos de log em tempo real. Por padrão, ele mostra as 10 linhas finais, mas essa quantidade pode ser alterada com a opção -n. A opção `-f` é muito usada para seguir o arquivo e exibir novas linhas à medida que são adicionadas no arquivo em tempo real.
@@ -700,9 +717,7 @@ O comando tail no Linux exibe as últimas linhas de um arquivo de texto, sendo �
 `nl /etc/passwd | tail -n +15` 
 
 ---
-
 ## Processos e servicos
-
 ```bash
 ps aux             # Lista todos os processos
 kill PID           # Envia sinal para finalizar processo
@@ -795,6 +810,7 @@ sleep 100        # Executa um comando longo
 Ctrl+Z           # Suspende o processo
 jobs             # Lista processos suspensos
 bg %1            # Coloca o job 1 em execução no background
+fg %1            # traz o job 1 para foreground (use %n, %+, %-)
 ```
 
 > O processo continuará executando no background, permitindo que o terminal seja usado normalmente.
@@ -823,19 +839,65 @@ O `renice` permite alterar a prioridade (nice value) de um processo que já est�
 `renice 10 -p 1234`
 
 #### Gerenciar serviços (SystemD) - `systemctl`
-- **Uso:** `systemctl [operação] [serviço]`
-- **Exemplos:**
-  - `systemctl status nginx`
-  - `systemctl start apache2`
-  - `systemctl enable sshd`
+O systemctl é o comando usado para controlar o systemd, que é o gerenciador de inicialização e serviços padrão nas distribuições modernas do Linux (como Ubuntu, Debian, Fedora, CentOS, etc).
+
+Ele permite iniciar, parar, habilitar, verificar status de serviços e também gerenciar o sistema (reiniciar, desligar, etc).
+- **Sintaxe:** `systemctl [operação] [serviço]`
+
+**Comandos básicos de serviços**
+```bash
+systemctl start nome_do_servico     # Inicia um serviço
+systemctl stop nome_do_servico      # Para um serviço
+systemctl restart nome_do_servico   # Reinicia um serviço
+systemctl reload nome_do_servico    # Recarrega configuração sem reiniciar
+systemctl status nome_do_servico    # Mostra status do serviço
+```
+**Gerenciar inicialização automática**
+```bash
+systemctl enable nome_do_servico     # Ativa serviço na inicialização
+systemctl disable nome_do_servico    # Desativa serviço na inicialização
+systemctl is-enabled nome_do_servico # Verifica se o serviço inicia automaticamente
+```
 
 #### `journalctl` - Ver logs do sistema
-- **Uso:** `journalctl [opções]`
-- **Exemplos:**
-  - `journalctl -xe` (últimos logs com erros)
-  - `journalctl -u nginx.service` (logs do nginx)
+- **Sintaxe:** `journalctl [opções]`
 
+```bash
+# Mostrar todos os logs do sistema
+journalctl
 
+# Exibir logs de um serviço específico
+journalctl -u nome_do_servico
+journalctl -u nginx
+
+# Mostrar logs em tempo real (como tail -f)
+journalctl -f
+journalctl -u nginx -f   # Logs em tempo real de um serviço específico
+
+# Mostrar logs do boot atual
+journalctl -b
+
+# Mostrar logs de boots anteriores
+journalctl -b -1         # Boot anterior
+journalctl -b -2         # Dois boots atrás
+
+# Filtrar logs por intervalo de tempo
+journalctl --since "2025-10-28 08:00" --until "2025-10-28 18:00"
+journalctl --since yesterday
+journalctl --since "1 hour ago"
+
+# Filtrar logs por nível de prioridade
+journalctl -p err        # Mostra apenas erros
+# Níveis disponíveis: emerg, alert, crit, err, warning, notice, info, debug
+
+# Limpar ou limitar o tamanho dos logs
+sudo journalctl --vacuum-time=7d      # Mantém logs dos últimos 7 dias
+sudo journalctl --vacuum-size=500M    # Mantém até 500 MB de logs
+
+# Diretório padrão dos logs do systemd
+# /var/log/journal/
+
+```
 #### HASH
 
 Funções de hash para verificar a integridade de arquivos. Isso é feito através de comandos como md5sum e sha256sum, que geram uma "impressão digital" única para um arquivo.
@@ -853,19 +915,8 @@ sha512sum minha_imagem.iso
 ```
 Isso retornaria algo como d41d8cd98f00b204e9800998ecf8427e minha_imagem.iso.
 
-#### Execucao de processos em primeiro e segundo plano
-
-Nós podemos executar um comando para ser executado em background, liberando-seassimoterminalpara uso. Em vez de digitar less /etc/passwd e prender o terminal, execute-o embackground:
-
-`less /etc/passwd &`
-
-Para poder executar qualquer programa em backgroung, coloque o caracter “&” no final do comando. E para verificar os processos em segundo plano, devemos usar o comando `job` para a listagem dos processos.
-
-
 ---
-
 ## Rede
-
 ```bash
 ip a               # Mostra interfaces de rede e IPs
 ping 8.8.8.8       # Testa conectividade com destino
@@ -873,10 +924,102 @@ curl http://site   # Faz uma requisição HTTP
 wget url           # Baixa um arquivo via terminal
 netstat -tuln      # Lista portas em uso (pode ser necessário instalar)
 ss -tuln           # Alternativa moderna ao netstat
-
+ifconfig           # Para visualizar informações sobre todas as interfaces de rede ativas
+ifconfig eth0      # Ver uma interface específica
+sudo ifconfig eth0 up   # Ativar uma interface
+sudo ifconfig eth0 down # Desativar uma interface
+netstat            # Exibe informações sobre conexões de rede, tabelas de roteamento e estatísticas de interface e protocolo.
+  netstat -an      # Exibe todas as conexões e portas de escuta
+  netstat -p tcp   # Mostra apenas as conexões relacionadas ao protocolo TCP
+  netstat -s       # Exibe estatísticas de tráfego por protocolo. 
+  netstat -rn      # Mostra a tabela de roteamento do sistema. 
 ```
----
+##### ip link
 
+O comando ip link é uma subseção do comando ip no Linux, que é usado para gerenciar as interfaces de rede (camada de enlace). Ele substituiu o antigo ifconfig em sistemas modernos. 
+
+> Para exibir uma lista de todas as interfaces de rede no sistema: `ip link show`
+
+> Ativar uma interface: `sudo ip link set dev <interface> up`
+
+> Desativar uma interface: `sudo ip link set dev <interface> down`
+
+> Alterar o endereço MAC: `sudo ip link set dev <interface> address <mac_address>`
+
+Uma interface de rede é um ponto de conexão física ou lógica que permite a um dispositivo (como um computador) se comunicar com uma rede. Ela atua como um "tradutor" entre o hardware do dispositivo e o software, possibilitando a troca de dados com outros dispositivos na rede. 
+
+##### route
+
+O comando route no Linux é usado para visualizar e manipular a tabela de roteamento IP, que determina o caminho que os pacotes de dados seguirão na rede. Para ver as rotas existentes, basta digitar route no terminal. Para adicionar ou remover rotas, são usadas as opções add e del, respectivamente. 
+> Visualizar a tabela de roteamento: `route`
+
+> Visualizar a tabela de roteamento (sem resolver nomes): `route -n`
+
+>Adicionar uma rota para uma rede:
+`route add -net <endereço_de_rede> netmask <máscara_de_sub-rede> gw <endereço_do_gateway>`
+
+> Adicionar uma rota padrão (default gateway):
+`route add default gw <endereço_do_gateway>`
+
+##### NetworkManager
+
+O `NetworkManager` é um serviço (ou daemon) de sistema que tem como objetivo simplificar e automatizar a gestão das conexões de rede em sistemas Linux. Ele foi projetado para tornar a configuração de rede o mais transparente possível para o usuário, gerenciando dinamicamente as interfaces de rede e suas conexões.
+
+Os arquivos de configuração que contém a extensão .network e ficam dentro do diretório /etc/systemd/network ou em /lib/systemd/network são lidos pelo systemd-networkd.
+
+##### Arquivo /etc/nsswitch.conf
+
+O arquivo /etc/nsswitch.conf informa onde o sistema irá buscar as fontes de base de dados. Aprimeiracolunatem o valor "tipo de banco de dados" informa exatamente que tipo de dados deve ser consultado, eascolunasrestantes indicam quais base de dados serão consultadas na ordem especificadas.
+
+Sintaxe: `tipo de banco de dados: primeira_base segunda_base terceira_base`
+
+Uma dessas base de dados é resolução de nomes. o tipo de banco de dados hosts. essa ocorrênciaindicaumabase de dados de resolução de nomes DNS. e as colunas seguintes indicam a ordemde consulta:
+
+```bash
+grep -i hosts /etc/nsswitch.conf
+hosts: files dns                     # files - É o arquivo /etc/hosts. 
+                                     # dns - É o arquivo /etc/resolv.conf. Indica que será feira a pesquisa nos servidores DNS informadosnessearquivo
+```
+O arquivo /etc/hosts é um arquivo de texto simples no sistema operacional Linux que mapeia nomes de host para endereços IP. Ele atua como um diretório local para o seu computador, permitindo que ele resolva nomes de domínio para endereços IP sem consultar servidores DNS externos.
+
+
+
+##### Protocolos da camada de aplicacao
+
+- HTTP (Hypertext Transfer Protocol): Usado para transferir informações entre navegadores (clientes) e servidores web, sendo a base da comunicação na World Wide Web.
+- HTTPS (Hypertext Transfer Protocol Secure): É a versão segura do HTTP, usando criptografia SSL/TLS para proteger a comunicação e os dados transmitidos entre o navegador e o servidor.
+- FTP (File Transfer Protocol): Utilizado para transferir arquivos entre um cliente e um servidor em uma rede de computadores.
+- SMTP (Simple Mail Transfer Protocol): Encarregado de enviar e-mails de um cliente para um servidor de e-mail e de transferir e-mails entre servidores.
+- POP3 (Post Office Protocol 3): Permite que um cliente de e-mail acesse e baixe as mensagens de um servidor para o seu dispositivo, geralmente excluindo-as do servidor após o download.
+- IMAP (Internet Message Access Protocol): Um protocolo de e-mail que permite gerenciar e sincronizar mensagens de e-mail diretamente no servidor, possibilitando que o usuário as acesse de múltiplos dispositivos.
+- DNS (Domain Name System): Converte nomes de domínio (como google.com) em endereços IP (como 172.217.10.14), permitindo que os navegadores encontrem e acessem servidores na internet.
+- DHCP (Dynamic Host Configuration Protocol): Atribui automaticamente endereços IP e outras configurações de rede a dispositivos conectados a uma rede, simplificando a gestão e a conexão de novos equipamentos.
+
+##### Protocolos das camadas de transporte e rede
+
+TCP (Transmission Control Protocol): É um protocolo orientado à conexão que garante a entrega confiável e ordenada de dados. É ideal para aplicações onde a integridade dos dados é crucial, como a navegação web e transferência de arquivos.
+UDP (User Datagram Protocol): Um protocolo não orientado à conexão e de baixa latência, que não garante a entrega ou a ordem dos pacotes. É usado em aplicações onde a velocidade é mais importante que a confiabilidade, como streaming de vídeo e jogos online.
+IP (Internet Protocol): Responsável por endereçar e rotear pacotes de dados através das redes. Atribui um endereço único (o endereço IP) a cada dispositivo conectado à internet, permitindo que os dados cheguem ao destino correto.
+
+##### Portas de Servicos
+
+| Porta | Protocolo | Descrição |
+| ----- | --------- | --------- |
+| 20 | FTP | Serviço do protocolo FTP para transferência dedados. |
+| 21 | FTP | Serviço do protocolo FTP para conexão. |
+| 22 | SSH | SSH Protocolo para login remoto do shell. |
+| 23 | Telnet | Acesso Remoto no Prompt Comando ou Shell. |
+| 25 | SMTP | Serviço de e-mail para envio e recedimento de mensagens.|
+| 53 | DNS | Serviço para resolução de nomes DNS. |
+| 80 | HTTP | Serviço para acesso de páginas WEB. |
+| 110 | POP3 | Download de Mensagens de Email. |
+| 123 | NTP | Serviço usado para atualização de data e hora. |
+| 137 | NetBIOS | Resolução de nomes NetBIOS. |
+| 139 | NetBIOS | Compartilhamento de arquivos|
+| 143 | IMAP | Visualização e Download de mensagens de Email|
+| 443 | HTTPS | Faz o mesmo que o serviço HTTP mas comcriptografia. |
+
+---
 ## Gerenciamento de usuarios
 
 ```bash
@@ -890,6 +1033,8 @@ chmod +x script.sh         # Torna o arquivo executável
 chown user:grupo arquivo   # Altera dono e grupo de um arquivo
 sudo comando               # Executa comando como root
 su -                       # Troca para o usuário root
+sudo -u <user>             # Comando usado para executar um comando com um usuário diferente na mesma sessão.
+last                       # exibe um histórico cronológico reverso dos usuários que fizeram login e logout no sistema
 ```
 As permissões são as informações que indicam que tipo de acesso pode ser realizado em determinado diretório ou arquivo. No GNU/Linux cada arquivo e/ou diretório tem definido seu controle de acesso em permissões atribuídas a:
 
@@ -950,6 +1095,115 @@ Chown é uma abreviação para change owner, que traduzido fica “mudar o dono�
 #### UMASK
 
 `umask` é um comando em sistemas Unix e similares que define ou mostra a "máscara de usuário", determinando as permissões padrão para arquivos e diretórios recém-criados. Ele funciona subtraindo um valor de permissão (geralmente em formato octal, como \(022\)) do conjunto de permissões padrão para criar arquivos (\(666\) para arquivos, \(777\) para diretórios). 
+
+---
+## Tarefas administrativas de seguranca
+
+- Contas de usuário: Criação (`useradd`), exclusão (`userdel`) e modificação (`usermod`) de contas de usuário. O arquivo `/etc/passwd` armazena as informações básicas dos usuários.
+- Grupos: Gerenciamento de grupos (`groupadd`, `groupdel`, `groupmod`) para organizar usuários e controlar permissões de acesso a arquivos e diretórios.
+- Permissões de acesso: Alteração de permissões de arquivos (`chmod`) e de propriedade (`chown`) para garantir que os usuários tenham o acesso correto aos recursos do sistema.
+- Privilégios: Utilização do comando sudo para permitir que usuários executem tarefas administrativas com privilégios de super usuário (root), garantindo a segurança do sistema.
+
+> Criando um grupo básico
+`sudo groupadd desenvolvedores`
+
+> Criando um grupo com um GID (Group ID) específico:
+`sudo groupadd -g 2000 contabilidade`
+
+>  Excluindo um grupo:
+`sudo groupdel dev_backend`
+
+> Atribuir usuários a um grupo
+`sudo usermod -aG desenvolvedores joao` # Adiciona o usuário 'joao' ao grupo 'desenvolvedores'
+
+> Alterar a propriedade de grupo de um diretório
+`sudo chgrp desenvolvedores /var/www/projetos` # Altera a propriedade do grupo do diretório 'projetos' para 'desenvolvedores'
+
+> Modificar as permissões do diretório
+`sudo chmod g+rwx /var/www/projetos` # Permite que o grupo 'desenvolvedores' tenha permissões de leitura, escrita e execução no diretório 'projetos'
+
+##### Comandos administrativos:
+```bash
+# O lsof exibe uma longa lista de todos os arquivos abertos por todos os processos
+lsof -p <PID>            # Listar arquivos abertos por um processo específico
+lsof -i                  # Listar arquivos de rede e portas
+lsof -i :80              # Mostrará qual processo está usando a porta 80
+lsof +D /caminho/para/diretorio # Listar arquivos abertos em um diretório
+
+# O fuser retorna os IDs dos processos (PIDs) que estão acessando o recurso especificado.
+# Sintaxe: fuser [opções] [arquivo_ou_socket]
+fuser -v .               # Identificar processos usando um diretório
+fuser -v -n tcp 80       # Encontrar processos em uma porta de rede
+```
+
+##### SUID e SGID
+SUID e SGID são permissões especiais de arquivo no Linux que permitem que um arquivo executável seja executado com os privilégios do seu proprietário (SUID) ou grupo (SGID), independentemente de qual usuário o está executando
+
+> Comando para encontrar e listar todos os arquivos com os bits SUID ou SGID ativados em todo o sistema de arquivos, a partir do diretório raiz (/).
+`find / -type f -a \( -perm -4000 -o -perm -2000 \) -ls`
+
+- `find /`: Inicia a busca a partir do diretório raiz (/), ou seja, em todo o sistema de arquivos.
+- `-type f`: Restringe a busca apenas a arquivos regulares, ignorando diretórios e outros tipos de arquivos.
+- `-a`: Representa um operador "AND", que combina as duas condições seguintes. Ele é implícito, então o comando funcionaria da mesma forma sem ele.
+- `\( ... \)`: Agrupa as duas condições de permissão. As barras invertidas (\) são necessárias para escapar os parênteses, de forma que o shell os interprete como parte do comando find, e não como metacaracteres do shell.
+- `-perm -4000`: Encontra arquivos com o bit SUID (Set User ID) ativado. Quando um arquivo com SUID é executado, ele é executado com os privilégios do proprietário do arquivo, e não com os privilégios do usuário que o executa.
+- `-o`: Representa um operador "OR", que encontra arquivos que correspondem à condição anterior ou à seguinte.
+- `-perm -2000`: Encontra arquivos com o bit SGID (Set Group ID) ativado. Quando um arquivo com SGID é executado, ele é executado com os privilégios do grupo do arquivo, e não com os privilégios do grupo do usuário que o executa.
+- `-ls`: Exibe os resultados encontrados em um formato de listagem detalhada, similar ao que o comando ls -l faz.
+
+#### Funcoes no linux
+
+O arquivo /etc/profile é um script de configuração do sistema Linux que define variáveis de ambiente e configurações de inicialização para todos os usuários. Ele é executado por shells de login (como Bash) sempre que um usuário faz login no sistema, seja por meio de um terminal, console ou SSH. 
+
+##### Funções em shell script
+No dia a dia: É possível definir funções no arquivo de configuração do seu shell (como .bashrc ou .zshrc) para criar atalhos para comandos longos e usados com frequência.
+
+Exemplo:
+```bash
+# Define uma função chamada "saudacao"
+saudacao() {
+    echo "Olá, $1!" # $1 é o primeiro parâmetro passado
+    echo "Bem-vindo ao shell script."
+}
+
+# Chama a função "saudacao" passando o parâmetro "usuário"
+saudacao "usuário"
+
+```
+
+#### Agendador de tarefas no Linux
+
+O `cron` é o agendador de tarefas padrão do Linux, usado para automatizar a execução de comandos ou scripts em horários e intervalos específicos. A configuração dessas tarefas é feita através de um arquivo chamado crontab, abreviação de "cron table".
+
+Estrutura do comando crontab
+
+O utilitário `crontab` permite gerenciar as tarefas agendadas. 
+- `crontab -e`: Abre o arquivo crontab do usuário atual em um editor de texto para que você possa adicionar, modificar ou remover tarefas.
+- `crontab -l`: Lista todas as tarefas agendadas para o usuário atual.
+- `crontab -r`: Remove todas as tarefas agendadas para o usuário atual.
+
+> EX: Executar um script a cada 5 minutos:
+`*/5 * * * * /caminho/para/meu_script.sh`
+
+> EX: Executar um script todos os dias à 1h da manhã:
+`0 1 * * * /caminho/para/backup_diario.sh`
+
+>EX: Executar um script toda segunda-feira, às 7h
+`0 7 * * 1 /caminho/para/relatorio_semanal.sh`
+
+##### Atualizar a data e hora manualmente com date
+
+O comando date permite visualizar e definir a data e a hora do sistema. Para alterar a data e hora, é preciso ter privilégios de superusuário (sudo)
+
+> Exemplo: Definir a data e hora para 27 de outubro de 2025, às 17:00
+`sudo date 102717002025` # A sintaxe para definir a data é: date MMDDHHMMYYYY.
+
+A forma mais recomendada e precisa de manter a data e hora atualizadas é usando a sincronização automática via NTP, que ajusta o relógio do sistema de acordo com servidores de tempo confiáveis. O timedatectl é a ferramenta para gerenciar essa configuração na maioria das distribuições Linux modernas. 
+
+`timedatectl status` # status do serviço de sincronização
+
+Para ligar a sincronização automática, use o seguinte comando: `sudo timedatectl set-ntp true`
+
 
 ---
 ## Limpeza e manutencao
@@ -1052,8 +1306,8 @@ O comando find é uma ferramenta poderosa do Linux para pesquisar arquivos e dir
 > Mostrar todos os arquivos modificados no último minuto:
 `find . -mmin -1`
 ---
-
-### 📝 Vim (Visual Editor)
+## Vim 
+(Visual Editor)
 
 O **Vim** é uma versão aprimorada do clássico editor **vi**. Ele está
 presente na maioria das distribuições Linux modernas (Ubuntu, Debian,
@@ -1144,7 +1398,7 @@ Apenas Leitura | vim -R arquivo.txt ou view arquivo.txt |	Abre o arquivo no modo
 
 
 ---
-### Redirecionamento de Entrada Saida e Erros padrao
+## Redirecionamento de Entrada Saida e Erros padrao
 
 Processos Unix (e consequentemente Linux) geralmente abrem três descritores padrão de arquivos,que os permitem processar entrada e saída de dados. Esses descritores podem ser redirecionados de e para outros arquivos ou processos. 
 
@@ -1194,8 +1448,8 @@ systemctl poweroff  # Ele instrui o systemd a iniciar o processo de desligamento
 ```
 
 ---
+## Estruturas condicionais
 
-### Estruturas condicionais
 
 As estruturas condicionais em shell script, como if, then, else e fi, são usadas para controlar o fluxo de execução com base em condições. Elas permitem que um script execute comandos diferentes dependendo se uma condição é verdadeira ou falsa. As condições são avaliadas com operadores de comparação para números, strings e arquivos. Outra estrutura importante é o case, que simplifica a verificação de múltiplas condições em uma única variável. 
 
@@ -1337,7 +1591,7 @@ case $caracter in
 esac
 ```
 
-### 🔁 Loops `for` no Bash
+#### 🔁 Loops `for` no Bash
 
 
 ------------------------------------------------------------------------
@@ -1464,3 +1718,43 @@ done
 - `i++` → incremento a cada iteração
 
 ------------------------------------------------------------------------
+## SSH
+
+SSH (Secure Shell) no Linux é um protocolo usado para acesso remoto seguro a servidores. Ele permite que um usuário se conecte a outro computador pela rede de forma criptografada, garantindo a segurança da transmissão de dados. Para usar o SSH, normalmente se utiliza o comando no terminal com a sintaxe básica: `ssh usuario@endereco_ip_ou_dominio`
+
+Esse comando conecta um usuário autenticado a um servidor remoto, geralmente na porta 22, que pode ser alterada por segurança. O SSH é usado principalmente para administrar sistemas remotamente, permitindo a execução de comandos e transferências de arquivos, substituindo protocolos menos seguros como Telnet.
+
+Para que o SSH funcione, o servidor deve ter o serviço SSH (sshd) instalado e rodando. A configuração do SSH pode ser ajustada no arquivo **`/etc/ssh/sshd_config`**, onde se define a porta, tipo de autenticação e políticas de segurança, incluindo a possibilidade de desabilitar o login direto como root para aumentar proteção.
+
+Além da autenticação via senha, o SSH oferece autenticação por chave pública/privada, que é mais segura e evita a necessidade de digitar senha a cada conexão.
+
+Sintaxe: `ssh [opções] [usuário@]hostname [comando]`
+```bash
+# Opções:
+-4          # força o uso de endereços IPv4;
+-6          # força o uso de endereços IPv6;
+-p porta    # conecta usando a porta especificada (por padrão é 22);
+-q          # modo silencioso, suprime mensagens de aviso;
+-V          # exibe a versão do ssh e sai;
+-v          # modo verboso para debug, mostra mensagens detalhadas do progresso.
+```
+> Esse comando tenta conectar como usuário "root" na porta 22 do IP 10.1.2.3.
+`ssh -p 22 root@10.1.2.3`
+
+##### Automatizar diferentes chaves por host no config
+
+Para automatizar o uso de diferentes chaves SSH por host no arquivo de configuração ~/.ssh/config, você deve criar entradas específicas para cada host, associando a ele sua respectiva chave privada por meio da opção IdentityFile. Isso permite que o SSH utilize automaticamente a chave correta ao estabelecer a conexão, sem precisar especificar manualmente a cada uso.
+
+Exemplo de configuração: 
+```bash
+Host servidor1
+    HostName servidor1.exemplo.com
+    User usuario1
+    IdentityFile ~/.ssh/chave_privada_servidor1
+
+Host servidor2
+    HostName servidor2.exemplo.com
+    User usuario2
+    IdentityFile ~/.ssh/chave_privada_servidor2
+```
+Assim, o arquivo ssh-config funciona como um gerenciador de conexões personalizadas e automatiza o uso das chaves corretas para cada host, simplificando a gestão de múltiplas conexões seguras.
