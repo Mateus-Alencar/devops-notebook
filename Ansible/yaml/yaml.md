@@ -26,12 +26,19 @@ food:
   - Comentários iniciam com o caracter: "#";
   - O processador de YAML ignora comentáiros;
   - Em YAML podemos escrever textos de duas formas: Sem aspas e com aspas;
-
   - Em YAML podemos definir um dado como nulo de duas formas: ***~*** ou ***null***, os dois vão resultar em None;
 
   - Podmeos inserir booleanos da seguinte forma:
     - True e On = verdadeiro;
     - False e Off = falso;
+  - Os arquivos YAML são estruturados em formato de mapas ou lista
+    - Mapas:
+      - Com os mapas, é possivel associar pares de chave-valor
+      - Cada chave precisa ser única, e qualquer ordem é aceita
+    - Listas:
+      - Incluem valores em uma ordem específica e podem conter qualquer quantidade de itens
+      - A sequência de uma lista inicia com um traço (-) e um espaço
+      - É separada da sequência mãe por um recuo
   - Arrys, tipos de dados para listas:
     - Primeira forma:
     ```
@@ -45,6 +52,14 @@ food:
             - teste
             - True
     ```
+  - Mapas:
+  ```
+  Idenficacao:
+    nome: Phillipe
+    sobrenome: Farias
+    idade: 32
+    sexo: masculino
+  ```
   - Dicionário, tipos de dados para objetos ou listas com chaves e valores:
     - Primeira forma:
     ```
