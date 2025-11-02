@@ -1,5 +1,20 @@
+## Sumário
+1. Introdução ao Ansible
+2. Conceitos principais
+3. Funcionamento
+4. ansible.cfg e configuração
+5. Inventário
+6. Variáveis
+7. Playbooks
+8. Módulos e Pacotes
+9. Collections
+10. Roles
+11. Ansible-doc
+12. Exemplos práticos
+
+
 ## Ansible
-O Ansible ofere automação de código que reduz a complexidade e pode ser executado em qualquer lugar. Usar o Ansible permite automatizar praticamente qualquer tarefa. Ele se conecta aos servidores de destino (nós) remotamente, via SSH para sistemas Unix e via Windows Remote Management para Windows, utilizando os módulos para realizar as ações.
+O Ansible oferece automação de código que reduz a complexidade e pode ser executado em qualquer lugar. Usar o Ansible permite automatizar praticamente qualquer tarefa. Ele se conecta aos servidores de destino (nós) remotamente, via SSH para sistemas Unix e via Windows Remote Management para Windows, utilizando os módulos para realizar as ações.
 
 > O Ansible automatiza o gerenciamento de sistemas remotos e controla seu estado desejado.
 
@@ -12,22 +27,18 @@ Casos de uso com Ansible:
 > 👉 O Ansible usa scripts chamados de `playbooks`
 
 ### Conceitos principais do Ansible
-- Idempotência → se você rodar o mesmo playbook várias vezes, o resultado será sempre o mesmo (não instala pacotes repetidos, por exemplo).
-- Agentless → não precisa instalar agente nos servidores; só precisa de SSH e Python básico instalado no destino.
-- Playbook → São conjuntos de instruções escritas em YAML que descrevem o estado desejado de um sistema. Você escreve o que quer que aconteça, e o Ansible cuida da execução.
-- Inventário → lista de servidores onde as tarefas serão aplicadas.
-- Target: Host gerenciado pelo Ansible
-- Ad-hoc: linha de comando do Ansible, através do binário “/usr/bin/ansible” para
-automatizar tarefas únicas através de um ou mais módulos gerenciados.
-- Módulos: são “conjunto de códigos” que podem ser utilizadas pela linha de comando adhoc ou em uma Playbook para prover determinada ação nos targets gerenciáveis.
-- Tasks: é a definição de uma ação aplicada em um determinado host gerenciado. Uma
-tarefa é executada utilizando um módulo Ansible.
-- Roles: uma “distribuição limitada” e reutilizada de um conteúdo (automação) Ansible. Em
-uma role temos as Tasks, Handlers, Variáveis, Templates, entre outros.
-- Collections: formato de distribuição para conteúdo do Ansible, incluindo manuais, tarefas,
-módulos e plugins.
-- YAML: Linguagem de programação utilizada para escrever os arquivos do Ansible
-(Playbooks, Tasks, Inventory files, etc)
+| Conceito     | Descrição resumida                           |
+| ------------ | -------------------------------------------- |
+| Idempotência | Executar várias vezes não altera o resultado |
+| Agentless    | Não requer agente, usa SSH/WinRM             |
+| Playbook     | Arquivo YAML com instruções declarativas     |
+| Inventário   | Lista de hosts ou grupos gerenciados         |
+| Módulo       | Unidade de ação executada em um host         |
+| Task         | Execução de um módulo com parâmetros         |
+| Role         | Estrutura modular de automação reutilizável  |
+| Collection   | Pacote que reúne roles, módulos e plugins    |
+| Ad-hoc       | Execução rápida de comandos sem playbook     |
+
 
 ![alt text](image.png)
 
@@ -158,7 +169,7 @@ host_key_checking       = False
 ssh_executable          = /usr/bin/ssh
 private_key_file        = ~/.ssh/id_rsa
 
-[privilege_scalation]
+[privilege_escalation]
 
 become                  = True
 become_method           = sudo
@@ -467,6 +478,96 @@ Os pacotes no Ansible são representados principalmente por "módulos", que são
 - Uso em Tarefas: Os módulos são utilizados em tarefas dentro de playbooks para aplicar ações em hosts gerenciados. Por exemplo, o módulo apt gerencia pacotes em distribuições baseadas em Debian, enquanto o dnf é usado para Fedora ou RHEL-based.​
 
 > 👉 No Ansible você descreve o estado desejado da infraestrutura, e o Ansible garante que ela vai ficar daquele jeito.
+
+| Módulo           | Sistema compatível                           | Descrição                                      |
+| ---------------- | -------------------------------------------- | ---------------------------------------------- |
+| `apt`            | Debian, Ubuntu                               | Gerencia pacotes via APT                       |
+| `yum`            | CentOS, RHEL, Amazon Linux (versões antigas) | Gerencia pacotes via YUM                       |
+| `dnf`            | Fedora, RHEL 8+, Rocky, AlmaLinux            | Gerencia pacotes via DNF                       |
+| `zypper`         | openSUSE, SLES                               | Gerencia pacotes via Zypper                    |
+| `package`        | Todos os Linux                               | Módulo genérico (usa o gerenciador disponível) |
+| `win_chocolatey` | Windows                                      | Gerencia pacotes com Chocolatey                |
+| `pip`            | Todos                                        | Gerencia pacotes Python (via pip)              |
+
+```yaml
+---
+- name: Instalar pacotes no Debian/Ubuntu
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Atualizar o cache de pacotes
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Instalar pacotes essenciais
+      ansible.builtin.apt:
+        name:
+          - nginx
+          - curl
+          - git
+        state: present
+# O parâmetro state: present garante que o pacote esteja instalado. 
+# state: latest força a atualização para a versão mais recente.
+```
+```yaml
+---
+- name: Criar diretórios para aplicação
+  hosts: all
+  become: yes
+  tasks:
+    - name: Criar diretório de logs
+      ansible.builtin.file:
+        path: /var/log/minha_app
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+# Criar diretórios, ajustar permissões ou remover arquivos antigos.
+```
+```yaml
+---
+- name: Criar usuários do sistema
+  hosts: all
+  become: yes
+  tasks:
+    - name: Criar usuário deploy
+      ansible.builtin.user:
+        name: deploy
+        shell: /bin/bash
+        state: present
+        groups: sudo
+        create_home: yes
+# automatizar criação de contas de usuários ou times.
+```
+
+```yaml
+---
+- name: Agendar backup diário
+  hosts: all
+  become: yes
+  tasks:
+    - name: Adicionar tarefa no cron
+      ansible.builtin.cron:
+        name: "Backup diário"
+        minute: "0"
+        hour: "2"
+        job: "/usr/local/bin/backup.sh"
+# Criar tarefas agedadas
+```
+
+```yaml
+---
+- name: Clonar projeto do GitHub
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Baixar código da aplicação
+      ansible.builtin.git:
+        repo: 'https://github.com/exemplo/meu-projeto.git'
+        dest: /var/www/meu-projeto
+        version: main
+# Deply automático de aplicações.
+```
 
 ### Collections no Ansible
 
