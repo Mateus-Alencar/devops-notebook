@@ -1,0 +1,135 @@
+---
+- name: Ansible Conditionals
+  hosts: Debian
+  vars:
+    backup: true
+    snapshot: false
+  tasks:
+    - name: Rum the task if 'backup' is true
+      ansible.builtin.debug:
+        msg: "Congratulations"
+      when: backup | bool
+    - name: Rum the task if 'backup' is false
+      ansible.builtin.debug:
+        msg: "Critical. Mack backup"
+      when: not backup
+...
+
+---
+  - name: Block Testing
+    hosts: target02
+    tasks:
+      - block:
+          - ansible.builtin.debug:
+            msg: "EXECUTANDO NORMALMENTE"
+          - name: Simulando erros
+            ansible.builtin.shell: ./configure
+            args:
+              chdir: /tmp
+          - ansible.builtin.debug:
+            msg: "Nunca será executado"
+      rescue:
+        - ansible.builtin.debug:
+          msg: "ERror - falha no target {{ inventory_hostname }}"
+    always:
+      - name: SISOP | Update System
+        ansible.builtin.apt:
+          name: '*'
+          state: latest
+
+...
+
+# Loop: O item com loop no Ansible funciona como uma forma de repetir uma mesma tarefa para cada elemento de uma lista.
+---
+- name: Ansible Loop
+  hosts: target01
+  tasks:
+    - name: USER |  Add User
+      ansible.builtin.user:
+        name: "{{ item }}"        
+        state: present
+        groups: "users_ansible"
+      loop:
+        - eddie
+        - dime
+        - taylor
+...
+# OU
+---
+- name: Ansible Loop
+  hosts: target01
+  tasks:
+    - name: USER |  Add User
+      ansible.builtin.user:
+        name: "{{ item.name }}"        
+        state: present
+        comment: "{{ item.comment }}"
+        groups: "users_ansible"
+      loop:
+        - { name: 'edie', comment: 'edie' }
+        - { name: 'dime', comment: 'dime' }
+        - { name: 'taylor', comment: 'taylor' }
+...
+
+# Código para transferir 3 arquivos, através de um loop with_items, para um target
+---
+
+- name: Ansible Loop
+  hosts: target01
+  tasks:
+    - name: System | Copy files
+      ansible.builtin.copy: src={{ item.src  }} dest={{ item.dest  }}
+      with_items:
+        - { src: '/tmp/file1.txt', dest: '/tmp/file1.txt' }
+        - { src: '/tmp/file2.txt', dest: '/tmp/file2.txt' }
+        - { src: '/tmp/file3.txt', dest: '/tmp/file3.txt' }
+
+...
+
+# Código para criar uma sequência de usuários
+---
+
+- name: Sequence with_sequence
+  hosts: all
+  tasks:
+    - name: USER | Add User
+      ansible.builtin.user:
+        name: "{{ item  }}"
+        state: present
+        groups: users_ansible
+      with_sequence: start=0 end=9 format=user%x
+...
+# Comando para rodar essa playbook:
+#  ansible-playbook -i target01 -b 12_Sequence_with_sequence.yml
+# -b --> Elevar a autorizadade da execução na máquina de destino.
+
+
+
+# Esse código Ansible exemplifica o uso de handlers para gerenciar serviços de forma 
+# eficiente. 
+---
+
+- name: Ansible Handlers
+  hosts: target01 # O playbook é executado no host target01.
+  tasks:
+    - name: NGINX | Change Listener
+      ansible.builtin.replace:
+        dest: /etc/nginx/nginx.conf
+        regexp: 'listen          80 default_server;'
+        replace: 'listen         {{ ansible_default_ipv4.addresss }}:80 default_server'
+      notify: Restart Nginx
+
+  handlers:
+    - name: Restart Nginx
+      ansible.builtin.systemd:
+        name: nginx
+        state: restarted
+        enabled: yes
+
+# Tem uma tarefa que usa o módulo ansible.builtin.replace para alterar uma linha
+# no arquivo de configuração do NGINX /etc/nginx/nginx.conf. A linha com o padrão 
+# listen 80 default_server; é substituída para usar o endereço IP padrão da interface
+# de rede do host (variável ansible_default_ipv4.addresss) seguido de :80 default_server.
+# A tarefa possui o parâmetro notify: Restart Nginx, que informa ao Ansible que, se essa 
+# tarefa fizer alguma modificação, deve disparar o handler chamado "Restart Nginx".
+...

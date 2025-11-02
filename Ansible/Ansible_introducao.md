@@ -385,6 +385,78 @@ Esse módulo imprime o valor da variável chamada var_teste que está definida p
         groups: sudo
 
 ```
+```yaml
+---
+- name: Ansible Prompt | Creating user on Linux
+  hosts: all
+  vars_prompt:
+    - name: username
+      prompt: What is your username?
+      private: false
+    - name: password
+      prompt: What is your password?
+      private: true # Opcional - default = true
+      encrypt: "md5_crypt"
+      confirm: yes
+    - name: shell
+      prompt: What is your shell?
+      private: false
+  tasks:
+      - name: Print a message
+        ansible.builtin.debug:
+          msg: 'Usuario: {{ username }} | Password: {{ password }} | Shell: {{ shell }}'
+      - name: USER | Add user
+        ansible.builtin.user:
+          name: "{{ username }}"
+          comment: "User create by Ansible"
+          shell: "{{ shell }}"
+          home: "/home/{{ username }}"
+          password: "{{ password }}"
+
+...
+```
+
+
+Código para procurar arquivos .cfg em /tmp, salva a lista e mostra só os caminhos desses arquivos para o usuário.
+
+```yaml
+---
+- name: Ansible Register Filers
+  hosts: all
+  tasks:
+    - name: SISOP | Find files
+      find:
+        path: /tmp
+        patterns: '*.cfg'
+      register: output
+
+    - name: SISOP | Show files
+      debug:
+        msg: "{{ output.files | map(attribute='path') }}"
+...
+# Essa tarefa usa o módulo debug para mostrar no console os caminhos dos arquivos encontrados
+# (armazenados em output.files). O filtro map(attribute='path') é usado para extrair apenas o 
+# caminho completo (path) de cada arquivo da lista de arquivos retornados pelo módulo find.
+```
+Condicionais (when)
+```yaml
+---
+- name: Ansible Conditionals (when)
+  hosts: all
+  tasks:
+    - name: DNF | Update Systems
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+      when: ansible_distribution == "Rocky"
+
+    - name: APT | Update cache
+      ansible.builtin.apt:
+        update_cache: yes
+      when: ansible_distribution == "Debian"
+...
+```
 
 ### Pacotes
 
@@ -407,3 +479,46 @@ ansible-galaxy collection search <termo> # pesquisa collections disponíveis no 
 ansible-galaxy collection build          # empacota uma coleção local para distribuição.
 ansible-galaxy collection publish        # publica uma coleção no repositório Ansible Galaxy.
 ```
+
+### Roles no Ansible
+
+No Ansible, roles são uma forma estruturada e modular de organizar automações, agrupando tarefas, variáveis, handlers, templates, arquivos e meta-informações em uma estrutura padrão de diretórios. Isso facilita reutilização, manutenção e compartilhamento de conteúdo.
+
+```bash
+roles/
+  nome_do_role/
+    tasks/
+      main.yml          # Tarefas principais do role
+    handlers/
+      main.yml          # Handlers, ex: restart serviços
+    templates/          # Arquivos Jinja2 para templates
+    files/              # Arquivos estáticos para copiar
+    vars/
+      main.yml          # Variáveis específicas do role
+    defaults/
+      main.yml          # Variáveis padrão do role (menos prioridade)
+    meta/
+      main.yml          # Dependências e metadados
+```
+
+Para usar um Ansible Role, basta referenciá-lo em um playbook. Você pode listá-lo com a opção roles ou adicioná-lo à seção de tarefas de role com os comandos include_role, ou import_role. Os roles listados por meio da opção roles ou adicionados via import_role são executados antes das outras tarefas em um play. Ao listá-los utilizando include_role, os roles são executados na ordem definida na lista de tarefas.
+
+
+### Ansible-doc
+
+Comando para acessar a documentação de plugins (módulos) do ansible: 
+`ancible-doc -h`
+
+Plugins (módulos) disponíveis no ambiente: `ansible-doc -l`
+
+Exemplo de pesquisa por um módulo em especifico: `ansible-doc -l -t shell`
+Retorno: 
+```bash
+ansible.builtin.cmd        Windows Command Prompt
+ansible.builtin.powershell Windows PowerShell
+ansible.builtin.sh         POSIX shell (/bin/sh)
+ansible.posix.csh          C shell (/bin/csh)
+ansible.posix.fish         fish shell (/bin/fish)
+```
+
+comando para listar todos os hosts do inventário: `ansible-inventory -i invetory/hosts --list`. # o comando `-i <caminho do host>` serve para passar o caminho do host apartir do etc/ansible/.
