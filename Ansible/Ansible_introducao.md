@@ -140,47 +140,47 @@ touch ansible.cfg
 
 ##### Exemplo de arquivo ansible.cfg
 ```bash
+# Ansible Configuration File: ansible.cfg
+
 [defaults]
 
 #--- General settings
-forks                   = 5
-log_path                = /var/log/ansible.log
-module_name             = command
-executable              = /bin/bash
-ansible_managed         = Ansible managed
+forks                   = 5               # Número de tarefas paralelas que o Ansible executa
+log_path                = /var/log/ansible.log  # Caminho para o log do Ansible
+executable              = /bin/bash       # Shell a ser usado nos hosts remotos
+ansible_managed         = Ansible managed # Texto padrão adicionado a arquivos gerenciados
 
 #--- Files/Directory settings
-inventory               = /etc/ansible/hosts
-library                 = /usr/share/my_modules
-remote_tmp              = ~/.ansible/tmp
-local_tmp               = ~/.ansible/tmp
-roles_path              = /etc/ansible/roles
+inventory               = /etc/ansible/hosts  # Arquivo ou diretório com a lista de hosts
+library                 = /usr/share/my_modules  # Diretório de módulos customizados
+remote_tmp              = ~/.ansible/tmp   # Diretório temporário nos hosts remotos
+local_tmp               = ~/.ansible/tmp   # Diretório temporário local
+roles_path              = /etc/ansible/roles  # Caminho onde os roles do Ansible estão localizados
 
 #--- Users settings
-remote_user             = root
-sudo_user               = root
-ask_pass                = no
-ask-sudo_pass           = no
+remote_user             = mateus          # Usuário padrão para conexões SSH
+ask_pass                = no              # Não pedir senha de SSH interativamente
 
 #--- SSH settings
-remote_port             = 22
-timeout                 = 10
-host_key_checking       = False
-ssh_executable          = /usr/bin/ssh
-private_key_file        = ~/.ssh/id_rsa
+remote_port             = 22              # Porta usada para SSH
+timeout                 = 10              # Timeout de conexão SSH em segundos
+host_key_checking       = False           # Desativa verificação de host key (não recomendado em produção)
+ssh_executable          = /usr/bin/ssh    # Caminho para o cliente SSH
+private_key_file        = /home/mateus/.ssh/id_ed25519  # Caminho para a chave privada usada na autenticação
 
 [privilege_escalation]
 
-become                  = True
-become_method           = sudo
-become_user             = root
-become_ask_pass         = False
+become                  = True            # Permitir elevação de privilégios (sudo)
+become_method           = sudo            # Método de elevação de privilégios
+become_user             = root            # Usuário alvo após o 'become'
+become_ask_pass         = False           # Não pedir senha sudo interativamente
 
 [ssh_connection]
 
-scp_if_ssh              = smart
-transfer_method         = smart
-retries                 = 3
+scp_if_ssh              = smart           # Usa scp se possível para transferir arquivos
+transfer_method         = smart           # Método de transferência de arquivos
+retries                 = 3               # Número de tentativas de conexão SSH antes de falhar
+
 ```
 >Verificar qual configuração o Ansible está usando:
 `ansible-config dump --only-changed` ou `ansible-config list`
