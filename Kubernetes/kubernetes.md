@@ -6,7 +6,9 @@ Hoje existem diversos Orquestradores de Containers disponíveis tanto na nuvem q
 
 No caso dos Orquestradores de Containers, um projeto é em geral definido de maneira declarativa e é chamado de Estado do Cluster. Basicamente nós decidimos qual é o estado desejado do ambiente e o Orquestrador irá monitorar todo o ambiente fazendo modificações para alcançar o estado desejado.
 
-## Kubernetes 🌐​⚓
+## Kubernetes 🌐​
+
+![alt text](image-3.png)
 
 O Orquestrador de Containers mais utilizado no mercado atualmente é o Kubernetes. Kubernetes (K8s) é um produto Open Source utilizado para automatizar a implantação, o dimensionamento e o gerenciamento de aplicativos em contêiner.
 
@@ -47,7 +49,7 @@ Temos três tipos de *Container Runtime*:
 
 - Sandbox e Virtualized: são os *Container Runtime* que são executados por um *Container Engine* e que são responsáveis por executar containers de forma segura. O tipo Sandbox é executado em unikernels ou utilizando algum proxy para fazer a comunicação com o Kernel. O gVisor é um exemplo de *Container Runtime* do tipo Sandbox. Já o tipo Virtualized é executado em máquinas virtuais. A performance aqui é um pouco menor do que quando executado nativamente. O Kata Containers é um exemplo de *Container Runtime* do tipo Virtualized.
 
-#### Diferenças entre **Control Place** e **Workers**
+#### Diferenças entre **Control Plane** e **Workers**
 
  O Control Place é o cérebro, responsável por gerenciar o estado desejado. Ele decide o que o cluster deve rodar, monitor e corrigir desvios.
   O Workeres (Nós de trabalho), sõa os nós onde suas aplicações relmente rodam. ele escuta os Pods (containers da sua aplicação).
@@ -66,6 +68,8 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
  - O Control Plane é responsável pelas decisões administrativas do ambiente. Pense nele como a cabeça por trás das decisões tomadas pelo Kubernetes.
  - No Node Plane são reunidos os componentes que são executados em todos os servidores do Cluster. Nele temos os componentes que gerenciam os container e rede dos servidores. 
  - Por fim, os Addons são componentes que usam recursos do Kubernetes para adicionar capacidades extras ao Cluster.
+
+![alt text](image-4.png)
 
 ##### Kube-apiserver
 ```
@@ -87,7 +91,7 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
   dos dados do Kubernetes.
 ```
 
-##### Kube-scheduler
+##### Kube-scheduler 
 ```
     O Kube-scheduler é o responsável por determinar em que servidor cada 
     pod será iniciado e executado. Para tomar esta decisão ele leva em 
@@ -195,12 +199,15 @@ Tipos comuns de volumes:
 Permite organizar e isolar recursos dentro de um mesmo cluster. Muito útil em ambientes com múltiplos times ou projetos.
 Exemplo: `kubectl create namespace meu-projeto`
 
-### Kubectl
-```
-O Kubectl é a forma mais básica de se gerenciar um cluster Kubernetes. Através da combinação de seus comandos é possével 
-gerenciar e monitorar todo o cluster.
-Ele é um executável extremamente leve disponível para a maioria dos sistemas operacionais e pode controlar clusters locais ou remotos.
-```
+### Objetos do Kubernetes
+Os objetos principais do Kubernetes representam recursos persistentes que definem o estado desejado do cluster e das aplicações que nele rodam. Entre os mais importantes estão:
+- Deployment: Gerencia a implantação e o ciclo de vida de um conjunto de réplicas de pods. Garante o número desejado de réplicas, possibilita atualizações e rollback de versões da aplicação, facilitando escalabilidade e alta disponibilidade.
+- DaemonSet: Garante que uma cópia de um pod específico seja executada em todos (ou em nós selecionados) do cluster. Muito usado para tarefas como coleta de logs ou monitoramento que precisam rodar em cada nó.
+- ReplicaSet é o controlador de nível intermediário que mantém a quantidade desejada de pods idênticos sempre ativos no cluster Kubernetes.
+- Job: Cria pods que executam tarefas únicas ou batch, garantindo que elas sejam concluídas com sucesso uma vez. Finaliza após a conclusão da tarefa.
+- CronJob: Permite agendar Jobs para execução periódica, similar a um cron do Linux. Ideal para tarefas como backups, atualizações ou verificações programadas.
+
+Esses objetos são configurados via arquivos YAML declarativos, usados para definir o estado desejado que o Kubernetes mantém automaticamente, criando, atualizando ou removendo pods conforme necessário para atender às especificações
 
 ## Comandos Básicos com kubectl
 ```
@@ -222,6 +229,8 @@ kubectl logs nome-do-pod
 # Executar comando dentro do pod
 kubectl exec -it nome-do-pod -- bash
 ```
+
+![alt text](image-2.png)
 
 ## Portas utilizados pelos componentes do Kubernetes
 

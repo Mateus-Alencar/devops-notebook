@@ -14,7 +14,7 @@ Tipos de rede (drivers)
 
 |  Rede  |  Descrição  | 
 |--------|-------------|
-| **Bridge**  | o mais comum e default do Docker, utilizado quando ocntainers precisam se conectar|
+| **Bridge**  | o mais comum e default do Docker, utilizado quando containers precisam se conectar|
 | **host**    | permite a conexão entre um container a máquina que está hosteando o Docker|
 | **macvian** | permite a conexão a um container por um MAC address|
 | **none**    | remove todas conexões de rede de um container|

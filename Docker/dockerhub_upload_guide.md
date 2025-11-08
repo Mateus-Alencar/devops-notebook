@@ -83,3 +83,50 @@ docker logout
 - Você pode subir múltiplas `tags` da mesma imagem (ex: `v1`, `stable`, `latest`).
 
 ---
+
+## Imagens Docker em Harbor
+
+Para trabalhar com imagens Docker em Harbor, você utiliza os comandos padrão do Docker para login, pull (baixar) e push (enviar) de imagens, porém apontando para o endereço do seu registro Harbor.
+
+1. Fazer login no Harbor (substitua <harbor_address> pelo domínio/endereço do seu Harbor):
+> `docker login <harbor_address>`
+
+2. Baixar (pull) uma imagem do Harbor:
+> `docker pull <harbor_address>/<projeto>/<nome-da-imagem>:<tag>`
+EX: `docker pull harbor.minhaempresa.com/library/nginx:latest`
+
+3. Enviar (push) uma imagem para o Harbor:
+- Primeiro, você deve “taggear” a imagem local com o endereço do Harbor, projeto e nome desejado: `docker tag <imagem-local> <harbor_address>/<projeto>/<nome-da-imagem>:<tag>`
+
+>`docker tag nginx:latest harbor.minhaempresa.com/library/nginx:latest`
+
+- Depois, faça o push para o Harbor: `docker push <harbor_address>/<projeto>/<nome-da-imagem>:<tag>`
+
+> `docker push harbor.minhaempresa.com/library/nginx:latest`
+
+| Ação             |  Comando exemplo   |
+| ---------------- |  ----------------- |
+| Login no Harbor  | `docker login harbor.minhaempresa.com`   |
+| Pull da imagem   | `docker pull harbor.minhaempresa.com/meuprojeto/minhaimagem:tag`  |
+| Taggear a imagem | `docker tag minhaimagem:tag harbor.minhaempresa.com/meuprojeto/minhaimagem:tag` |
+| Push da imagem   | `docker push harbor.minhaempresa.com/meuprojeto/minhaimagem:tag` |
+
+
+version: "3.7"
+services:
+  web:
+    image: nginx
+    deploy:
+      replicas: 5
+      resources:
+        limits:
+        cpus: "0.1"
+        memory: 50M
+    restart_policy:
+      condition: on-failure
+    ports:
+    - "8080:80"
+    networks:
+    - webserver
+networks:
+  webserver:

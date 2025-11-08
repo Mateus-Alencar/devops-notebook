@@ -623,3 +623,16 @@ ansible.posix.fish         fish shell (/bin/fish)
 ```
 
 comando para listar todos os hosts do inventário: `ansible-inventory -i invetory/hosts --list`. # o comando `-i <caminho do host>` serve para passar o caminho do host apartir do etc/ansible/.
+
+
+### Criptografia no Ansible
+
+A criptografia no Ansible é realizada principalmente pelo Ansible Vault, uma ferramenta que permite criptografar e descriptografar dados sensíveis, como senhas e chaves, em arquivos inteiros, playbooks ou variáveis individuais. Ele usa o algoritmo AES 256 para criptografia simétrica e exige uma senha para criptografar e descriptografar os dados. 
+
+`ansible-vault encrypt_string <password_source> '<string_to_encrypt>' --name '<string_name_of_variable>'`
+
+> Visualizar arquivo criptografado:
+`ansible-vault view foo.yml`
+
+> Editar arquivo criptografado:
+`ansible-vault edit foo.yml`

@@ -54,6 +54,14 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
 
 É um serviço de registro de imagens Docker em nuvem, que permite a associação com repositórios para **build automatizado** de imagens. Imagens marcadas como **oficiais** no Docker Hub são criadas pela própria **Docker Inc.**
 
+#### Camdas lógicas de um container
+
+- Camadas de imagem: Uma imagem de container é composta por uma série de camadas, onde cada uma representa uma alteração na imagem.
+- Compartilhamento: Essas camadas de imagem são somente para leitura e podem ser compartilhadas entre vários containers para otimizar o uso de armazenamento.
+- Camada gravável (camada de container): Cada container, como uma instância da imagem, tem uma camada superior, gravável, onde as alterações são feitas sem afetar a imagem base ou outros containers.
+- Portabilidade: O sistema de camadas garante que as modificações não são aplicadas ao sistema de arquivos original, tornando o container portátil. 
+
+![alt text](image-1.png)
 ---
 
 # Comandos - Docker
@@ -71,7 +79,7 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
 
 4. `docker exec -it <nome-ou-id> bash` ou `docker exec -it <nome-ou-id> sh`
    → Abre um terminal dentro de um contêiner já em execução.
-   → O comando com SH deve ser executado caso o container não tenha `bash`
+   → **O comando com SH deve ser executado caso o container não tenha `bash`**
 
 5. `docker stop <nome-ou-id>`  
    → Para um contêiner em execução.
@@ -120,6 +128,22 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
    → Criar container sem iniciar
 20. `docker <comando> --help`
    → Para saber mais sobre qualquer comando.
+
+21. Comando para sair do contâiner sem fechar o container:
+> Ctrl + P + Q
+22. Comando para voltar para o container:
+> `docker container attach <nome-ou-id>`
+23. Comando para rodar um container sem entrar no terminal interativo no serviço: 
+>`docker container -d <image>`
+
+24. `sudo docker container run -d -m 128M --cpus 0.5 nginx`
+   → Criação de um container em segundo plano, `-d`
+   → `-m 128M`: limita a quantidade máxima de memória
+   → `--cpus 0.5`: limita o uso máximo do cpu para meio núcleo (50%)
+
+25. ` sudo docker system prune --all -f --volumes`
+   → **Comando para limpar volumes, images e containers parados**
+
 ##### Copiar arquivos
 - Do host para o container: `docker cp arquivo.txt meu-container:/home/` 
 - Do container para o host: `docker cp meu-container:/home/arquivo.txt .`
@@ -226,6 +250,20 @@ CMD ["npm", "start"]
 | `USER`       | Define o usuário que irá executar os processos do container. |
 | `ENTRYPOINT` | Define o processo principal do container.               |
 
+**CMD**
+Define o comando padrão ou parâmetros padrão que serão executados se nenhum comando for passado quando o container for iniciado.
+**ENTRYPOINT**
+Define o comando fixo (o ponto de entrada) que sempre será executado quando o container rodar.
+
+```
+ENTRYPOINT ["ping"]
+CMD ["google.com"]
+```
+```
+FROM ubuntu
+ENTRYPOINT ["top", "-b"]
+CMD ["-c"]
+```
 
 #### Renomeação de uma imagem Docker
 
@@ -386,6 +424,33 @@ Verificando o que tem no Compose
 Podemos fazer a verificação do compose com o comando: `docker-compose ps`. Receberemos um resumo dos serviços que sobem ao rodar o compose, facilitando a leitura do projeto.
 
 > Não precisa obrigatoriamente de um Dockerfile para usar o Docker Compose.
+
+#### Comandos Essenciais do Docker Compose
+
+**1. Iniciar o Ambiente (Build, Criação e Execução)**
+| Comando| Descrição|
+| -------------------- | ------------------ |
+| docker compose up    | Inicia todos os serviços definidos no arquivo Compose em primeiro plano (você verá os logs na tela). Se as imagens não existirem, ele as baixa ou constrói (se houver a instrução build). |
+| docker compose up -d | Recomendado para uso geral. Inicia todos os serviços em modo detached (segundo plano), liberando seu terminal.                                                                            |
+| docker compose build | Constrói ou reconstrói as imagens para os serviços que contêm a instrução build no arquivo Compose (útil para atualizar o código da sua aplicação antes de subir os containers).          |
+
+**2. Gerenciamento e Monitoramento**
+| Comando| Descrição|
+| --------------------------------- | -------------------------- |
+| docker compose ps                       | Lista os containers (serviços) definidos no Compose que estão rodando e mostra seu status. |
+| docker compose logs [serviço]           | Exibe os logs de um serviço específico (por exemplo, docker compose logs wordpress).       |
+| docker compose top                      | Exibe os processos em execução dentro dos containers.                                      |
+| docker compose exec [serviço] [comando] | Executa um comando dentro de um container em execução. Útil para depuração.                |
+
+**3. Parar e Limpar**
+| Comando| Descrição|
+| --------------------- | ------------ |
+| docker compose stop           | Para os containers em execução, mas não os remove. Eles podem ser reiniciados rapidamente com docker compose start.|
+| docker compose start          | Inicia containers que foram previamente parados.|
+| docker compose down           | Para e remove os containers, redes e volumes definidos pelo Compose.|
+| docker compose down --volumes | Limpeza Completa. Para e remove containers, redes e os volumes persistentes (como o db_data do seu exemplo). Use com cautela, pois isso apaga seus dados. |
+
+
 
 #### Utilização do Dockerfile e do Docker-compose
 
