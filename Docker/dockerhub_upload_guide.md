@@ -110,23 +110,3 @@ EX: `docker pull harbor.minhaempresa.com/library/nginx:latest`
 | Pull da imagem   | `docker pull harbor.minhaempresa.com/meuprojeto/minhaimagem:tag`  |
 | Taggear a imagem | `docker tag minhaimagem:tag harbor.minhaempresa.com/meuprojeto/minhaimagem:tag` |
 | Push da imagem   | `docker push harbor.minhaempresa.com/meuprojeto/minhaimagem:tag` |
-
-
-version: "3.7"
-services:
-  web:
-    image: nginx
-    deploy:
-      replicas: 5
-      resources:
-        limits:
-        cpus: "0.1"
-        memory: 50M
-    restart_policy:
-      condition: on-failure
-    ports:
-    - "8080:80"
-    networks:
-    - webserver
-networks:
-  webserver:
