@@ -1,0 +1,20 @@
+kind: Pod                    # Define que o objeto é um Pod no Kubernetes
+apiVersion: v1               # Versão da API Kubernetes usada para esse recurso
+metadata:
+  name: pod-cm-vol           # Nome do pod, que deve ser único dentro do namespace
+spec:
+  containers:                # Lista de containers que irão rodar dentro do Pod
+  - name: my-container       # Nome do container dentro do Pod
+    image: nginx             # Imagem do container, aqui usa nginx, um servidor web
+    envFrom:
+    - configMapRef:          # Importa variáveis de ambiente de um ConfigMap Kubernetes
+        name: my-cm          # Nome do ConfigMap do qual as variáveis são importadas
+    volumeMounts:
+    - name: my-vol              # Monta volume dentro do container
+      mountPath: "/etc/my-vol"  # Caminho no container onde o volume será montado
+      readOnly: true            # Define que o volume será montado somente leitura
+
+  volumes:              # Definição dos volumes que o Pod pode usar
+  - name: my-vol        # Nome do volume usado para referenciar em volumeMounts
+    configMap:          # Tipo de volume que usa um ConfigMap como fonte
+      name: my-cm       # Nome do ConfigMap usado como fonte do volume

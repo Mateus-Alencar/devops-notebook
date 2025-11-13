@@ -1,0 +1,44 @@
+apiVersion: apps/v1            # Define a versão da API usada
+kind: ReplicaSet               # Especifica o tipo de recurso, neste caso um ReplicaSet
+metadata:                      # Metadados do ReplicaSet
+  name: frontend-rs            # Nome do ReplicaSet
+  labels:                      # Rótulos associados ao ReplicaSet para identificação
+    app: frontend              # Rótulo 'app' com valor 'frontend'
+spec:                          # Especificações do ReplicaSet
+  tamplete:                    # ERRO: deveria ser 'template' (define o modelo do pod a ser criado)
+    metadata:                  # Metadados aplicados aos pods criados pelo ReplicaSet
+      name: my-pod-webserver   # Nome do pod (não é comum definir nome fixo em template)
+      labels:                  # Rótulos associados aos pods criados
+        apps: my-app           # Rótulo 'apps' com valor 'my-app'
+        tier: frontend         # Rótulo 'tier' com valor 'frontend'
+    spec:                      # Especificação dos containers dentro do pod
+      containers:              # Lista de containers dentro do pod
+      - name: my-containers    # Nome do container
+        image: nginx           # Imagem Docker usada no container (nginx)
+  selector:                    # Critério para selecionar pods gerenciados por esse ReplicaSet
+    matchLabels:               # Seleção baseada em rótulos
+      apps: my-app             # Seleciona pods com o rótulo 'apps: my-app'
+  replicas: 4                  # Define o número desejado de réplicas de pods (4)
+
+apiVersion: apps/v1
+kind: ReplicaSet     
+metadata:            
+  name: frontend-rs  
+  labels:            
+    app: frontend    
+spec:                
+  tamplete:          
+    metadata:        
+      name: my-pod-webserver
+      labels:        
+        apps: my-app  
+        tier: frontend
+    spec:             
+      containers:     
+      - name: my-containers 
+        image: nginx        
+  selector:        
+    matchLabels:   
+      apps: my-app 
+  replicas: 4      
+

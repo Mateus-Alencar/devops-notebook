@@ -1,0 +1,22 @@
+apiVersion: v1               # Define a versão da API Kubernetes usada (v1 para pods)
+kind: Pod                   # Especifica que este recurso é um Pod
+metadata :                  # Seção que define metadados do Pod, como nome e etiquetas
+  name: my-pod-webserver-hands-on   # Nome do Pod, usado para identificá-lo
+  labels:                   # Etiquetas (labels) para categorizar o Pod
+    app-type: web           # Label chave "app-type" com valor "web"
+spec:                       # Definição da especificação do Pod - como ele será executado
+  containers :              # Lista de containers que o Pod conterá
+  - name: my-container-apache   # Nome do container dentro do Pod
+    image: httpd            # Imagem Docker usada para esse container (Apache HTTP Server)
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod-webserver-hands-on
+  labels:
+    app-type: web 
+spec:
+  containers:
+  - name: my-container-apache
