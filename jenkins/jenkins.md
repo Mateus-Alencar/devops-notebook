@@ -41,8 +41,8 @@ tasks:
 
 1. Preparação do Jenkinsfile
     - Primeiro, certifique-se de que seu Jenkinsfile esteja:
-    - Criado: O arquivo deve ser nomeado exatamente como Jenkinsfile (sem extensão, com "J" maiúsculo).
-    - Armazenado: Ele deve estar na raiz do seu repositório Git (ou outro SCM) que contém o código do seu projeto.
+        - Criado: O arquivo deve ser nomeado exatamente como Jenkinsfile (sem extensão, com "J" maiúsculo).
+        - Armazenado: Ele deve estar na raiz do seu repositório Git (ou outro SCM) que contém o código do seu projeto.
 
 Exemplo básico de um Jenkinsfile:
 ```groovy

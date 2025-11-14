@@ -1,0 +1,23 @@
+apiVersion: v1     # Versão da API Kubernetes usada para este recurso
+kind: Endpoints   # Tipo do recurso: Endpoints, que define IPs backend manualmente
+metadata:
+  name: my-endpoints-service     # Nome do recurso Endpoints (deve ser o mesmo do Service associado)
+subsets:   # Lista de subsets, definindo grupos de endpoints
+  - addresses:
+      - ip: 77.68.88.76  # IP do backend (aqui um servidor IIS)
+#     - ip: 10.244.0.9   # IP comentado (exemplo de outro backend Apache)
+#     - ip: 10.244.0.10  # IP comentado (exemplo de backend Nginx)
+    ports:
+      - port: 80   # Porta em que o backend está escutando (porta 80)
+
+---
+
+apiVersion: v1     # Versão da API Kubernetes usada para este recurso
+kind: Service     # Tipo do recurso: Service, que expõe rede para acesso
+metadata:
+  name: my-endpoints-service   # Nome do serviço (deve ter mesmo nome do Endpoints para linkar)
+spec:
+  ports:
+    - protocol: TCP     # Protocolo TCP para acesso ao serviço
+      port: 80         # Porta exposta pelo serviço no cluster
+      targetPort: 80   # Porta no backend para qual o tráfego será direcionado

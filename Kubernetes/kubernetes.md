@@ -52,7 +52,7 @@ Temos três tipos de *Container Runtime*:
 #### Diferenças entre **Control Plane** e **Workers**
 
  O Control Place é o cérebro, responsável por gerenciar o estado desejado. Ele decide o que o cluster deve rodar, monitor e corrigir desvios.
-  O Workeres (Nós de trabalho), sõa os nós onde suas aplicações relmente rodam. ele escuta os Pods (containers da sua aplicação).
+  O Workeres (Nós de trabalho), são os nós onde suas aplicações relmente rodam. ele escuta os Pods (containers da sua aplicação).
 
 |Aspector | Control Place | Workers |
 |---------|---------------|---------|
@@ -60,6 +60,38 @@ Temos três tipos de *Container Runtime*:
 | Responsabilidade| Decisões, agendamento, estado do cluster | Rodar containers e serviços |
 | Componentes| API Server, etcd, Scheduler, Controller Manager | Kubelet, Kube Proxy, Runtime |
 | Onde roda apps?| Não (salvo exceções em clusters pequenos, ex. minikube) | Sim, aqui ficam os Pods do usuário |
+
+
+## Principais Conceitos 💻​
+![alt text](image.png)
+
+### Cluster
+
+Conjunto de máquinas (físicas ou virtuais) que trabalham juntas para executar aplicações em containers. Um cluster Kubernetes contém pelo menos:
+
+- Um **control plane** (plano de controle)
+- Um ou mais **nodes** (nós) onde os aplicativos são executados
+
+---
+
+### Node
+
+É uma máquina (física ou virtual) dentro do cluster responsável por executar os **pods**. Existem dois tipos:
+
+- **Master node** (controla o cluster)
+- **Worker node** (executa os aplicativos)
+
+---
+
+### Pod
+
+A menor unidade implantável no Kubernetes. Um **pod** pode conter um ou mais containers que compartilham:
+
+- A mesma rede/IP
+- Armazenamentos
+- Ciclo de vida
+
+---
 
 ### Componentes
 
@@ -107,18 +139,6 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
   responsabilidades distintas são executados a fim de manter o estado do 
   cluster atualizado.
 ```
-##### Endpoints Controller 📈​
-```
-    O Endpoint Controller é responsável por adicionar Endpoints, ou IP’s 
-    de Pods, a lista de Endpoint de um Service. Ele observa as regras 
-    definidas no campo Selector de um Service para descobrir que Pods 
-    devem ser adicionados a lista, tornando possével a descoberta de 
-    Serviço de forma fácil e prática usando DNS e Services.
-```
-##### Services 
-
-Um dos principais objetivos dos Serviços no Kubernetes é que você não precisa modificar sua aplicação existente para usar um mecanismo de descoberta de serviços desconhecido. Você pode executar código em Pods, seja um código desenvolvido para um ambiente nativo da nuvem ou uma aplicação mais antiga que você conteinerizou. Você usa um Serviço para **disponibilizar esse conjunto de Pods na rede**, permitindo que os clientes interajam com ele.
-
 ##### Kubelet
  ```
     O Kubelet é o processo responsável por iniciar os containers definidos 
@@ -126,64 +146,87 @@ Um dos principais objetivos dos Serviços no Kubernetes é que você não precis
     garantindo a execução e a saúde dos containers definidos no Estado do 
     Cluster.
  ```
-![alt text](image.png)
-## Principais Conceitos 💻​
 
-### Cluster
+### Services 
 
-Conjunto de máquinas (físicas ou virtuais) que trabalham juntas para executar aplicações em containers. Um cluster Kubernetes contém pelo menos:
+Um dos principais objetivos dos Serviços no Kubernetes é que você não precisa modificar sua aplicação existente para usar um mecanismo de descoberta de serviços desconhecido. Você pode executar código em Pods, seja um código desenvolvido para um ambiente nativo da nuvem ou uma aplicação mais antiga que você conteinerizou. Você usa um Serviço para **disponibilizar esse conjunto de Pods na rede**, permitindo que os clientes interajam com ele.
 
-- Um **control plane** (plano de controle)
-- Um ou mais **nodes** (nós) onde os aplicativos são executados
+**ClusterIP**
+Expõe o serviço em um IP interno do cluster. Escolher esse valor torna o serviço acessível apenas de dentro do cluster. Esse é o valor padrão usado se você não especificar explicitamente um IP para o serviço. Você pode expor o serviço à internet pública usando um Ingress ou um Gateway .
+**NodePort**
+Expõe o serviço no IP de cada nó em uma porta estática (a NodePort). Para disponibilizar a porta do nó, o Kubernetes configura um endereço IP de cluster, da mesma forma que se você tivesse solicitado um serviço de type: ClusterIP.
+**LoadBalancer**
+Expõe o serviço externamente usando um balanceador de carga externo. O Kubernetes não oferece um componente de balanceamento de carga diretamente; você precisa fornecer um ou pode integrar seu cluster Kubernetes a um provedor de nuvem.
+**ExternalName**
+Mapeia o serviço para o conteúdo do externalNamecampo (por exemplo, para o nome do host api.foo.bar.example). O mapeamento configura o servidor DNS do seu cluster para retornar um CNAME registro com esse valor de nome de host externo. Nenhum tipo de proxy é configurado.
 
----
+> Comando para pegar a porta do serviço:
+` kubectl get svc <nome-service> -o yaml | grep address`
 
-### Node
+> Lista todos os serviços no namespace atual.
+`kubectl get services (ou kubectl get svc)`
 
-É uma máquina (física ou virtual) dentro do cluster responsável por executar os **pods**. Existem dois tipos:
+> Mostra detalhes completos de um serviço específico, incluindo seletores, endpoints e portas.
+`kubectl describe service <nome-do-serviço>`
 
-- **Master node** (controla o cluster)
-- **Worker node** (executa os aplicativos)
+> Cria um serviço para expor um deployment, pod ou outro recurso.
+`kubectl expose <tipo-recurso> <nome> --port=<porta> --target-port=<porta>`
 
----
+> Remove um serviço do cluster.
+`kubectl delete service <nome-do-serviço>`
 
-### Pod
+> Lista os endpoints (IP dos pods) aos quais o serviço está direcionando.
+`kubectl get endpoints <nome-do-serviço>`
 
-A menor unidade implantável no Kubernetes. Um **pod** pode conter um ou mais containers que compartilham:
+> Edita o serviço diretamente no editor de texto.
+`kubectl edit service <nome-do-serviço>`
 
-- A mesma rede/IP
-- Armazenamentos
-- Ciclo de vida
+> Faz redirecionamento de porta de um serviço para acesso local.
+`kubectl port-forward service/<nome-do-serviço> <porta-local>:<porta-serviço>`
 
----
+> Altera o tipo do serviço, por exemplo, para NodePort.
+`kubectl patch service <nome-do-serviço> -p '{"spec":{"type":"NodePort"}}'`
 
-### Deployment
+### Endpoints Controller 📈​
 
-Objeto responsável por definir **como e quantas vezes** uma aplicação deve rodar. Gerencia a criação, atualização e escala dos pods.
+O Endpoint Controller é responsável por adicionar Endpoints, ou IP’s de Pods, a lista de Endpoint de um Service. Ele observa as regras definidas no campo Selector de um Service para descobrir que Pods devem ser adicionados a lista, tornando possével a descoberta de Serviço de forma fácil e prática usando DNS e Services.
 
-Exemplo de definição:
+
+Endpoints no Kubernetes funcionam como um mapa de endereços IP e portas dos pods que pertencem a um serviço, sendo criados automaticamente quando um serviço é criado.
+
+![alt text](image-5.png)
+
 ```yaml
-apiVersion: apps/v1         # Define a versão da API do Kubernetes que será usada para esse recurso (aqui: apps/v1, usado para Deployments).
-kind: Deployment            # Indica o tipo de recurso que está sendo criado, neste caso um Deployment.
+apiVersion: v1     # Versão da API Kubernetes usada para este recurso
+kind: Endpoints   # Tipo do recurso: Endpoints, que define IPs backend manualmente
 metadata:
-  name: meu-app             # Nome do Deployment, que serve como identificador dentro do cluster.
+  name: my-endpoints-service     # Nome do recurso Endpoints (deve ser o mesmo do Service associado)
+subsets:   # Lista de subsets, definindo grupos de endpoints
+  - addresses:
+      - ip: 77.68.88.76  # IP do backend (aqui um servidor IIS)
+#     - ip: 10.244.0.9   # IP comentado (exemplo de outro backend Apache)
+#     - ip: 10.244.0.10  # IP comentado (exemplo de backend Nginx)
+    ports:
+      - port: 80   # Porta em que o backend está escutando (porta 80)
+
+---
+
+apiVersion: v1     # Versão da API Kubernetes usada para este recurso
+kind: Service     # Tipo do recurso: Service, que expõe rede para acesso
+metadata:
+  name: my-endpoints-service   # Nome do serviço (deve ter mesmo nome do Endpoints para linkar)
 spec:
-  replicas: 3               # Quantidade de réplicas (pods) que o Deployment deve manter em execução.
-  selector:                 # Define como o Deployment vai identificar quais Pods pertencem a ele.
-    matchLabels:            # Critério de correspondência: procura Pods com o rótulo abaixo.
-      app: meu-app          # Rótulo usado para identificar os Pods que fazem parte deste Deployment.
-  template:                 # Template que descreve como os Pods desse Deployment devem ser criados.
-    metadata:
-      labels:
-        app: meu-app        # Rótulo que será adicionado aos Pods criados (precisa bater com o selector acima).
-    spec:
-      containers:           # Lista de containers que irão rodar dentro de cada Pod.
-        - name: nginx       # Nome do container (apenas identificador dentro do Pod).
-          image: nginx      # Imagem Docker que será usada para criar o container (nesse caso, a imagem oficial do Nginx do Docker Hub).
-          ports:
-            - containerPort: 80  # Porta exposta pelo container (nesse caso, o Nginx escuta na porta 80).
+  ports:
+    - protocol: TCP     # Protocolo TCP para acesso ao serviço
+      port: 80         # Porta exposta pelo serviço no cluster
+      targetPort: 80   # Porta no backend para qual o tráfego será direcionado
 
 ```
+
+##### EndPointSlice
+A API EndpointSlice é o mecanismo que o Kubernetes usa para permitir que seu serviço seja dimensionado para lidar com um grande número de backends e permite que o cluster atualize sua lista de backends íntegros de forma eficiente.
+
+
 
 ##### YAML Kubernetes Example
 
@@ -211,12 +254,6 @@ spec:
 
 ```
 
-### Service
-Define uma forma de expor os pods como um serviço de rede. Tipos comuns:
- - ClusterIP (interno ao cluster)
- - NodePort (acesso externo via porta do node)
- - LoadBalancer (exposição externa com balanceamento de carga)
-
 ### Volume
 Volumes fornecem armazenamento persistente para os pods. Eles mantêm dados mesmo se o pod for recriado
 Tipos comuns de volumes:
@@ -231,6 +268,31 @@ Exemplo: `kubectl create namespace meu-projeto`
 ### Objetos do Kubernetes
 Os objetos principais do Kubernetes representam recursos persistentes que definem o estado desejado do cluster e das aplicações que nele rodam. Entre os mais importantes estão:
 - Deployment: Gerencia a implantação e o ciclo de vida de um conjunto de réplicas de pods. Garante o número desejado de réplicas, possibilita atualizações e rollback de versões da aplicação, facilitando escalabilidade e alta disponibilidade.
+
+Exemplo de definição:
+```yaml
+apiVersion: apps/v1         # Define a versão da API do Kubernetes que será usada para esse recurso (aqui: apps/v1, usado para Deployments).
+kind: Deployment            # Indica o tipo de recurso que está sendo criado, neste caso um Deployment.
+metadata:
+  name: meu-app             # Nome do Deployment, que serve como identificador dentro do cluster.
+spec:
+  replicas: 3               # Quantidade de réplicas (pods) que o Deployment deve manter em execução.
+  selector:                 # Define como o Deployment vai identificar quais Pods pertencem a ele.
+    matchLabels:            # Critério de correspondência: procura Pods com o rótulo abaixo.
+      app: meu-app          # Rótulo usado para identificar os Pods que fazem parte deste Deployment.
+  template:                 # Template que descreve como os Pods desse Deployment devem ser criados.
+    metadata:
+      labels:
+        app: meu-app        # Rótulo que será adicionado aos Pods criados (precisa bater com o selector acima).
+    spec:
+      containers:           # Lista de containers que irão rodar dentro de cada Pod.
+        - name: nginx       # Nome do container (apenas identificador dentro do Pod).
+          image: nginx      # Imagem Docker que será usada para criar o container (nesse caso, a imagem oficial do Nginx do Docker Hub).
+          ports:
+            - containerPort: 80  # Porta exposta pelo container (nesse caso, o Nginx escuta na porta 80).
+
+```
+
 - DaemonSet: Garante que uma cópia de um pod específico seja executada em todos (ou em nós selecionados) do cluster. Muito usado para tarefas como coleta de logs ou monitoramento que precisam rodar em cada nó.
 ``` bash
 kubectl get daemonset # lista os DaemonSets presentes no cluster e mostra status básico.
@@ -393,6 +455,36 @@ Explicação:
 Considera falha a sonde se não responder dentro de 2 segundos.
 - Se falhar 3 vezes consecutivas, o Kubernetes reiniciará o container automaticamente.
 
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness-pod
+spec:
+  containers:
+  - name: liveness-container-test
+    image: busybox
+    args:
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 30; rm -f /tmp/healthy; sleep 600
+    
+    livenessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 3
+```
+Explicação:
+Esse arquivo YAML define um Pod no Kubernetes com um container que inclui uma livenessProbe, usada para verificar se o container está "vivo" e funcionando corretamente.
+- A livenessProbe usa um comando cat /tmp/healthy para verificar a existência desse arquivo.
+- A sondagem começa após um initialDelaySeconds de 5 segundos, e é repetida a cada 5 segundos (periodSeconds).
+- Se o comando falhar (por exemplo, porque o arquivo /tmp/healthy não existe), após 3 falhas consecutivas (failureThreshold), o Kubernetes considera que o container está com problema.
+- Nesse caso, o kubelet irá reiniciar o container automaticamente para tentar restaurar o estado saudável.
+
 ### Requests
 Requests e Limits: Cada container pode declarar a quantidade mínima (request) e máxima (limit) de recursos que pode usar
 
@@ -431,6 +523,12 @@ spec:
 ```
 
 ### Volumes
+
+No Kubernetes, volumes são uma abstração que permitem que contêineres dentro de um Pod armazenem e compartilhem dados via sistema de arquivos. Diferente do sistema de arquivos efêmero dos containers, que é destruído junto com o container, os volumes podem ter vida útil maior, persistindo além da vida do Pod, dependendo do tipo.
+
+- Um volume é declarado na seção .spec.volumes do Pod.
+- É montado em um ou mais containers do Pod na seção .spec.containers[].volumeMounts, definindo o caminho onde o volume ficará visível dentro do container.
+
 O volume **emptyDir** no Kubernetes é um volume temporário criado no momento em que um Pod é atribuído a um nó e que existe enquanto o Pod está ativo naquele nó. Inicialmente vazio, ele é compartilhado entre todos os containers do Pod e seu conteúdo é apagado definitivamente quando o Pod é removido
 
 ```yaml
@@ -475,6 +573,43 @@ spec:
       path: /tmp
       type: Directory
 ```
+
+### Persistent Volume (PV e PVC)
+
+O **Persistent Volume (PV)** no Kubernetes é um recurso de armazenamento previamente provisionado no cluster, que pode ser configurado pelo administrador para fornecer espaço de armazenamento abstrato e persistente para uso dos pods. Ele possui propriedades como tamanho, modo de acesso (ex: ReadWriteOnce, ReadOnlyMany, ReadWriteMany) e pode estar em estados como Available (disponível), Bound (associado) ou Released (liberado).
+> EX
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-example
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/mnt/data"
+```
+Já o **Persistent Volume Claim (PVC)** é uma requisição feita pelo usuário/pod para solicitar armazenamento. O PVC descreve suas necessidades como tamanho, modo de acesso e classe de armazenamento, e o sistema do Kubernetes realiza o bind (associação) automático a um PV que atenda aos critérios requisitados. O usuário interage com o PVC para usar o armazenamento, sem se preocupar com a implementação do PV.
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-example
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+```
+
+Com esse PVC, o Kubernetes automaticamente liga esse pedido a um PV que tenha pelo menos 5Gb de espaço e o modo de acesso requisitado, permitindo o pod usar esse volume via a claim.
+
+Assim, o PV representa o recurso físico de armazenamento, enquanto o PVC é a forma de requisitar e usar esse recurso no Kubernetes, promovendo abstração e melhor gerenciamento do armazenamento em clusters.
+
 #### Direction node attribution
 A "direction node attribution" (atribuição ou direcionamento de pods para nós) no Kubernetes é realizada principalmente por meio de mecanismos de seleção e afinidade baseados em labels dos nós.
 
@@ -485,6 +620,27 @@ Os principais métodos para direcionar a atribuição de pods a nós específico
 - Taints and Tolerations: Os nós podem ser "tintados" (tainted) para repelir pods que não tenham as correspondentes "tolerations", ajudando a controlar onde pods podem ou não ser executados.
 - Pod affinity/anti-affinity: Permite definir regras para que pods prefiram ou evitem rodar perto de outros pods com determinadas características, influenciando indireta e dinamicamente a seleção do nó.
 
+Exemplo 1: Node Affinity obrigatória (requiredDuringSchedulingIgnoredDuringExecution)
+Este pod será agendado apenas em nós que tenham o label disktype: ssd:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-com-node-affinity-obrigatoria
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: In
+            values:
+            - ssd
+  containers:
+  - name: nginx
+    image: nginx
+```
 #### Node labels
 
 Node labels no Kubernetes são pares chave-valor associados aos nós (máquinas físicas ou virtuais) do cluster. Esses labels ajudam a categorizar e identificar os nós com informações específicas, como localização geográfica, tipo de hardware, ambiente (produção, desenvolvimento), etc. 
@@ -511,6 +667,20 @@ Os Pods do Kubernetes possuem um restartPolicycampo specque define como os cont�
 - OnFailure: Essa política reinicia os contêineres do Pod somente se eles forem encerrados com um código de saída diferente de zero, indicando uma falha. Isso geralmente é usado para trabalhos em lote ou processos que podem ser repetidos em caso de falha. 
 - Never: Essa política impede que o Kubernetes reinicie os contêineres do Pod após o término da execução, independentemente do status de saída. Isso é apropriado para aplicações projetadas para serem executadas uma única vez e depois paradas.
 
+Exemplo:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+spec:
+  restartPolicy: OnFailure   # Política de reinício: reinicia o container somente se ele falhar (exit code != 0)
+  containers:
+  - name: example-container
+    image: busybox
+    command: ["sh", "-c", "echo Hello Kubernetes; sleep 30; exit 1"]
+```
+
 #### JOBS
 
 Kubernetes Jobs são recursos usados para executar tarefas finitas, de curta duração, uma única vez e que precisam ser concluídas com sucesso. Eles criam um ou mais Pods para executar a tarefa, monitoram sua execução, e garantem que o número desejado de execuções com sucesso seja alcançado. Depois disso, os Pods são finalizados e o Job é marcado como completo.
@@ -534,7 +704,7 @@ spec:
 
 Um ConfigMap é um objeto de API usado para armazenar dados não confidenciais em pares de chave-valor. Cápsulaspode consumir ConfigMaps como variáveis ​​de ambiente, argumentos de linha de comando ou como arquivos de configuração em um volume.
 
-#### Secrets
+### Secrets
 
 No Kubernetes, Secrets são objetos usados para armazenar e gerenciar informações sensíveis, como senhas, tokens, chaves SSH e certificados, de forma segura dentro do cluster. Eles evitam que dados confidenciais fiquem expostos em arquivos de configuração ou imagens de containers. Secrets podem ser consumidos pelos Pods como variáveis de ambiente, arquivos montados em volumes ou usados internamente pelo sistema, por exemplo, para autenticação.
 
@@ -561,7 +731,7 @@ spec:
           key: password
 ```
 
-### Resumo sobre StatefulSet no Kubernetes
+### StatefulSet no Kubernetes
 
 - **O que é:**  
   StatefulSet é um recurso do Kubernetes usado para gerenciar aplicações stateful (com estado), garantindo que cada pod tenha uma identidade única e persistente durante seu ciclo de vida.
@@ -582,3 +752,78 @@ spec:
   Gerenciar um cluster Redis com réplicas que precisam de armazenamento separado e identificação estável para replicação e failover.
 
 Em resumo, StatefulSets são essenciais para cargas de trabalho que mantêm estado e precisam ser executadas com alta disponibilidade e consistência dentro do ambiente Kubernetes.
+
+### RBAC (Role-Based Access Control)
+
+RBAC (Role-Based Access Control) no Kubernetes é um sistema de controle de acesso que define quem pode fazer o quê dentro do cluster com base nas funções atribuídas a usuários, grupos ou contas de serviço. Ele gerencia permissões para acessar e operar recursos do Kubernetes, como pods, serviços, entre outros, garantindo segurança e organização no ambiente. O RBAC utiliza quatro recursos principais: 
+
+- Roles (definem permissões dentro de um namespace), 
+- ClusterRoles (definem permissões para o cluster inteiro),
+- RoleBindings (associam Roles a usuários ou grupos dentro de um namespace) e 
+- ClusterRoleBindings (associam ClusterRoles a usuários ou grupos para todo o cluster). 
+
+Essa estrutura possibilita um gerenciamento granular e flexible das permissões, facilitando a aplicação do princípio do menor privilégio e melhorando a segurança do cluster.
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role            # Define uma Role que encapsula permissões 
+metadata:
+  namespace: default  # Namespace onde essa Role será aplicada
+  name: auditor-role
+rules:
+- apiGroups: [""]     # Grupo de API vazio significa o grupo core do Kubernetes
+  resources: ["pods","services"]  # Recursos do Kubernetes aos quais essa Role terá acesso
+  verbs: ["get","list","watch"]   # Ações permitidas sobre esses recursos: leitura e monitoramento
+
+# Role é um objeto de RBAC (Role-Based Access Control) que define um conjunto
+# de permissões dentro de um namespace específico. Ela especifica quais ações 
+# (como criar, listar, atualizar, deletar) um usuário, grupo ou conta de serviço 
+# pode realizar em quais recursos (como pods, serviços, deployments) dentro 
+# daquele namespace.
+---
+
+apiVersion: rbac.authorization.k8s.io/v1  # Versão da API para recursos RBAC
+kind: RoleBinding  # Define um RoleBinding que associa uma Role a usuários, grupos ou contas de serviço
+metadata:
+  namespace: default   # Namespace onde essa associação ocorrerá (deve ser o mesmo da Role)
+  name: auditor-rb   # Nome do RoleBinding, para identificar esta associação
+subjects:
+- kind: User     # Tipo de sujeito que receberá a permissão (aqui um usuário)
+  name: auditor  # Nome do usuário que receberá a permissão concedida pela Role
+  apiGroup: rbac.authorization.k8s.io  # APIGroup para RBAC
+roleRef:
+  kind: Role    # Referência à Role que será associada
+  name: auditor-role  # Nome da Role que será vinculada ao sujeito
+  apiGroup: rbac.authorization.k8s.io  # APIGroup para RBAC
+
+```
+> Comando para alterar o contexto ativo:
+`kubectl config use-context <user_conectext>`
+
+<KBD>IMPORTANTE!</KBD> Em resumo, `kubectl config use-context` troca o contexto atual, o que inclui o usuário do kubeconfig que será utilizado, mas o foco do comando é na troca completa do contexto (cluster, namespace e usuário), não apenas do usuário isoladamente
+
+> Comando para visualizar o contexto atual usado pelo kubectl.
+`kubectl config current-context`
+
+#### Gerenciar rollouts e implantações.
+
+> Comando para reverter um deployment
+`kubectl rollout undo deployment/<nome-do-pod>`
+
+> Reverte o deployment para uma revisão específica anterior.
+`kubectl rollout undo deployment/<deployment-name> --to-revision=<revision-number>`
+
+> Exibe o status do rollout atual para verificar progresso e possíveis erros.
+`kubectl rollout status deployment/<deployment-name>`
+
+> Lista o histórico de revisões do deployment para saber quais versões foram implantadas.
+`kubectl rollout history deployment/<deployment-name>`
+
+> Reinicia todos os pods do deployment forçando um novo rollout sem alterar a imagem.
+`kubectl rollout restart deployment/<deployment-name>`
+
+> Pausa um rollout ativo para que possa ser revisado ou corrigido antes de continuar.
+`kubectl rollout pause deployment/<deployment-name>`
+
+> Retoma um rollout pausado.
+`kubectl rollout resume deployment/<deployment-name>`
