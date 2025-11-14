@@ -255,7 +255,7 @@ O SystemD monitora processos usando cgroups do Linux, garantindo que ao parar um
 Todos esses diretórios não podem está em uma partição diferente do diretório "/", por que durante o boot o kernel linux monta primeiro a partição vinculada ao diretório "/"
 
 
-A partir do kernel 2.6 o Linux apresenta o sistema de arquivo **sysfs**. O sistema de arquivo sysfs é descrito como a união dos sistemas de arquivo **proc**, **devfs** e **devpty**. O sistema de arquivos sysfs enumera os dispositivos e canais conectados ao sistema numa hierarquia de sistema de arquivo que podeser acessadapelo espaço do usuário.
+A partir do kernel 2.6 o Linux apresenta o sistema de arquivo **sysfs**. O sistema de arquivo sysfs é descrito como a união dos sistemas de arquivo **proc**, **devfs** e **devpty**. O sistema de arquivos sysfs enumera os dispositivos e canais conectados ao sistema numa hierarquia de sistema de arquivo que pode ser acessada pelo espaço do usuário.
 > O arquivo que contém informações sobre a CPU no Linux é: `/proc/cpuinfo`
 
 O arquivo cpuinfo exibe detalhes do processador, como:
@@ -269,14 +269,14 @@ O arquivo cpuinfo exibe detalhes do processador, como:
 **sysfs**
 O `sysfs` é um sistema de arquivos virtual no Linux, montado geralmente em `/sys`. Ele foi criado para fornecer uma interface entre o kernel e o espaço do usuário, permitindo que informações sobre dispositivos, drivers e subsistemas do kernel sejam acessadas de forma organizada como arquivos e diretórios.
 **dev** 
-Trantando-se de dispositivos, outro diretório muito importante é o `/dev`. Nele encontramos arquivos especiais que representam a maioria dos dispositivos do sistema, particulamente dispositivos de armazenamento. Isso quer dizer que a maioria dos dispositivos conectados no servidor é representando por uma rquivo dentro do diretório /dev. 
+Trantando-se de dispositivos, outro diretório muito importante é o `/dev`. Nele encontramos arquivos especiais que representam a maioria dos dispositivos do sistema, particulamente dispositivos de armazenamento. Isso quer dizer que a maioria dos dispositivos conectados no servidor é representando por um arquivo dentro do diretório /dev. 
 Um Disco conectado a uma controadora IDE, por exemplo, quando conectado ao primeiro canal IDE da placa mãe, é representado pelo arquivo de dispositivo /dev/hda. Cada partição nesse disco será identificada como `/dev/hda1`, `/dev/hda2` e até a última partição encontrada.
 **proc**
 O diretório `/proc` é um diretório criado pelo kernel na memória do computador apenas durante a inicialização, e contém informações sobre diversas informações do sistema, como processos em execuçãono sistema, incluindo detalhes sobre os dispositivos detectados. 
 
 **Diretório /var/log**
 
-O diretório padrão dos arquivos de logs é /var/log e geralmente utiliza dois formatos dearquivos: oformatotexto puro como usado em arquivos como /var/log/messages, /var/log/secure(emoutrasdistroséoarquivo/var/log/auth) e que são visualizados com comandos como cat/tac, more, less, head e tail.
+O diretório padrão dos arquivos de logs é /var/log e geralmente utiliza dois formatos de arquivos: oformatotexto puro como usado em arquivos como /var/log/messages, /var/log/secure(em outras distros é o arquivo/var/log/auth) e que são visualizados com comandos como cat/tac, more, less, head e tail.
 
 ##### logger
 O comando `logger` é uma ferramenta de linha de comando no Linux que permite enviar mensagens diretamente para o sistema de logs (syslog). É muito útil para administradores de sistema e desenvolvedores que precisam registrar informações de scripts ou de tarefas agendadas no mesmo local que os logs do sistema, como `/var/log/syslog` ou `/var/log/messages`.
@@ -574,12 +574,16 @@ cut                               # é usado para extrair seções específicas 
   cut -d: -f1,6 /etc/passwd > usuarios_home.txt # Salvar o resultado em um novo arquivo
 zcat arquivo.gz                   # Serve para visualizar o conteúdo de um arquivo compactado com gzip
 
-stat arquivo.txt                  # Com este comando, é possível visualizar informações detalhadas sobre os arquivos
+stat arquivo.txt                  # Visualizar informações detalhadas sobre os arquivos
 less arquivo.log                  # Visualiza arquivo com rolagem (para logs grandes)
 grep "palavra" /etc/arquivo.txt   # Busca texto em arquivos.
 find /home -name "documento.txt"  # Localiza arquivos. (find [diretório] [opção] [ação])
 scp / rsync                       # Cópia remota do arquivo.
+
 cron                              # Agendamento de tarefas
+  crontab -e                      # Abre o arquivo de tarefas do usuário atual no editor (nano/vim).
+  crontab -l                      # Listar tarefas agendadas
+  crontab -u nomeUsuario -l       # Listar crontab de outro usuário
 
 diff arquivo1 arquivo2            # mostra a diferença entre os arquivos
 diff arquivo1 arquivo2| cat -A    # mostra a diferença incluindo os caracteres especiais
