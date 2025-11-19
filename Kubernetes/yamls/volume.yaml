@@ -1,0 +1,28 @@
+apiVersion: apps/v1      # Versão da API Kubernetes para Deployment (apps/v1 é a atual estável)
+kind: Deployment        # Tipo de objeto, aqui estamos criando um Deployment
+metadata:
+  name: frontend-volume    # Nome do Deployment
+  labels:
+    app: frontend-volume     # Labels para identificar o Deployment
+spec:
+  replicas: 1     # Número de réplicas (Pods) desejadas
+  selector:
+    matchLabels:
+      component: web   # Seleciona pods que possuem este label para gerenciar
+  template:           # Template que define o Pod que será criado pelas réplicas
+    metadata:
+      labels:
+        component: web   # Labels atribuídos aos Pods criados
+    spec:
+      containers:
+        - name: container-volume  # Nome do container dentro do Pod
+          image: macoratti/pizzafrontend:latest   # Imagem Docker para o container
+          imagePullPolicy: IfNotPresent  # Política para puxar a imagem (só baixa se não existir)
+          ports:
+            - containerPort: 80    # Porta exposta pelo container (exemplo para aplicação web)
+          volumeMounts:
+            - name: meuvolume   # Nome do volume definido abaixo, que será montado no container
+              mountPath: "/app/meuvolume" # Caminho dentro do container onde o volume será montado
+      volumes:
+        - name: meuvolume  # Definição do volume com o mesmo nome referenciado no volumeMounts
+          emptyDir: {}     # Volume temporário criado na memória do node, perde dados ao reiniciar Pod

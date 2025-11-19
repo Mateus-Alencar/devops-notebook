@@ -64,20 +64,21 @@ Opções:
 - view: Exibe as configurações dentro do arquivo ansible.cfg
 - init: cria um arquivo de configurações inicial
 
+``` bash
 Plugins disponíveis no ansible.cfg:
-- base
-- become
-- cache
-- callback
-- cliconf
-- connection
-- httpapi
-- inventory
-- lookup
-- netconf
-- shell
-- vars
-
+- base       # define funcionalidades fundamentais para outros plugins Ansible.
+- become     # escalonar privilégios, permite executar comandos com permissões elevadas (sudo, su).
+- cache      # gerencia o cache de fatos (facts) coletados para acelerar execuções futuras.
+- callback   # controla a saída do Ansible, permite customizar como os resultados são exibidos.
+- cliconf    # configuração de dispositivos de rede via CLI (interface de linha de comando).
+- connection # gerencia o método de conexão com os hosts remotos (SSH, local, paramiko, etc).
+- httpapi    # permite comunicação com dispositivos via APIs HTTP/REST.
+- inventory  # obtém e gerencia o inventário de hosts, podendo ser estático ou dinâmico.
+- lookup     # busca dados de diferentes fontes (arquivos, variáveis, bases externas).
+- netconf    # comunicação com dispositivos de rede via protocolo NETCONF.
+- shell      # executa comandos shell nos hosts remotos como parte da conexão.
+- vars       # gerencia variáveis dentro do Ansible, permitindo manipulação e definição.
+```
 ### Guia passo a passo para configurar um control node do zero
 
 **Instalar o Ansible**
@@ -243,7 +244,7 @@ target01
 # O parâmetro children do arquivo de inventário do Ansible permite organizar seus hosts 
 # em uma hierarquia de grupos, criando uma relação de "pai-filho". 
 ```
-versão do arquivo invesntário em `.yaml`
+versão do arquivo inventário em `.yaml`
 ```bash
 all:
   hosts:
@@ -304,7 +305,7 @@ ansible_ssh_user=adm22
 Esse módulo imprime o valor da variável chamada var_teste que está definida para o host ou grupo alvo.
 
 ### Ansible Playbooks
-- Playbooks do Ansible são conuuntos de instruções (escritas em YAML) que oferecem um gerenciamento de configuração repetível, reutilizável e simples, permitindo o gerenciamento de configurações em diferentes targets de forma simultânea.
+- Playbooks do Ansible são conjuntos de instruções (escritas em YAML) que oferecem um gerenciamento de configuração repetível, reutilizável e simples, permitindo o gerenciamento de configurações em diferentes targets de forma simultânea.
 - Uma playbook é composta por uma ou mais tarefas, conhecidas como "Plays".
 - Playbooks são executadas aplicando o conceito de "Top Down"
 

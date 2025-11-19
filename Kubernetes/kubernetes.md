@@ -91,6 +91,13 @@ A menor unidade implantável no Kubernetes. Um **pod** pode conter um ou mais co
 - Armazenamentos
 - Ciclo de vida
 
+#### Ciclo de vida de um Pod
+
+- Pending: O Pod foi criado e aceito pelo cluster, mas um ou mais contêineres ainda não estão em execução. Essa fase inclui o tempo de escalonamento e o tempo de download da imagem.
+- Running: O pod foi alocado a um nó, e todos os contêineres foram criados. Pelo menos um contêiner está em execução, no processo de iniciar ou está reiniciando.
+- Succeeded: Todos os contêineres no pod foram encerrados com sucesso. Os pods encerrados não são reiniciados.
+- Failed: Todos os contêineres no pod foram encerrados e pelo menos um foi encerrado com falha. Um contêiner "falha" se ele é encerrado com um status diferente de zero.
+- Unknow: O estado do pod não pode ser determinado. As causas podem ser um erro de comunicação entre o node e o Pod.
 ---
 
 ### Componentes
@@ -122,7 +129,10 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
   falha de uma delas não afetará a disponibilidade do ambiente e integridade 
   dos dados do Kubernetes.
 ```
-
+##### API Server
+```
+Provê todos os serviços do Kubernetes. É um serviço REST. Valida e configura dados para os objetos de API que incluem pods, serviços, controladores de replicação e outros.
+```
 ##### Kube-scheduler 
 ```
     O Kube-scheduler é o responsável por determinar em que servidor cada 
@@ -147,6 +157,41 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
     Cluster.
  ```
 
+##### kubectl 
+```
+É a ferramenta CLI de interação com o cluster K8s. Permite executar comandos em clusters do Kubernetes, implantar aplicativos, inspecionar e gerenciar recursos de cluster e visualizar logs.
+```
+##### Namespace
+```
+Permite organizar e isolar recursos dentro de um mesmo cluster. Muito útil 
+em ambientes com múltiplos times ou projetos.
+Exemplo: `kubectl create namespace meu-projeto`
+```
+##### YAML Kubernetes Example
+
+```yaml
+
+apiVersion: v1
+# Indica o tipo do objeto que está sendo criado, neste caso um Pod, que é a menor unidade de implantação que pode conter um ou mais contêineres.
+kind: Pod 
+# Define metadados do Pod. name é o nome do Pod que será criado como "rss-site". labels são pares chave-valor que categorizam o Pod
+metadata:
+  name: rss-site
+  labels:
+    app: web
+# Define a especificação do Pod, ou seja, o que ele deve conter e como ele deve se comportar.
+spec:
+  containers:
+    - name: front-end
+      image: nginx-container
+      ports:
+        - containerPort: 80
+    - name: redis-container
+      image: redis:5.0.4
+      ports:
+        - containerPort: 6379
+
+```
 ### Services 
 
 Um dos principais objetivos dos Serviços no Kubernetes é que você não precisa modificar sua aplicação existente para usar um mecanismo de descoberta de serviços desconhecido. Você pode executar código em Pods, seja um código desenvolvido para um ambiente nativo da nuvem ou uma aplicação mais antiga que você conteinerizou. Você usa um Serviço para **disponibilizar esse conjunto de Pods na rede**, permitindo que os clientes interajam com ele.
@@ -158,7 +203,27 @@ Expõe o serviço no IP de cada nó em uma porta estática (a NodePort). Para di
 **LoadBalancer**
 Expõe o serviço externamente usando um balanceador de carga externo. O Kubernetes não oferece um componente de balanceamento de carga diretamente; você precisa fornecer um ou pode integrar seu cluster Kubernetes a um provedor de nuvem.
 **ExternalName**
-Mapeia o serviço para o conteúdo do externalNamecampo (por exemplo, para o nome do host api.foo.bar.example). O mapeamento configura o servidor DNS do seu cluster para retornar um CNAME registro com esse valor de nome de host externo. Nenhum tipo de proxy é configurado.
+É um tipo de serviço Kubernetes que mapeia um nome de serviço interno para um nome DNS externo. Ele não cria um proxy ou um balanceador, apenas resolve o nome DNS.
+### **Ingress**
+[Kubernetes - Apresentando e usando o Ingress (youtube)](https://www.youtube.com/watch?v=6rbLsnsy1Gc)
+
+O Ingress é um objeto kubernetes cujo trabalho é expor e gerenciar o acesso externo aos Services ou serviçoes Kubernetes usando rotas HTTP e HTTPS.
+![alt text](image-6.png)
+Resumindo, o Ingress é essencial para:
+- Expor serviços HTTP e HTTPS externamente ao cluster.
+- Roteamento flexível do tráfego com base em regras configuráveis.
+- Gerenciamento centralizado do acesso e segurança do tráfego
+> Exemplo:
+![alt text](image-7.png)
+
+- Ingress apoiado por um único serviço: Nesse tipo de Ingress apenas um único Serviço é exposto pelo Ingress
+- Fanout simples: No Ingress fanout simples há um host no Ingress e o Ingress expôe vários serviços
+- Hospedagem virtual baseada em nome: Nesse tipo de Ingress pode haver vários hosts, mas a condição é que seu endereço IP seja o mesmo.
+
+##### Comandos para gerenciar services
+
+> Listar recursos do tipo ingress
+`kubectl get ingress`
 
 > Comando para pegar a porta do serviço:
 ` kubectl get svc <nome-service> -o yaml | grep address`
@@ -186,6 +251,16 @@ Mapeia o serviço para o conteúdo do externalNamecampo (por exemplo, para o nom
 
 > Altera o tipo do serviço, por exemplo, para NodePort.
 `kubectl patch service <nome-do-serviço> -p '{"spec":{"type":"NodePort"}}'`
+
+### Portas utilizados pelos componentes do Kubernetes
+
+  - 6443 (TCP) → entrada no cluster (API Server)
+  - 2379–2380 (TCP) → armazenamento do estado (etcd)
+  - 10250 (TCP) → comunicação entre API Server e nós (Kubelet)
+  - 10251 (TCP) → scheduler
+  - 10252 (TCP) → controller manager
+
+  > Uma porta TCP é um número que funciona como um ponto de entrada e saída numa rede, associado a um aplicativo específico num dispositivo
 
 ### Endpoints Controller 📈​
 
@@ -225,45 +300,6 @@ spec:
 
 ##### EndPointSlice
 A API EndpointSlice é o mecanismo que o Kubernetes usa para permitir que seu serviço seja dimensionado para lidar com um grande número de backends e permite que o cluster atualize sua lista de backends íntegros de forma eficiente.
-
-
-
-##### YAML Kubernetes Example
-
-```yaml
-
-apiVersion: v1
-# Indica o tipo do objeto que está sendo criado, neste caso um Pod, que é a menor unidade de implantação que pode conter um ou mais contêineres.
-kind: Pod 
-# Define metadados do Pod. name é o nome do Pod que será criado como "rss-site". labels são pares chave-valor que categorizam o Pod
-metadata:
-  name: rss-site
-  labels:
-    app: web
-# Define a especificação do Pod, ou seja, o que ele deve conter e como ele deve se comportar.
-spec:
-  containers:
-    - name: front-end
-      image: nginx-container
-      ports:
-        - containerPort: 80
-    - name: redis-container
-      image: redis:5.0.4
-      ports:
-        - containerPort: 6379
-
-```
-
-### Volume
-Volumes fornecem armazenamento persistente para os pods. Eles mantêm dados mesmo se o pod for recriado
-Tipos comuns de volumes:
- - emptyDir
- - hostPath
- - persistentVolumeClaim (PVC)
-
-### Namespace
-Permite organizar e isolar recursos dentro de um mesmo cluster. Muito útil em ambientes com múltiplos times ou projetos.
-Exemplo: `kubectl create namespace meu-projeto`
 
 ### Objetos do Kubernetes
 Os objetos principais do Kubernetes representam recursos persistentes que definem o estado desejado do cluster e das aplicações que nele rodam. Entre os mais importantes estão:
@@ -414,17 +450,6 @@ EX: Pausar o rollout de um Deployment chamado nginx: `kubectl rollout pause depl
 
 ![alt text](image-2.png)
 
-## Portas utilizados pelos componentes do Kubernetes
-
-  - 6443 (TCP) → entrada no cluster (API Server)
-  - 2379–2380 (TCP) → armazenamento do estado (etcd)
-  - 10250 (TCP) → comunicação entre API Server e nós (Kubelet)
-  - 10251 (TCP) → scheduler
-  - 10252 (TCP) → controller manager
-
-  > Uma porta TCP é um número que funciona como um ponto de entrada e saída numa rede, associado a um aplicativo específico num dispositivo
-
-
 ### Livesprobe
 
 Uma liveness probe no Kubernetes é uma verificação periódica da saúde de um container rodando dentro de um pod. Ela serve para garantir que o aplicativo está funcionando corretamente, e, se detectar que o container está travado, não responde ou não está mais operacional, o Kubernetes automaticamente reinicia esse container para restaurar sua funcionalidade.
@@ -526,8 +551,10 @@ spec:
 
 No Kubernetes, volumes são uma abstração que permitem que contêineres dentro de um Pod armazenem e compartilhem dados via sistema de arquivos. Diferente do sistema de arquivos efêmero dos containers, que é destruído junto com o container, os volumes podem ter vida útil maior, persistindo além da vida do Pod, dependendo do tipo.
 
-- Um volume é declarado na seção .spec.volumes do Pod.
-- É montado em um ou mais containers do Pod na seção .spec.containers[].volumeMounts, definindo o caminho onde o volume ficará visível dentro do container.
+- Um volume é declarado na seção `.spec.volumes` do Pod.
+- É montado em um ou mais containers do Pod na seção `.spec.containers[].volumeMounts`, definindo o caminho onde o volume ficará visível dentro do container.
+
+![alt text](image-8.png)
 
 O volume **emptyDir** no Kubernetes é um volume temporário criado no momento em que um Pod é atribuído a um nó e que existe enquanto o Pod está ativo naquele nó. Inicialmente vazio, ele é compartilhado entre todos os containers do Pod e seu conteúdo é apagado definitivamente quando o Pod é removido
 
@@ -551,7 +578,7 @@ spec:
 # O volume cache-volume é do tipo emptyDir e montado em /cache no container.
   ```
 
-O volume **hostPath** no Kubernetes é um tipo de volume que monta um diretório ou arquivo do sistema de arquivos do nó (host) onde o pod está sendo executado diretamente dentro do container. É útil para acessar dados locais do nó, como logs, arquivos temporários ou outras informações específicas do host.
+O volume **hostPath** Monta um arquivo ou diretório do sistema de arquivos do nó do host no Pod. É útil para acessar dados locais do nó, como logs, arquivos temporários ou outras informações específicas do host.
 
 > Exemplo de uso de volume hostPath em um pod:
 ```yaml
@@ -575,8 +602,12 @@ spec:
 ```
 
 ### Persistent Volume (PV e PVC)
+[Kubernetes - Volumes Persistentes (youtube)](https://www.youtube.com/watch?v=7ImUf_qWW2Y)
+
+![alt text](image-9.png)
 
 O **Persistent Volume (PV)** no Kubernetes é um recurso de armazenamento previamente provisionado no cluster, que pode ser configurado pelo administrador para fornecer espaço de armazenamento abstrato e persistente para uso dos pods. Ele possui propriedades como tamanho, modo de acesso (ex: ReadWriteOnce, ReadOnlyMany, ReadWriteMany) e pode estar em estados como Available (disponível), Bound (associado) ou Released (liberado).
+![alt text](image-11.png)
 > EX
 ```yaml
 apiVersion: v1
@@ -592,6 +623,8 @@ spec:
   hostPath:
     path: "/mnt/data"
 ```
+**Modos de acesso ao PV (accessModes)**
+![alt text](image-10.png)
 Já o **Persistent Volume Claim (PVC)** é uma requisição feita pelo usuário/pod para solicitar armazenamento. O PVC descreve suas necessidades como tamanho, modo de acesso e classe de armazenamento, e o sistema do Kubernetes realiza o bind (associação) automático a um PV que atenda aos critérios requisitados. O usuário interage com o PVC para usar o armazenamento, sem se preocupar com a implementação do PV.
 ```yaml
 apiVersion: v1
@@ -610,7 +643,15 @@ Com esse PVC, o Kubernetes automaticamente liga esse pedido a um PV que tenha pe
 
 Assim, o PV representa o recurso físico de armazenamento, enquanto o PVC é a forma de requisitar e usar esse recurso no Kubernetes, promovendo abstração e melhor gerenciamento do armazenamento em clusters.
 
-#### Direction node attribution
+**Clico de vida de PV e PVC**
+- Provisioning: Refere-se a criação do PV, diretamente (estático) ou dinamicamente usando StorageClass.
+- Binding: Atribuindo o PV ao PVC
+- Using: O Pod esta usando o volume através do PVC
+- Reclaiming: O PV é recuperado, mantend-o para o próximo uso ou excluindo-o diretamente do armazenamento em nuvem.
+
+![alt text](image-12.png)
+
+### Direction node attribution
 A "direction node attribution" (atribuição ou direcionamento de pods para nós) no Kubernetes é realizada principalmente por meio de mecanismos de seleção e afinidade baseados em labels dos nós.
 
 Os principais métodos para direcionar a atribuição de pods a nós específicos são:
@@ -827,3 +868,22 @@ roleRef:
 
 > Retoma um rollout pausado.
 `kubectl rollout resume deployment/<deployment-name>`
+
+### Helm (Gerenciador de pacotes)
+Helm é um ***gerenciador de pacotes*** para Kubernetes que simplifica a definição, instalação, configuração e atualização de aplicativos e serviços dentro do cluster. Ele funciona como um facilitador para gerenciar a complexidade de aplicações Kubernetes, agrupando todos os recursos necessários em um único pacote chamado chart.
+
+Um chart no Helm é uma coleção organizada de arquivos que descrevem um conjunto relacionado de recursos Kubernetes, como Deployments, Services, ConfigMaps, Ingress, e outros. Isso inclui manifestos YAML, templates e configurações que definem como esses recursos devem ser criados e configurados.
+
+```bash
+# Instalar uma aplicação a partir de um chart
+helm install meu-app nome-do-chart
+
+# Atualizar uma instalação com uma nova configuração
+helm upgrade meu-app nome-do-chart -f valores-personalizados.yaml
+
+# Listar as releases instaladas
+helm list
+
+# Buscar charts disponíveis
+helm search repo prometheus
+``` 
