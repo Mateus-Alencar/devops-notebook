@@ -20,6 +20,4 @@ Tipos de rede (drivers)
 | **none**    | remove todas conexões de rede de um container|
 | **plugins** | permite extensões de terceiros para criar outras redes|
 
-Comandos
 
-1. `docker netword ls`
