@@ -2,6 +2,7 @@
 
 - [Conceitos Fundamentais do Docker](#conceitos-fundamentais-do-docker)
 - [Containers](#containers)
+- [Camadas logicas de um container](#camadas-logicas-de-um-container)
 - [Dockerfile](#dockerfile)
 - [Docker Registry](#docker-registry)
 - [Docker Hub](#docker-hub)
@@ -10,7 +11,7 @@
 - [Networks no Docker](#Networks)
 - [Docker Compose](#docker-compose)
 
-# Conceitos Fundamentais do Docker 🐳
+## Conceitos Fundamentais do Docker 🐳
 
 O Docker usa um esquema de **camadas (layers)**, e para montar essas camadas são usadas técnicas de **Copy-On-Write**, que evitam duplicação desnecessária de dados ao compartilhar camadas entre containers.
 Um **container** é basicamente uma **pilha de camadas** compostas por **N camadas read-only** e **uma camada superior read-write**.
@@ -28,7 +29,7 @@ Containers Docker empacotam componentes de software em um sistema de arquivos co
 | Imagem base         | Menor                       | Maior                               |
 | Gerenciamento       | Docker Engine               | Hypervisor (Ex: VirtualBox, VMWare) |
 
-## Containers
+### Containers
 
 Containers são similares às máquinas virtuais, porém **mais leves** e mais **integrados ao sistema operacional da máquina host**. Eles compartilham o **kernel do host**, o que proporciona **melhor desempenho**, graças ao gerenciamento único dos recursos e ao **isolamento das imagens**.
 
@@ -42,117 +43,190 @@ Mas normalmente não queremos um isolamento total, e sim um **isolamento control
 - Cópia de arquivos para o container ou a partir do container
 - Comunicação entre os containers
 
-### Diferenças entre container e imagem
+**Diferenças entre container e imagem**
 
-Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (instância), enquanto a imagem seria uma classe (modelo).
-
-#### [Docker Registry](https://docs.docker.com/registry/)
-
-É uma aplicação *server-side* para guardar e distribuir imagens Docker.
-
-#### [Docker Hub](https://hub.docker.com/)
+Utilizando uma analogia com `POO`, podemos comparar um container a um objeto  (instância), enquanto a imagem seria uma classe (modelo).  
+[Docker Registry](https://docs.docker.com/registry/)  
+É uma aplicação *server-side* para guardar e distribuir imagens Docker.  
+[Docker Hub](https://hub.docker.com/)  
 
 É um serviço de registro de imagens Docker em nuvem, que permite a associação com repositórios para **build automatizado** de imagens. Imagens marcadas como **oficiais** no Docker Hub são criadas pela própria **Docker Inc.**
 
-#### Camdas lógicas de um container
+### Camadas logicas de um container
 
-- Camadas de imagem: Uma imagem de container é composta por uma série de camadas, onde cada uma representa uma alteração na imagem.
-- Compartilhamento: Essas camadas de imagem são somente para leitura e podem ser compartilhadas entre vários containers para otimizar o uso de armazenamento.
+- Camadas de imagem: Uma imagem de container é composta por uma série de camadas, **onde cada uma representa uma alteração na imagem.**
+- Compartilhamento: Essas camadas de imagem são somente para leitura e **podem ser compartilhadas entre vários containers** para otimizar o uso de armazenamento.
 - Camada gravável (camada de container): Cada container, como uma instância da imagem, tem uma camada superior, gravável, onde as alterações são feitas sem afetar a imagem base ou outros containers.
 - Portabilidade: O sistema de camadas garante que as modificações não são aplicadas ao sistema de arquivos original, tornando o container portátil. 
 
 ![alt text](image-1.png)
+
 ---
+## Comandos docker
 
-# Comandos - Docker
+### 1. Inspeção Básica  
+#### Listar containers  
+-   `docker ps` --- Lista containers em execução\  
+-   `docker ps -a` --- Lista todos, inclusive parados\  
+-   `docker ps -q` --- Lista apenas IDs dos containers  
+#### Listar imagens  
+-   `docker images` --- Lista imagens locais\  
+-   `docker images -q` --- Apenas IDs das imagens  
+#### Informações gerais  
+-   `docker version` --- Mostra versão instalada\  
+-   `docker info` --- Exibe dados do ambiente Docker  
+------------------------------------------------------------------------
 
-## Docker
+### 2. Gerenciamento de Imagens  
+#### Download de imagens  
+-   `docker pull nginx` --- Baixa imagem\  
+-   `docker pull ubuntu:20.04` --- Baixa imagem com tag específica  
+#### Remover imagens  
+-   `docker rmi <imagem>` --- Remove imagem\  
+-   `docker rmi -f <imagem>` --- Força remoção  
+#### Criar imagens  
+-   `docker build -t meu-app .` --- Cria imagem com tag\  
+-   `docker build -f Dockerfile.prod -t app-prod .` --- Usa Dockerfile  
+    específico  
+------------------------------------------------------------------------
 
-1. `docker ps`  
-   → Lista todos os contêineres em execução. (igual a `docker container ls`)
+### 3. Criando e Executando Containers  
+#### Modo interativo  
+-   `docker run -it ubuntu bash` --- Abre terminal dentro do container  
+#### Background (daemon)  
+-   `docker run -d nginx` --- Executa em segundo plano\  
+-   `docker run -d -p 8080:80 nginx` --- Mapeamento de portas  
+#### Execução com limpeza automática  
+-   `docker run --rm ubuntu ls /` --- Remove container ao final  
+#### Criar sem iniciar  
+-   `docker create --name teste nginx`  
+------------------------------------------------------------------------
 
-2. `docker ps -a`  
-   → Lista todos os contêineres, inclusive os parados. (igual a `docker container ls -a`)
+### 4. Acessando Containers  
+#### Executar comando dentro do container  
+-   `docker exec -it <container> bash`\  
+-   `docker exec -it <container> sh` --- Caso não exista bash  
+#### Anexar ao terminal  
+-   `docker attach <container>`  
+#### Sair sem encerrar container  
+-   `Ctrl + P` + `Ctrl + Q`  
+------------------------------------------------------------------------
 
-3. `docker run -it ubuntu bash`  
-   → Cria e executa um contêiner Ubuntu com um terminal interativo (bash).
+### 5. Ciclo de Vida do Container  
+#### Parar, iniciar e reiniciar  
+-   `docker stop <container>`\  
+-   `docker start <container>`\  
+-   `docker restart <container>`  
+#### Remover containers  
+-   `docker rm <container>` --- Container parado\  
+-   `docker rm -f <container>` --- Remove mesmo ativo  
+#### Renomear  
+-   `docker rename antigo novo`  
+------------------------------------------------------------------------
 
-4. `docker exec -it <nome-ou-id> bash` ou `docker exec -it <nome-ou-id> sh`
-   → Abre um terminal dentro de um contêiner já em execução.
-   → **O comando com SH deve ser executado caso o container não tenha `bash`**
+### 6. Monitoramento e Logs  
+#### Logs  
+-   `docker logs <container>`\  
+-   `docker logs -f <container>` --- Seguir logs  
+#### Processos dentro do container  
+-   `docker top <container>`  
+#### Inspecionar container  
+-   `docker inspect <container>`\  
+-   `docker inspect <imagem>`  
+#### Uso de recursos  
+-   `docker stats` --- CPU, memória, rede\  
+-   `docker stats <container>` --- Específico  
+------------------------------------------------------------------------
 
-5. `docker stop <nome-ou-id>`  
-   → Para um contêiner em execução.
+### 7. Controle de Recursos  
+#### Limitar memória e CPU  
+-   `docker run -m 256M nginx` --- Limite memória\  
+-   `docker run --cpus=0.5 nginx` --- 50% de um núcleo\  
+-   `docker run -d -m 128M --cpus 0.5 nginx`  
+------------------------------------------------------------------------
 
-6. `docker start meu-container`
-   → Reinicia um container que estava parado
+### 8. Volumes e Persistência  
+#### Criar volumes  
+-   `docker volume create dados`  
+#### Listar volumes  
+-   `docker volume ls`  
+#### Inspecionar volume  
+-   `docker volume inspect dados`  
+#### Montar volume no container  
+-   `docker run -v dados:/var/lib/mysql mysql`  
+#### Remover volume  
+-   `docker volume rm dados`  
+------------------------------------------------------------------------
 
-7. `docker rm <nome-ou-id> -f`
-   → Remove um contêiner em execução.
+### 9. Redes no Docker  
+#### Criar rede  
+-   `docker network create minha-rede`  
+#### Listar redes  
+-   `docker network ls`  
+#### Inspecionar rede  
+-   `docker network inspect minha-rede`  
+#### Rodar container em rede específica  
+-   `docker run -d --network minha-rede nginx`  
+#### Conectar / desconectar container da rede  
+-   `docker network connect minha-rede meu-container`\  
+-   `docker network disconnect minha-rede meu-container`  
+------------------------------------------------------------------------
 
-8. `docker rm <nome-ou-id>`  
-   → Remove um contêiner parado.
+### 10. Docker System (Manutenção)  
+#### Limpeza completa  
+-   `docker system prune` --- Limpa containers/parados\  
+-   `docker system prune -a` --- Limpa tudo, incl. imagens\  
+-   `docker system prune --volumes -a -f` --- Limpa volumes também  
+#### Limpeza específica  
+-   `docker container prune`\  
+-   `docker image prune`\  
+-   `docker volume prune`\  
+-   `docker network prune`  
 
-9. `docker container stats`  
-   → Exibe estatísticas em tempo real de uso dos contêineres ativos (CPU, memória, rede, disco).
+#### Comando para limpar volumes, images e containers parados  
+- `sudo docker system prune --all -f --volumes`
+------------------------------------------------------------------------
 
-10. `docker run --rm nome-da-imagem`
-   → O parâmetro --rm no Docker remove automaticamente o container assim que ele for parado.
+### 11. Login em Registries  
+-   `docker login` --- Realiza login no Docker Hub\  
+-   `docker logout` --- Encerra sessão\  
+-   `docker tag meu-app usuario/meu-app:v1` --- Marca imagem\  
+-   `docker push usuario/meu-app:v1` --- Envia ao registry  
+------------------------------------------------------------------------
 
-11. `docker top <nome-ou-id>`
-   → Verificar processamento do container
+### 12. Ajuda  
+-   `docker <comando> --help`\  
+-   `docker help`  
+------------------------------------------------------------------------
 
-12. `docker inspect <nome-da-imagem>`
-   → Inspeciona as caracteristicas e configurações do container ou da imagem
-
-13. `docker stats`
-   → é usado para monitorar o uso de recursos dos containers em tempo real.
-
-14. `docker logount` e `docker login`
-   → Servem para gerenciar a autenticação com registros de imagens Docker, como o Docker Hub, GitHub Container Registry e AWS ECR
-   
-15. `docker pull`
-   → O comando docker pull serve para baixar (fazer o download) de uma imagem de container de um registro (como o Docker Hub) para a minha máquina local.
-
-16. `docker logs <nome-ou-id>`  
-   → Mostra os logs de um contêiner.
-> Use `docker logs -f meu-container` para acompanhar os logs em tempo real.
-
-17. `docker pause meu-container` `docker unpause meu-container`
-   → Comandos para pausar e despausar containers respectivamente.
-
-18. `docker rename <antigo-nome> <novo-nome>`
-   → Renomear container.
-
-19. `docker create --name <meu-container> nginx`
-   → Criar container sem iniciar
-20. `docker <comando> --help`
-   → Para saber mais sobre qualquer comando.
-
-21. Comando para sair do contâiner sem fechar o container:
-> Ctrl + P + Q
-22. Comando para voltar para o container:
-> `docker container attach <nome-ou-id>`
-23. Comando para rodar um container sem entrar no terminal interativo no serviço: 
->`docker container -d <image>`
-
-24. `sudo docker container run -d -m 128M --cpus 0.5 nginx`
-   → Criação de um container em segundo plano, `-d`
-   → `-m 128M`: limita a quantidade máxima de memória
-   → `--cpus 0.5`: limita o uso máximo do cpu para meio núcleo (50%)
-
-25. ` sudo docker system prune --all -f --volumes`
-   → **Comando para limpar volumes, images e containers parados**
+### 13. Comandos Rápidos (Cheatsheet)  
+    docker pull nginx  
+    docker run -d -p 8080:80 --name web nginx  
+    docker exec -it web bash  
+    docker logs -f web  
+    docker stop web  
+    docker rm web  
+    docker system prune -a -f --volumes  
+------------------------------------------------------------------------
 
 ##### Copiar arquivos
 - Do host para o container: `docker cp arquivo.txt meu-container:/home/` 
 - Do container para o host: `docker cp meu-container:/home/arquivo.txt .`
-### 📦 Containers
 
-1. `docker pull ubuntu`  
-   → Baixa a imagem oficial do Ubuntu do Docker Hub.
 
-2. `docker container run -ti --mount type=bind,source=/home/mateus/giropops,target=/giropops debian`   
+**Exemplos:**
+`sudo docker container run -d -m 128M --cpus 0.5 nginx`
+   → Criação de um container em segundo plano, `-d`
+   → `-m 128M`: limita a quantidade máxima de memória
+   → `--cpus 0.5`: limita o uso máximo do cpu para meio núcleo (50%)
+
+ `docker run -d -p 80:80 nginx`
+   → `docker run`: Cria e inicia um novo container
+   → `-d`: significa *detached mode (modo destacado)*, isso faz com que o container rode em segundo plano.
+   → `-p 80:80`: mapeamento de portas
+   → `nginx`: nome da imagem
+
+`docker container run -ti --mount type=bind,source=/home/mateus/giropops,target=/giropops debian`   
    → `-ti`: abre o terminal interativo  
    → `--mount`: monta diretório do host no container  
    → `type=bind`: tipo de montagem  
@@ -172,12 +246,6 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto (in
    | `volume`      | Usa um volume Docker (gerenciado automaticamente).                      |
    | `tmpfs`       | Cria um sistema de arquivos temporário (RAM), útil para dados voláteis. |
 
-
- 3. `docker run -d -p 80:80 nginx`
-   → `docker run`: Cria e inicia um novo container
-   → `-d`: significa *detached mode (modo destacado)*, isso faz com que o container rode em segundo plano.
-   → `-p 80:80`: mapeamento de portas
-   → `nginx`: nome da imagem
 
 
 ---
@@ -277,7 +345,7 @@ No Docker, renomear uma imagem significa dar a ela um novo nome (tag), sem modif
  
 --- 
 
-## 📦 O que são Volumes no Docker?
+### 📦 O que são Volumes no Docker?
 
 Volumes são a forma recomendada pelo Docker para armazenar dados persistentes. Eles são armazenados fora do sistema de arquivos interno do contêiner e **não são apagados quando o contêiner é removido.**
 
@@ -428,27 +496,27 @@ Podemos fazer a verificação do compose com o comando: `docker-compose ps`. Rec
 #### Comandos Essenciais do Docker Compose
 
 **1. Iniciar o Ambiente (Build, Criação e Execução)**
-| Comando| Descrição|
-| -------------------- | ------------------ |
-| docker compose up    | Inicia todos os serviços definidos no arquivo Compose em primeiro plano (você verá os logs na tela). Se as imagens não existirem, ele as baixa ou constrói (se houver a instrução build). |
-| docker compose up -d | Recomendado para uso geral. Inicia todos os serviços em modo detached (segundo plano), liberando seu terminal.                                                                            |
-| docker compose build | Constrói ou reconstrói as imagens para os serviços que contêm a instrução build no arquivo Compose (útil para atualizar o código da sua aplicação antes de subir os containers).          |
+| Comando   | Descrição|
+| ------------------- | ------------------ |
+| `docker compose up`| Inicia todos os serviços definidos no arquivo Compose em primeiro plano (você verá os logs na tela). Se as imagens não existirem, ele as baixa ou constrói (se houver a instrução build). |
+| `docker compose up -d` | Recomendado para uso geral. Inicia todos os serviços em modo detached (segundo plano), liberando seu terminal.                                                                            |
+| `docker compose build` | Constrói ou reconstrói as imagens para os serviços que contêm a instrução build no arquivo Compose (útil para atualizar o código da sua aplicação antes de subir os containers).          |
 
 **2. Gerenciamento e Monitoramento**
 | Comando| Descrição|
 | --------------------------------- | -------------------------- |
-| docker compose ps                       | Lista os containers (serviços) definidos no Compose que estão rodando e mostra seu status. |
-| docker compose logs [serviço]           | Exibe os logs de um serviço específico (por exemplo, docker compose logs wordpress).       |
-| docker compose top                      | Exibe os processos em execução dentro dos containers.                                      |
-| docker compose exec [serviço] [comando] | Executa um comando dentro de um container em execução. Útil para depuração.                |
+| `docker compose ps `                      | Lista os containers (serviços) definidos no Compose que estão rodando e mostra seu status. |
+| `docker compose logs [serviço]`          | Exibe os logs de um serviço específico (por exemplo, docker compose logs wordpress).       |
+| `docker compose top`                      | Exibe os processos em execução dentro dos containers.                                      |
+| `docker compose exec [serviço] [comando]` | Executa um comando dentro de um container em execução. Útil para depuração.                |
 
 **3. Parar e Limpar**
 | Comando| Descrição|
 | --------------------- | ------------ |
-| docker compose stop           | Para os containers em execução, mas não os remove. Eles podem ser reiniciados rapidamente com docker compose start.|
-| docker compose start          | Inicia containers que foram previamente parados.|
-| docker compose down           | Para e remove os containers, redes e volumes definidos pelo Compose.|
-| docker compose down --volumes | Limpeza Completa. Para e remove containers, redes e os volumes persistentes (como o db_data do seu exemplo). Use com cautela, pois isso apaga seus dados. |
+| `docker compose stop`          | Para os containers em execução, mas não os remove. Eles podem ser reiniciados rapidamente com docker compose start.|
+| `docker compose start`          | Inicia containers que foram previamente parados.|
+| `docker compose down`          | Para e remove os containers, redes e volumes definidos pelo Compose.|
+| `docker compose down --volumes` | Limpeza Completa. Para e remove containers, redes e os volumes persistentes (como o db_data do seu exemplo). Use com cautela, pois isso apaga seus dados. |
 
 
 
