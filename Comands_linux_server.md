@@ -251,6 +251,7 @@ O SystemD monitora processos usando cgroups do Linux, garantindo que ao parar um
 | `/opt`          | Softwares opcionais      |
 | `/media`       | Ponto de montagem para dispositivos removíveis |
 | `/etc/shadow`  | armazena senhas de usuários de forma criptografada, junto com outras informações como data de validade da senha e configurações de segurança |
+| `proc/cpuinfo` | Arquivo que contém informações sobre a CPU|
 
 Todos esses diretórios não podem está em uma partição diferente do diretório "/", por que durante o boot o kernel linux monta primeiro a partição vinculada ao diretório "/"
 
@@ -267,16 +268,16 @@ O arquivo cpuinfo exibe detalhes do processador, como:
 - Cache (cache size)
 
 **sysfs**
-O `sysfs` é um sistema de arquivos virtual no Linux, montado geralmente em `/sys`. Ele foi criado para fornecer uma interface entre o kernel e o espaço do usuário, permitindo que informações sobre dispositivos, drivers e subsistemas do kernel sejam acessadas de forma organizada como arquivos e diretórios.
+O `sysfs` é um sistema de arquivos virtual no Linux, montado geralmente em `/sys`. Ele foi criado para fornecer uma interface entre o kernel e o espaço do usuário, permitindo que informações sobre dispositivos, drivers e subsistemas do kernel sejam acessadas de forma organizada como arquivos e diretórios. **O `/sys` tem função específica de armazenas informações de dispositivos.**
 **dev** 
-Trantando-se de dispositivos, outro diretório muito importante é o `/dev`. Nele encontramos arquivos especiais que representam a maioria dos dispositivos do sistema, particulamente dispositivos de armazenamento. Isso quer dizer que a maioria dos dispositivos conectados no servidor é representando por um arquivo dentro do diretório /dev. 
-Um Disco conectado a uma controadora IDE, por exemplo, quando conectado ao primeiro canal IDE da placa mãe, é representado pelo arquivo de dispositivo /dev/hda. Cada partição nesse disco será identificada como `/dev/hda1`, `/dev/hda2` e até a última partição encontrada.
+Trantando-se de dispositivos, outro diretório muito importante é o `/dev`. Nele encontramos arquivos especiais que representam a maioria dos dispositivos do sistema, particulamente dispositivos de armazenamento. Isso quer dizer que a maioria dos dispositivos conectados no servidor é representando por um arquivo dentro do diretório `/dev`. 
+Um Disco conectado a uma controadora IDE, por exemplo, quando conectado ao primeiro canal IDE da placa mãe, é representado pelo arquivo de dispositivo `/dev/hda`. Cada partição nesse disco será identificada como `/dev/hda1`, `/dev/hda2` e até a última partição encontrada.
 **proc**
-O diretório `/proc` é um diretório criado pelo kernel na memória do computador apenas durante a inicialização, e contém informações sobre diversas informações do sistema, como processos em execuçãono sistema, incluindo detalhes sobre os dispositivos detectados. 
+O diretório `/proc` é um diretório criado pelo kernel na memória do computador apenas durante a inicialização, e contém informações sobre diversas informações do sistema, como processos em execuçãono sistema, incluindo detalhes sobre os dispositivos detectados. **ele contém arquivos com informações dos processos ativos e de recuros do hardware**
 
 **Diretório /var/log**
 
-O diretório padrão dos arquivos de logs é /var/log e geralmente utiliza dois formatos de arquivos: oformatotexto puro como usado em arquivos como /var/log/messages, /var/log/secure(em outras distros é o arquivo/var/log/auth) e que são visualizados com comandos como cat/tac, more, less, head e tail.
+O diretório padrão dos arquivos de logs é `/var/log` e geralmente utiliza dois formatos de arquivos: o formato texto puro como usado em arquivos como `/var/log/messages`, `/var/log/secure` em outras distros é o arquivo `/var/log/auth)` e que são visualizados com comandos como cat/tac, more, less, head e tail.
 
 ##### logger
 O comando `logger` é uma ferramenta de linha de comando no Linux que permite enviar mensagens diretamente para o sistema de logs (syslog). É muito útil para administradores de sistema e desenvolvedores que precisam registrar informações de scripts ou de tarefas agendadas no mesmo local que os logs do sistema, como `/var/log/syslog` ou `/var/log/messages`.
@@ -285,7 +286,7 @@ Sintaxe: `logger <opções> [-p facility.priority] [-t tag] [mensagem]`
 
 | Opções | Descrição |
 | ------ | --------- |
-| -p | Especifica uma facilidade e prioridade para a mensagem a qual pode ser especificadanoseguinteformato: "facility.priority". |
+| -p | Especifica uma facilidade e prioridade para a mensagem a qual pode ser especificada no seguinte formato: `facility.priority`. |
 | -t | Adiciona uma marcação (tag) em cada linha do arquivo de log. |
 | -i | Mostra o ID do processo do logger junto em cada linha. |
 | -f | Envia a mensagem de log para o arquivo especificado. |
@@ -415,6 +416,14 @@ rpm -qa                      # Lista todos os pacotes instalados.
 
 ---
 ## Gerenciamento de particoes
+
+```bash
+cat /proc/scsi/scsi    # mostra os dispositivos SCSI (ou SCSI emulação) detectados pelo kernel Linux.
+```
+
+#### Nomes dos dispositivos de armazenamento no linux
+
+![alt text](image-2.png)
 
 ##### Conceitos de LVM
 
@@ -550,6 +559,11 @@ cd /caminho                       # Entra em um diretório
   cd ~                            # Para acessar a pasta do usuário logado
   cd -                            # Para retornar para diretórios anteriores
 pwd                               # Mostra o diretório atual
+head <nome-arquivo>               # Mostra o início do um arquivo (padrão: 10 linhas)
+  head -5 arquivo.txt             # Mostra às 5 primeiras linhas.
+  head -n 20 /etc/passwd | nl     # Mostra às 20 primeiras linhas numeradas
+  cat -n /etc/passwd | head -n -25 # Mostra às 25 primeiras linhas numeradas
+tail -n 20 nome_do_arquivo.txt    # Exibe às últimas 20 linhas do arquivo
 
 mkdir nome                        # Cria um diretório
 rmdir pasta                       # Ela exclui permanentemente um diretório vazio
@@ -576,6 +590,10 @@ zcat arquivo.gz                   # Serve para visualizar o conteúdo de um arqu
 
 stat arquivo.txt                  # Visualizar informações detalhadas sobre os arquivos
 less arquivo.log                  # Visualiza arquivo com rolagem (para logs grandes)
+  `Page-Down`                     # Avançar página.
+  `Page-Up`                       # Retrocedor página.
+  `\`                             # Pesquisar um texto.
+  `q`                             # Sair do less.
 grep "palavra" /etc/arquivo.txt   # Busca texto em arquivos.
 find /home -name "documento.txt"  # Localiza arquivos. (find [diretório] [opção] [ação])
 scp / rsync                       # Cópia remota do arquivo.
@@ -919,6 +937,7 @@ sha512sum minha_imagem.iso
 ```
 Isso retornaria algo como d41d8cd98f00b204e9800998ecf8427e minha_imagem.iso.
 
+O comando `iconv` é usado para converter a codificiação de caracteres de um arquivo para outro tipo de codificação.
 ---
 ## Rede
 ```bash
