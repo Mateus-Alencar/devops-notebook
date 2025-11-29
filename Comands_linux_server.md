@@ -1053,6 +1053,8 @@ As permissões em arquivos/diretórios são sequências de 12 bits, ou seja, bit
 | w | 2 | Escrita| Modificar e deletar o arquivo | Criar/Apagar arquivos/diretórios |
 | x | 1 | Execução/Acesso para diretório| Execução do arquivo como programa | Entrar no diretório |
 
+![alt text](image-1.png)
+
 #### CHMOD
 
 `chmod [opções] alteração arquivo`
