@@ -268,12 +268,12 @@ O arquivo cpuinfo exibe detalhes do processador, como:
 - Cache (cache size)
 
 **sysfs**
-O `sysfs` é um sistema de arquivos virtual no Linux, montado geralmente em `/sys`. Ele foi criado para fornecer uma interface entre o kernel e o espaço do usuário, permitindo que informações sobre dispositivos, drivers e subsistemas do kernel sejam acessadas de forma organizada como arquivos e diretórios.
+O `sysfs` é um sistema de arquivos virtual no Linux, montado geralmente em `/sys`. Ele foi criado para fornecer uma interface entre o kernel e o espaço do usuário, permitindo que informações sobre dispositivos, drivers e subsistemas do kernel sejam acessadas de forma organizada como arquivos e diretórios. **O `/sys` tem função específica de armazenas informações de dispositivos.**
 **dev** 
-Trantando-se de dispositivos, outro diretório muito importante é o `/dev`. Nele encontramos arquivos especiais que representam a maioria dos dispositivos do sistema, particulamente dispositivos de armazenamento. Isso quer dizer que a maioria dos dispositivos conectados no servidor é representando por um arquivo dentro do diretório /dev. 
-Um Disco conectado a uma controadora IDE, por exemplo, quando conectado ao primeiro canal IDE da placa mãe, é representado pelo arquivo de dispositivo /dev/hda. Cada partição nesse disco será identificada como `/dev/hda1`, `/dev/hda2` e até a última partição encontrada.
+Trantando-se de dispositivos, outro diretório muito importante é o `/dev`. Nele encontramos arquivos especiais que representam a maioria dos dispositivos do sistema, particulamente dispositivos de armazenamento. Isso quer dizer que a maioria dos dispositivos conectados no servidor é representando por um arquivo dentro do diretório `/dev`. 
+Um Disco conectado a uma controadora IDE, por exemplo, quando conectado ao primeiro canal IDE da placa mãe, é representado pelo arquivo de dispositivo `/dev/hda`. Cada partição nesse disco será identificada como `/dev/hda1`, `/dev/hda2` e até a última partição encontrada.
 **proc**
-O diretório `/proc` é um diretório criado pelo kernel na memória do computador apenas durante a inicialização, e contém informações sobre diversas informações do sistema, como processos em execuçãono sistema, incluindo detalhes sobre os dispositivos detectados. 
+O diretório `/proc` é um diretório criado pelo kernel na memória do computador apenas durante a inicialização, e contém informações sobre diversas informações do sistema, como processos em execuçãono sistema, incluindo detalhes sobre os dispositivos detectados. **ele contém arquivos com informações dos processos ativos e de recuros do hardware**
 
 **Diretório /var/log**
 
@@ -416,6 +416,14 @@ rpm -qa                      # Lista todos os pacotes instalados.
 
 ---
 ## Gerenciamento de particoes
+
+```bash
+cat /proc/scsi/scsi    # mostra os dispositivos SCSI (ou SCSI emulação) detectados pelo kernel Linux.
+```
+
+#### Nomes dos dispositivos de armazenamento no linux
+
+![alt text](image-2.png)
 
 ##### Conceitos de LVM
 
@@ -929,6 +937,7 @@ sha512sum minha_imagem.iso
 ```
 Isso retornaria algo como d41d8cd98f00b204e9800998ecf8427e minha_imagem.iso.
 
+O comando `iconv` é usado para converter a codificiação de caracteres de um arquivo para outro tipo de codificação.
 ---
 ## Rede
 ```bash
