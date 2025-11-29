@@ -251,6 +251,7 @@ O SystemD monitora processos usando cgroups do Linux, garantindo que ao parar um
 | `/opt`          | Softwares opcionais      |
 | `/media`       | Ponto de montagem para dispositivos removíveis |
 | `/etc/shadow`  | armazena senhas de usuários de forma criptografada, junto com outras informações como data de validade da senha e configurações de segurança |
+| `proc/cpuinfo` | Arquivo que contém informações sobre a CPU|
 
 Todos esses diretórios não podem está em uma partição diferente do diretório "/", por que durante o boot o kernel linux monta primeiro a partição vinculada ao diretório "/"
 
@@ -276,7 +277,7 @@ O diretório `/proc` é um diretório criado pelo kernel na memória do computad
 
 **Diretório /var/log**
 
-O diretório padrão dos arquivos de logs é /var/log e geralmente utiliza dois formatos de arquivos: oformatotexto puro como usado em arquivos como /var/log/messages, /var/log/secure(em outras distros é o arquivo/var/log/auth) e que são visualizados com comandos como cat/tac, more, less, head e tail.
+O diretório padrão dos arquivos de logs é `/var/log` e geralmente utiliza dois formatos de arquivos: o formato texto puro como usado em arquivos como `/var/log/messages`, `/var/log/secure` em outras distros é o arquivo `/var/log/auth)` e que são visualizados com comandos como cat/tac, more, less, head e tail.
 
 ##### logger
 O comando `logger` é uma ferramenta de linha de comando no Linux que permite enviar mensagens diretamente para o sistema de logs (syslog). É muito útil para administradores de sistema e desenvolvedores que precisam registrar informações de scripts ou de tarefas agendadas no mesmo local que os logs do sistema, como `/var/log/syslog` ou `/var/log/messages`.
@@ -285,7 +286,7 @@ Sintaxe: `logger <opções> [-p facility.priority] [-t tag] [mensagem]`
 
 | Opções | Descrição |
 | ------ | --------- |
-| -p | Especifica uma facilidade e prioridade para a mensagem a qual pode ser especificadanoseguinteformato: "facility.priority". |
+| -p | Especifica uma facilidade e prioridade para a mensagem a qual pode ser especificada no seguinte formato: `facility.priority`. |
 | -t | Adiciona uma marcação (tag) em cada linha do arquivo de log. |
 | -i | Mostra o ID do processo do logger junto em cada linha. |
 | -f | Envia a mensagem de log para o arquivo especificado. |
@@ -550,6 +551,11 @@ cd /caminho                       # Entra em um diretório
   cd ~                            # Para acessar a pasta do usuário logado
   cd -                            # Para retornar para diretórios anteriores
 pwd                               # Mostra o diretório atual
+head <nome-arquivo>               # Mostra o início do um arquivo (padrão: 10 linhas)
+  head -5 arquivo.txt             # Mostra às 5 primeiras linhas.
+  head -n 20 /etc/passwd | nl     # Mostra às 20 primeiras linhas numeradas
+  cat -n /etc/passwd | head -n -25 # Mostra às 25 primeiras linhas numeradas
+tail -n 20 nome_do_arquivo.txt    # Exibe às últimas 20 linhas do arquivo
 
 mkdir nome                        # Cria um diretório
 rmdir pasta                       # Ela exclui permanentemente um diretório vazio
@@ -576,6 +582,10 @@ zcat arquivo.gz                   # Serve para visualizar o conteúdo de um arqu
 
 stat arquivo.txt                  # Visualizar informações detalhadas sobre os arquivos
 less arquivo.log                  # Visualiza arquivo com rolagem (para logs grandes)
+  `Page-Down`                     # Avançar página.
+  `Page-Up`                       # Retrocedor página.
+  `\`                             # Pesquisar um texto.
+  `q`                             # Sair do less.
 grep "palavra" /etc/arquivo.txt   # Busca texto em arquivos.
 find /home -name "documento.txt"  # Localiza arquivos. (find [diretório] [opção] [ação])
 scp / rsync                       # Cópia remota do arquivo.
