@@ -46,9 +46,20 @@ Inclua:
 - target padrão
 
 Explique cada etapa.
-```
-Resposta:
-```
+
+Resposta: 
+  $Primeiro processo:$ **BIOS/UEFI** - o BIOS carrega e executa o carregador de inicialização Master Boot Record (MBR). Quando o computador é ligado, a primeira coisa que o BIOS faz é executar algumas verficações de integridade do HD, seguida, carrega e executa o programa carregador de inicialização.
+
+  $Segundo processo$: **Bootloader** - é o carregador de inicialização típico para a maioria dos sistemas Linux, sendo o primeiro software a ser carregador para preparar o hardware. Em muitos sistemas, tem como encontrar o arquivo de configuração em `/boot/grub/grub.conf` ou `etc/grub.conf`.
+
+  $Terceiro processo$: **Kernel**: O kernel é carregado pelo bootloader e passa a controlar todo o hardware. Ele detecta dispositivos básicos (CPU, RAM, drivers essenciais).
+
+  $Quarto processo$: **Initramfs**: O initramfs é uma imagem compactada usada como sistema de arquivos temporário na RAM. Ele monta o sistema raiz (`/`). Depois que o root é montado o kernel inicia o PID 1, normalmente systemd.
+
+  $Quinto processo$: **Systemd**: O systemd é o gerenciador de serviços padrão das distribuições modernas.
+  
+  $Sexto processo$: **Target padrão**: O target é o "runlevel moderno" utilizado pelo systemd.
+
 #### 4. (Pacotes – apt/dpkg) Explique a diferença exata entre:
 
 - apt remove pacote

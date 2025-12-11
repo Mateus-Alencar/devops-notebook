@@ -109,7 +109,7 @@ Comando usado para exibir informações sobre o sistema operacional, como o nome
 
 Os diretórios Linux são pastas que organizam o sistema de arquivos, seguindo uma estrutura hierárquica a partir do diretório raiz (\(/\)). Cada diretório tem uma função específica, como armazenar programas (\(/bin\), \(/usr\)), configurações (\(/etc\)), arquivos dos usuários (\(/home\)), ou dados temporários (\(/tmp\)). 
 
-![alt text](image.png)
+![alt text](imagens\image.png)
 
 #### **`cat`**
 O comando cat é usado para visualizar, combinar e criar arquivos de texto.
