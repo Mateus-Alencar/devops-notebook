@@ -40,7 +40,7 @@ Casos de uso com Ansible:
 | Ad-hoc       | Execução rápida de comandos sem playbook     |
 
 
-![alt text](image.png)
+![alt text](Imagens/image.png)
 
 #### Funcionamento
 - Desenvolvido em Python
@@ -52,7 +52,7 @@ Casos de uso com Ansible:
 - Para servidores Micro$oft Window$, utiliza-se do WinRM para comunicação
 sks, Handlers, Variáveis, Templates, entre outros.
 
-![alt text](image-1.png)
+![alt text](Imagens/image-1.png)
 
 ##### Utilitário ansible-config
 - Comando utilizado para realizar a criação e/ou alteração do arquivo ansible.cfg

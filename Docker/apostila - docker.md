@@ -59,7 +59,7 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto  (i
 - Camada gravável (camada de container): Cada container, como uma instância da imagem, tem uma camada superior, gravável, onde as alterações são feitas sem afetar a imagem base ou outros containers.
 - Portabilidade: O sistema de camadas garante que as modificações não são aplicadas ao sistema de arquivos original, tornando o container portátil. 
 
-![alt text](image-1.png)
+![alt text](Imagens/image-1.png)
 
 ---
 ## Comandos docker
@@ -250,7 +250,7 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto  (i
 
 ---
 
-![alt text](image.png)
+![alt text](Imagens/image.png)
 
 ## 📁 Imagens
 

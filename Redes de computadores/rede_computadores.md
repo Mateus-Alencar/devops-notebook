@@ -36,11 +36,11 @@ A máscara de rede tem 32 bits, assim como o endereço IP, tendo como finalidade
 - **IPv6**: Endereços de 128 bits, mais modernos e praticamente ilimitados.
 - **CIDR (Classless Inter-Domain Routing)**: Método de alocação de IPs sem depender de classes fixas.
 
+![alt text](Imagens/image-1.png)
+
 ### Máscaras de Sub-rede Comuns (IPv4)
 
-![alt text](image-1.png)
-
-![alt text](image.png)
+![alt text](Imagens/image.png)
 
 ### Classes
 Quando o IPv4 foi criado, os endereços IP foram divididos em faixas chamadas de “classes”, para organizar o tamanho das redes.
@@ -108,7 +108,7 @@ A rede é dividida em camadas, cada uma com uma função específica. Os diverso
 
 ### Endereçamento IP
 
-![alt text](image-2.png)
+![alt text](Imagens/image-2.png)
 
 ## 10. Tecnologias Avançadas
 - **SDN (Software Defined Networking)**: Controle programável da rede.

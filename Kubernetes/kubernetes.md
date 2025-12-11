@@ -8,7 +8,7 @@ No caso dos Orquestradores de Containers, um projeto é em geral definido de man
 
 ## Kubernetes 🌐​
 
-![alt text](image-3.png)
+![alt text](Imagens/image-3.png)
 
 O Orquestrador de Containers mais utilizado no mercado atualmente é o Kubernetes. Kubernetes (K8s) é um produto Open Source utilizado para automatizar a implantação, o dimensionamento e o gerenciamento de aplicativos em contêiner.
 
@@ -63,7 +63,7 @@ Temos três tipos de *Container Runtime*:
 
 
 ## Principais Conceitos 💻​
-![alt text](image.png)
+![alt text](Imagens/image.png)
 
 ### Cluster
 
@@ -108,7 +108,7 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
  - No Node Plane são reunidos os componentes que são executados em todos os servidores do Cluster. Nele temos os componentes que gerenciam os container e rede dos servidores. 
  - Por fim, os Addons são componentes que usam recursos do Kubernetes para adicionar capacidades extras ao Cluster.
 
-![alt text](image-4.png)
+![alt text](Imagens/image-4.png)
 
 ##### Kube-apiserver
 ```
@@ -208,13 +208,13 @@ Expõe o serviço externamente usando um balanceador de carga externo. O Kuberne
 [Kubernetes - Apresentando e usando o Ingress (youtube)](https://www.youtube.com/watch?v=6rbLsnsy1Gc)
 
 O Ingress é um objeto kubernetes cujo trabalho é expor e gerenciar o acesso externo aos Services ou serviçoes Kubernetes usando rotas HTTP e HTTPS.
-![alt text](image-6.png)
+![alt text](Imagens/image-6.png)
 Resumindo, o Ingress é essencial para:
 - Expor serviços HTTP e HTTPS externamente ao cluster.
 - Roteamento flexível do tráfego com base em regras configuráveis.
 - Gerenciamento centralizado do acesso e segurança do tráfego
 > Exemplo:
-![alt text](image-7.png)
+![alt text](Imagens/image-7.png)
 
 - Ingress apoiado por um único serviço: Nesse tipo de Ingress apenas um único Serviço é exposto pelo Ingress
 - Fanout simples: No Ingress fanout simples há um host no Ingress e o Ingress expôe vários serviços
@@ -269,7 +269,7 @@ O Endpoint Controller é responsável por adicionar Endpoints, ou IP’s de Pods
 
 Endpoints no Kubernetes funcionam como um mapa de endereços IP e portas dos pods que pertencem a um serviço, sendo criados automaticamente quando um serviço é criado.
 
-![alt text](image-5.png)
+![alt text](Imagens/image-5.png)
 
 ```yaml
 apiVersion: v1     # Versão da API Kubernetes usada para este recurso
@@ -448,7 +448,7 @@ kubectl port-forward svc/my-service 8080:80
 O comando `kubectl rollout pause` é usado para pausar o rollout (implantação) de um recurso no Kubernetes, normalmente um Deployment. Quando um rollout está pausado, o controlador não realiza alterações ou atualizações no recurso, mesmo que haja mudanças aplicadas no manifesto. Isso é útil para interromper temporariamente atualizações automáticas, permitindo que o administrador aplique várias modificações antes de retomar a implantação com o comando kubectl rollout resume.
 EX: Pausar o rollout de um Deployment chamado nginx: `kubectl rollout pause deployment/nginx`
 
-![alt text](image-2.png)
+![alt text](Imagens/image-2.png)
 
 ### Livesprobe
 
@@ -554,7 +554,7 @@ No Kubernetes, volumes são uma abstração que permitem que contêineres dentro
 - Um volume é declarado na seção `.spec.volumes` do Pod.
 - É montado em um ou mais containers do Pod na seção `.spec.containers[].volumeMounts`, definindo o caminho onde o volume ficará visível dentro do container.
 
-![alt text](image-8.png)
+![alt text](Imagens/image-8.png)
 
 O volume **emptyDir** no Kubernetes é um volume temporário criado no momento em que um Pod é atribuído a um nó e que existe enquanto o Pod está ativo naquele nó. Inicialmente vazio, ele é compartilhado entre todos os containers do Pod e seu conteúdo é apagado definitivamente quando o Pod é removido
 
@@ -604,10 +604,10 @@ spec:
 ### Persistent Volume (PV e PVC)
 [Kubernetes - Volumes Persistentes (youtube)](https://www.youtube.com/watch?v=7ImUf_qWW2Y)
 
-![alt text](image-9.png)
+![alt text](Imagens/image-9.png)
 
 O **Persistent Volume (PV)** no Kubernetes é um recurso de armazenamento previamente provisionado no cluster, que pode ser configurado pelo administrador para fornecer espaço de armazenamento abstrato e persistente para uso dos pods. Ele possui propriedades como tamanho, modo de acesso (ex: ReadWriteOnce, ReadOnlyMany, ReadWriteMany) e pode estar em estados como Available (disponível), Bound (associado) ou Released (liberado).
-![alt text](image-11.png)
+![alt text](Imagens/image-11.png)
 > EX
 ```yaml
 apiVersion: v1
@@ -624,7 +624,7 @@ spec:
     path: "/mnt/data"
 ```
 **Modos de acesso ao PV (accessModes)**
-![alt text](image-10.png)
+![alt text](Imagens/image-10.png)
 Já o **Persistent Volume Claim (PVC)** é uma requisição feita pelo usuário/pod para solicitar armazenamento. O PVC descreve suas necessidades como tamanho, modo de acesso e classe de armazenamento, e o sistema do Kubernetes realiza o bind (associação) automático a um PV que atenda aos critérios requisitados. O usuário interage com o PVC para usar o armazenamento, sem se preocupar com a implementação do PV.
 ```yaml
 apiVersion: v1
@@ -649,7 +649,7 @@ Assim, o PV representa o recurso físico de armazenamento, enquanto o PVC é a f
 - Using: O Pod esta usando o volume através do PVC
 - Reclaiming: O PV é recuperado, mantend-o para o próximo uso ou excluindo-o diretamente do armazenamento em nuvem.
 
-![alt text](image-12.png)
+![alt text](Imagens/image-12.png)
 
 ### Direction node attribution
 A "direction node attribution" (atribuição ou direcionamento de pods para nós) no Kubernetes é realizada principalmente por meio de mecanismos de seleção e afinidade baseados em labels dos nós.
