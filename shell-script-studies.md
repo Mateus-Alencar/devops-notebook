@@ -45,6 +45,14 @@ Comandos principais do shell script
 ## tac - mostra o conteúdo o arquivo de trás para frente
 * `tac arquivo` : mostra todo o conteúdo do arquivo de trás para frente
 
+## getent - consulta entradas em bancos de dados do sistemas
+* `getent passwd` (mostra o conteúdo de `/etc/passwd` e outras fontes).
+* `getent passwd nome_do_usuario` (ex: getent passwd root).
+* `getent group` (mostra grupos de `/etc/group` e outras fontes).
+* `getent hosts`: Lista de hosts e IPs.
+* `getent networks`: Informações de redes configuradas.
+* `getent services`: Serviços de rede e portas. 
+
 ## tail - mostra somente as últimas 10 linhas  do arquivo
 * `tail -n2 arquivo` : mostra somente as 2 últimas linhas
 * `tail -f arquivo` : monitora por mudanças as últimas 10 linhas do arquivo até que seja interrompido (follow)
