@@ -569,6 +569,21 @@ Os pacotes no Ansible são representados principalmente por "módulos", que são
         version: main
 # Deply automático de aplicações.
 ```
+```yaml
+---
+- name: Desligar todos os servidores
+  hosts: all
+  become: true   # necessário para comandos de root
+  gather_facts: false
+
+  tasks:
+    - name: Desligar o host
+      ansible.builtin.shell: shutdown -h now
+      async: 1
+      poll: 0
+      ignore_errors: yes
+
+```
 
 ### Collections no Ansible
 
