@@ -225,8 +225,11 @@ Resumindo, o Ingress é essencial para:
 > Listar recursos do tipo ingress
 `kubectl get ingress`
 
+> Para criar um serviço e expor os Pods:
+`kubectl expose deployment <NOME> --type=<TIPO> --port=<PORT>`
+
 > Comando para pegar a porta do serviço:
-` kubectl get svc <nome-service> -o yaml | grep address`
+`kubectl get svc <nome-service> -o yaml | grep address`
 
 > Lista todos os serviços no namespace atual.
 `kubectl get services (ou kubectl get svc)`
@@ -304,6 +307,9 @@ A API EndpointSlice é o mecanismo que o Kubernetes usa para permitir que seu se
 ### Objetos do Kubernetes
 Os objetos principais do Kubernetes representam recursos persistentes que definem o estado desejado do cluster e das aplicações que nele rodam. Entre os mais importantes estão:
 - Deployment: Gerencia a implantação e o ciclo de vida de um conjunto de réplicas de pods. Garante o número desejado de réplicas, possibilita atualizações e rollback de versões da aplicação, facilitando escalabilidade e alta disponibilidade.
+
+> Comando para atualizar uma imagem de um deployment
+`kubectl set image deployment/<NOME> <NOME_CONTAINER>=<NOVA_IMAGEM>`
 
 Exemplo de definição:
 ```yaml
