@@ -7,7 +7,7 @@
   - **LAN (Local Area Network)**: Rede local, geralmente dentro de uma empresa ou residência.
   - **WAN (Wide Area Network)**: Rede de longa distância, interliga várias LANs.
   - **MAN (Metropolitan Area Network)**: Rede metropolitana, cobre áreas urbanas.
-  - **VPN (Virtual Private Network)**: Rede privada virtual, criptografa conexões pela internet.
+  - **VPN (Virtual Private Network)**: É uma extensão de uma rede privada sobre uma rede pública (Internet), que utiliza protocolos de tunelamento e criptografia para estabelecer um canal de comunicação seguro, íntegro e confidencial entre dois pontos.
 
 ## 2. Componentes de Rede
 - **Switch**: Dispositivo que conecta vários equipamentos em uma LAN.
@@ -17,6 +17,8 @@
 - **Access Point (AP)**: Expande a rede sem fio (Wi-Fi).
 - **Cabo de Rede (Ethernet)**: Meio físico para transmissão de dados.
 - **Patch Panel**: Organização física dos cabos de rede em racks.
+- **Gateway**: É a interface de Camada 3 (Rede) que atua como o ponto de saída obrigatório para que dispositivos de uma VLAN consigam se comunicar com dispositivos de outra VLAN. Sem esse gateway, as VLANs permanecem isoladas, pois pertencem a domínios de broadcast diferentes.
+
 
 ## 3. Endereçamento IP
 
