@@ -70,4 +70,17 @@
 | `powershell`          | Abre o terminal PowerShell                |
 | `ssh` `(ssh user@ip)`   | Conecta em outro computador via rede (Secure Shell)
 
+### `netsh wlan show wlanreport`
+
+O comando `netsh wlan show wlanreport` no Windows gera um relatório detalhado em HTML sobre o histórico de conexões Wi-Fi, erros, quedas e desempenho dos últimos três dias.
+O arquivo HTML é salva na pasta: `C:\ProgramData\Microsoft\Windows\WlanReport\`
+
+### `gpupdate /force`
+
+O comando `gpupdate /force` no Windows é utilizado para forçar a atualização imediata de todas as políticas de grupo (GPOs) do Active Directory, tanto do computador quanto do usuário.
+
+### `gpresult /h /f C:\temp\relatorio.html`
+
+O comando `gpresult /h /f C:\temp\relatorio.html` é utilizado no Windows para gerar um relatório detalhado e amigável, em formato HTML, de todas as Diretivas de Grupo (GPOs) aplicadas ao computador e ao usuário atual. 
+
 ---
