@@ -54,7 +54,7 @@ Temos três tipos de *Container Runtime*:
  O Control Place é o cérebro, responsável por gerenciar o estado desejado. Ele decide o que o cluster deve rodar, monitor e corrigir desvios.
   O Workeres (Nós de trabalho), são os nós onde suas aplicações relmente rodam. ele escuta os Pods (containers da sua aplicação).
 
-|Aspector | Control Place | Workers |
+|Aspector | Control Plane | Workers |
 |---------|---------------|---------|
 | Função| Gerenciar o cluster | Executar aplicações (Pods) |
 | Responsabilidade| Decisões, agendamento, estado do cluster | Rodar containers e serviços |
@@ -70,7 +70,9 @@ Temos três tipos de *Container Runtime*:
 Conjunto de máquinas (físicas ou virtuais) que trabalham juntas para executar aplicações em containers. Um cluster Kubernetes contém pelo menos:
 
 - Um **control plane** (plano de controle)
-- Um ou mais **nodes** (nós) onde os aplicativos são executados
+- Um ou mais **worker nodes** (nós) onde os aplicativos são executados
+
+Os worker nodes hospedam os Pods que são os componentes da carga de trabalho da aplicação. O control plane gerencia os worker nodes e os Pods no cluster. Em ambientes de produção, o control plane geralmente executa em múltiplos computadores e um cluster geralmente executa múltiplos nodes, fornecendo tolerância a falhas e alta disponibilidade.
 
 ---
 
@@ -110,6 +112,9 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
 
 ![alt text](Imagens/image-4.png)
 
+>[!NOTE]
+> É necessário um componente de proxy de rede em cada node para garantir que a API do Service e comportamentos associados estejam disponíveis na rede do seu cluster.
+
 ##### Kube-apiserver
 ```
   O Kube-apiserver é o componente que dá acesso ao Control Plane e é a 
@@ -118,6 +123,10 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
   estamos fazendo uma chamada a API do Kubernetes, que está sendo mantida 
   pelo kube-apiserver.
 ```
+
+>[!NOTE]
+>  O kube-apiserver foi projetado para ser escalonado horizontalmente, ou seja, ele pode ser escalonado com a criação de mais instâncias.
+
 ##### ETCD
 ```
   Todos os dados do Kubernetes são mantidos no ETCD, que é um banco de dados
@@ -125,21 +134,22 @@ O Kubernetes é formado por uma série de componentes que compartilham um mesmo 
   mantido e por isso o ETCD prioriza a consistência dos dados sobre 
   disponibilidade.
 
-  E possível manter árias réplicas do ETCD ativas ao mesmo tempo, e mesmo a 
+  E possível manter várias réplicas do ETCD ativas ao mesmo tempo, e mesmo a 
   falha de uma delas não afetará a disponibilidade do ambiente e integridade 
   dos dados do Kubernetes.
 ```
+
 ##### API Server
 ```
 Provê todos os serviços do Kubernetes. É um serviço REST. Valida e configura dados para os objetos de API que incluem pods, serviços, controladores de replicação e outros.
 ```
+
 ##### Kube-scheduler 
 ```
     O Kube-scheduler é o responsável por determinar em que servidor cada 
     pod será iniciado e executado. Para tomar esta decisão ele leva em 
     conta diversas questões, como disponibilidade de recursos, políticas 
-    aplicadas às cargas de trabalho e atribuições especiais 
-    vindas do usuário.
+    aplicadas às cargas de trabalho e atribuições vindas do usuário.
  ```
 
 ##### Kube controller manager
@@ -159,7 +169,9 @@ Provê todos os serviços do Kubernetes. É um serviço REST. Valida e configura
 
 ##### kubectl 
 ```
-É a ferramenta CLI de interação com o cluster K8s. Permite executar comandos em clusters do Kubernetes, implantar aplicativos, inspecionar e gerenciar recursos de cluster e visualizar logs.
+É a ferramenta CLI de interação com o cluster K8s. Permite executar comandos 
+em clusters do Kubernetes, implantar aplicativos, inspecionar e gerenciar 
+recursos de cluster e visualizar logs.
 ```
 ##### Namespace
 ```
@@ -167,7 +179,7 @@ Permite organizar e isolar recursos dentro de um mesmo cluster. Muito útil
 em ambientes com múltiplos times ou projetos.
 Exemplo: `kubectl create namespace meu-projeto`
 ```
-##### YAML Kubernetes Example
+##### Example of creating a pod with YAML.
 
 ```yaml
 
