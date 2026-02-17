@@ -1,7 +1,7 @@
 # Helm Chart
 
 Helm é um gerenciador de pacotes kubernetes que simplicafica `deployment` para construir aplicações com configurações reutilizáveis e controlar versões **Helm charts**
-Com o Helm, é possível implantar aplicações com um simples comando, gerenciar atualizações, e fazer roll back para versões antigas caso necessário.
+O Helm atua como um template engine e package manager para Kubernetes, permitindo versionamento, reutilização e gerenciamento de aplicações declarativas.
 
 ## Arquitetura do Helm Chart e componentes
 
@@ -32,19 +32,16 @@ Funciona como um registry para distribuição de charts.
 
 ## Estrutura básica de um Helm Chart
 ```pgsql
-meu-chart/
-  Chart.yaml
-  values.yaml
-  templates/
-  charts/
+mychart/
+│── charts/           # Diretório utilizado para armazenar dependências do chart  
+│── templates/        # Contém os arquivos de template em YAML  
+│   ├── deployment.yaml  
+│   ├── service.yaml  
+│   ├── ingress.yaml  
+│   ├── _helpers.tpl  # Contains reusable template functions  
+│── Chart.yaml        # Arquivo obrigatório que contém os metadados do chart 
+│── values.yaml       # Arquivo que define os valores padrão de configuração da aplicação.  
 ```
-### Chart.yaml — Identidade do Chart
-
-Ele define: Nome do chart, versão do chart, versão da aplicação, descrição e dependências.
-
-### values.yaml — Configurações padrão
-
-O `values.yaml` define valores padrão que serão injetados nos templates.
 
 ## Comandos 
 ### helm dependency build
@@ -54,3 +51,9 @@ helm dependency build
 Serve para:
 - Baixar dependências declaradas no Chart.yaml
 - Popular a pasta charts/
+
+### helm package
+```bash
+helm package .
+```
+Transforma o chart em um pacote versionado.
