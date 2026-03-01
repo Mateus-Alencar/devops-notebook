@@ -62,7 +62,7 @@ Comandos principais do shell script
 * `head -c10 arquivo` : mostra os 10 primeiros caracteres
 
 ## wc - conta os linhas, palavras, caracteres
-* `wc arquivo` : mostra as linhas, palabras e caracteres
+* `wc arquivo` : mostra as linhas, palavras e caracteres
 * `wc -l arquivo` : mostra o número de linhas
 * `wc -w arquivo` : mostra o número de palavras
 * `wc -m arquivo` : mostra o número de caracteres
