@@ -61,6 +61,8 @@ Utilizando uma analogia com `POO`, podemos comparar um container a um objeto  (i
 
 ![alt text](Imagens/image-1.png)
 
+*Uma image de um container é um empilhamento de arquivos de sistema (file system)*
+
 ---
 ## Comandos docker
 
