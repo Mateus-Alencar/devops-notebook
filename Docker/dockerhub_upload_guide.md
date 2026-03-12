@@ -86,14 +86,14 @@ docker logout
 
 ## Imagens Docker em Harbor
 
-Para trabalhar com imagens Docker em Harbor, você utiliza os comandos padrão do Docker para login, pull (baixar) e push (enviar) de imagens, porém apontando para o endereço do seu registro Harbor.
+Para trabalhar com imagens Docker em Harbor, você utiliza os comandos padrão do Docker para login, pull (baixar) e push (enviar) de imagens, porém, apontando para o endereço do seu registro Harbor.
 
 1. Fazer login no Harbor (substitua <harbor_address> pelo domínio/endereço do seu Harbor):
 > `docker login <harbor_address>`
 
 2. Baixar (pull) uma imagem do Harbor:
 > `docker pull <harbor_address>/<projeto>/<nome-da-imagem>:<tag>`
-EX: `docker pull harbor.minhaempresa.com/library/nginx:latest`
+EX: `docker pull harbor.dominio.com/library/nginx:latest`
 
 3. Enviar (push) uma imagem para o Harbor:
 - Primeiro, você deve “taggear” a imagem local com o endereço do Harbor, projeto e nome desejado: `docker tag <imagem-local> <harbor_address>/<projeto>/<nome-da-imagem>:<tag>`
@@ -106,7 +106,7 @@ EX: `docker pull harbor.minhaempresa.com/library/nginx:latest`
 
 | Ação             |  Comando exemplo   |
 | ---------------- |  ----------------- |
-| Login no Harbor  | `docker login harbor.minhaempresa.com`   |
-| Pull da imagem   | `docker pull harbor.minhaempresa.com/meuprojeto/minhaimagem:tag`  |
-| Taggear a imagem | `docker tag minhaimagem:tag harbor.minhaempresa.com/meuprojeto/minhaimagem:tag` |
-| Push da imagem   | `docker push harbor.minhaempresa.com/meuprojeto/minhaimagem:tag` |
+| Login no Harbor  | `docker login harbor.dominio.com`   |
+| Pull da imagem   | `docker pull harbor.dominio.com/meuprojeto/minhaimagem:tag`  |
+| Taggear a imagem | `docker tag minhaimagem:tag harbor.dominio.com/meuprojeto/minhaimagem:tag` |
+| Push da imagem   | `docker push harbor.dominio.com/meuprojeto/minhaimagem:tag` |
