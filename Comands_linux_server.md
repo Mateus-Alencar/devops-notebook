@@ -226,7 +226,7 @@ Esta camada é a interface que permite aos programas (que rodam no Espaço do Us
 
 O **Systemd** é um gerenciador de sistema e serviços para sistemas operacionais Liux. Podendo ser executado como um sistema init para inicializar o sistema.
 
-O SystemD monitora processos usando cgroups do Linux, garantindo que ao parar um determinado serviço, todos os processos que tenham sido iniciados por ele sejam finalizados;
+O SystemD monitora processos usando cgroups do Linux, garantindo que ao parar um determinado serviço, todos os processos que tenham sido iniciados por ele sejam finalizados.
 
 **SysVinit** é um sistema de inicialização (sistema init) usado em muitas distribuições GNU/Linux por padrão. No SysVinit existe um processo que é iniciado primeiro após o carregamento do kernel e, portanto, recebe o primeiro PID (Identificador de processo).
 
@@ -248,10 +248,10 @@ O SystemD monitora processos usando cgroups do Linux, garantindo que ao parar um
 | `/usr`         | Programas e bibliotecas  |
 | `bin`, `/sbin` | Binários do sistema      |
 | `/tmp`         | Arquivos temporários     |
-| `/opt`          | Softwares opcionais      |
+| `/opt`         | Softwares opcionais      |
 | `/media`       | Ponto de montagem para dispositivos removíveis |
 | `/etc/shadow`  | armazena senhas de usuários de forma criptografada, junto com outras informações como data de validade da senha e configurações de segurança |
-| `proc/cpuinfo` | Arquivo que contém informações sobre a CPU|
+| `proc/cpuinfo` | Arquivo que contém informações sobre a CPU |
 
 Todos esses diretórios não podem está em uma partição diferente do diretório "/", por que durante o boot o kernel linux monta primeiro a partição vinculada ao diretório "/"
 
@@ -1028,7 +1028,7 @@ IP (Internet Protocol): Responsável por endereçar e rotear pacotes de dados at
 
 | Porta | Protocolo | Descrição |
 | ----- | --------- | --------- |
-| 20 | FTP | Serviço do protocolo FTP para transferência dedados. |
+| 20 | FTP | Serviço do protocolo FTP para transferência de dados. |
 | 21 | FTP | Serviço do protocolo FTP para conexão. |
 | 22 | SSH | SSH Protocolo para login remoto do shell. |
 | 23 | Telnet | Acesso Remoto no Prompt Comando ou Shell. |
@@ -1040,7 +1040,7 @@ IP (Internet Protocol): Responsável por endereçar e rotear pacotes de dados at
 | 137 | NetBIOS | Resolução de nomes NetBIOS. |
 | 139 | NetBIOS | Compartilhamento de arquivos|
 | 143 | IMAP | Visualização e Download de mensagens de Email|
-| 443 | HTTPS | Faz o mesmo que o serviço HTTP mas comcriptografia. |
+| 443 | HTTPS | Faz o mesmo que o serviço HTTP mas com criptografia. |
 
 ---
 ## Gerenciamento de usuarios
