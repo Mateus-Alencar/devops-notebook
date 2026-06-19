@@ -413,7 +413,32 @@ rpm -i <arquivo.rpm>         # Instala um pacote .rpm.
 rpm -e <nome-do-pacote>      # Remove um pacote.
 rpm -qa                      # Lista todos os pacotes instalados.
 ```
+##### Resumo
+| Comando                    | O que faz                                       |
+| -------------------------- | ----------------------------------------------- |
+| `apt update`               | Atualiza a lista local de pacotes disponíveis   |
+| `apt upgrade`              | Instala novas versões dos pacotes já instalados |
+| `apt full-upgrade`         | Atualiza e pode adicionar/remover pacotes       |
+| `apt install pacote`       | Instala um pacote                               |
+| `apt remove pacote`        | Remove um pacote                                |
+| `sources.list`             | Repositórios principais                         |
+| `sources.list.d/`          | Repositórios adicionais                         |
+| `/var/lib/apt/lists/`      | Índices baixados pelo update                    |
+| `/var/cache/apt/archives/` | Pacotes `.deb` baixados                         |
+| `dpkg`                     | Ferramenta que efetivamente instala os pacotes  |
 
+O `apt upgrade` não leva em consideração atualizações majors, minor ou pathc. Ele apenas compara versões disponíveis e instaladas para atualizar. Porém se aquele pacote precisar de mais dependências, ele não irá concluir a atualização daquele pacote, irá aparecer a seguinte mensagem de erro: 
+```bash
+The following packages have been kept back:
+ nginx
+```
+Para conseguir aplicar essa atualização, será necessário utilizar o comando `sudo apt full-upgrade`  
+
+###### Recurso do APT `snapshots`
+Comando de exemplo: `sudo apt update --snapshot 20260616T000000Z`  
+O APT tentará enxergar o repositório exatamente como ele existia naquela data indicada.
+> [!IMPORTANT]  
+> O Repositório precisa oferecer suporte a snapshots
 ---
 ## Gerenciamento de particoes
 
