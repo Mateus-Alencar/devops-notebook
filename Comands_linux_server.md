@@ -276,6 +276,9 @@ O SystemD monitora processos usando cgroups do Linux, garantindo que ao parar um
 | `/var/spool/mail` | Local antigo das caixas de correio dos usuários (substituído por `/var/mail`). |
 | `/var/tmp` | Arquivos temporários preservados por mais tempo que os de `/tmp`. |
 
+> [!NOTE]  
+> O diretório lost+found serve como uma área de recuperação de dados. Ele é usado pela ferramenta fsck (File System Check) para armazenar fragmentos de arquivos ou arquivos órfãos recuperados após falhas de sistema, quedas de energia ou travamentos.
+
 Todos esses diretórios não podem está em uma partição diferente do diretório "/", por que durante o boot o kernel linux monta primeiro a partição vinculada ao diretório "/"
 
 
@@ -303,7 +306,7 @@ O diretório `/proc` é um diretório criado pelo kernel na memória do computad
 
 O diretório padrão dos arquivos de logs é `/var/log` e geralmente utiliza dois formatos de arquivos: o formato texto puro como usado em arquivos como `/var/log/messages`, `/var/log/secure` em outras distros é o arquivo `/var/log/auth)` e que são visualizados com comandos como cat/tac, more, less, head e tail.
 
-##### logger
+#### logger
 O comando `logger` é uma ferramenta de linha de comando no Linux que permite enviar mensagens diretamente para o sistema de logs (syslog). É muito útil para administradores de sistema e desenvolvedores que precisam registrar informações de scripts ou de tarefas agendadas no mesmo local que os logs do sistema, como `/var/log/syslog` ou `/var/log/messages`.
 
 Sintaxe: `logger <opções> [-p facility.priority] [-t tag] [mensagem]`
