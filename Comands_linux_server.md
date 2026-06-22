@@ -239,19 +239,42 @@ O SystemD monitora processos usando cgroups do Linux, garantindo que ao parar um
 ---
 ## Estrutura de Diretorios Importantes
 
-|   Diretório    | Função                   |
-|----------------|--------------------------|
-| `/`            | Raiz do sistema          |
-| `/home`        | Diretórios dos usuário   |
-| `/etc`         | Arquivos de configuração |
-| `var`          | Logs e dados variáveis   |
-| `/usr`         | Programas e bibliotecas  |
-| `bin`, `/sbin` | Binários do sistema      |
-| `/tmp`         | Arquivos temporários     |
-| `/opt`         | Softwares opcionais      |
-| `/media`       | Ponto de montagem para dispositivos removíveis |
-| `/etc/shadow`  | armazena senhas de usuários de forma criptografada, junto com outras informações como data de validade da senha e configurações de segurança |
-| `proc/cpuinfo` | Arquivo que contém informações sobre a CPU |
+## Estrutura de Diretórios Importantes
+
+| Diretório | Descrição |
+|------------|------------|
+| `/bin` | Binários de usuários essenciais para o boot do sistema. |
+| `/sbin` | Binários do superusuário (root) essenciais para o boot. |
+| `/boot` | Arquivos do gerenciador de inicialização (bootloader), kernel e símbolos. |
+| `/dev` | Arquivos de dispositivos do sistema. |
+| `/etc` | Arquivos globais de configuração do sistema. |
+| `/etc/opt` | Arquivos de configuração para aplicações instaladas em `/opt`. |
+| `/etc/X11` | Arquivos de configuração do X Window System. |
+| `/home` | Diretórios pessoais dos usuários comuns. |
+| `/root` | Diretório pessoal do superusuário (root). |
+| `/lib` | Bibliotecas essenciais utilizadas pelos binários em `/bin` e `/sbin`. |
+| `/mnt` | Ponto de montagem temporário para sistemas de arquivos. |
+| `/media` | Ponto de montagem para mídias removíveis (pendrives, CDs, DVDs, etc.). |
+| `/opt` | Instalação de pacotes e aplicações opcionais. |
+| `/proc` | Sistema de arquivos virtual que fornece informações sobre o kernel e processos. |
+| `/tmp` | Arquivos temporários; geralmente limpos após reinicializações. |
+| `/usr` | Hierarquia secundária para programas e dados não essenciais ao boot. |
+| `/usr/bin` | Binários de usuário não essenciais para recuperação ou inicialização. |
+| `/usr/include` | Diretório padrão para arquivos de cabeçalho (*headers*). |
+| `/usr/lib` | Bibliotecas não essenciais para o processo de boot. |
+| `/usr/sbin` | Binários administrativos não essenciais para o boot. |
+| `/usr/share` | Dados compartilhados independentes da arquitetura. |
+| `/usr/src` | Armazenamento de códigos-fonte. |
+| `/usr/X11R6` | Arquivos relacionados ao X Window System versão 11R6. |
+| `/usr/local` | Programas instalados localmente, fora do gerenciador de pacotes da distribuição. |
+| `/var` | Arquivos com alterações frequentes, como logs, e-mails e caches. |
+| `/var/lock` | Arquivos de bloqueio (*lock files*) para controle de recursos em uso. |
+| `/var/log` | Arquivos de log do sistema e aplicações. |
+| `/var/mail` | Caixas de e-mail dos usuários em formato mailbox. |
+| `/var/run` | Informações sobre o estado atual do sistema, processos e serviços em execução. |
+| `/var/spool` | Filas de tarefas, como impressão, cache de pacotes e proxy. |
+| `/var/spool/mail` | Local antigo das caixas de correio dos usuários (substituído por `/var/mail`). |
+| `/var/tmp` | Arquivos temporários preservados por mais tempo que os de `/tmp`. |
 
 Todos esses diretórios não podem está em uma partição diferente do diretório "/", por que durante o boot o kernel linux monta primeiro a partição vinculada ao diretório "/"
 
@@ -267,7 +290,8 @@ O arquivo cpuinfo exibe detalhes do processador, como:
 - Velocidade (cpu MHz)
 - Cache (cache size)
 
-**sysfs**
+**sysfs**  
+
 O `sysfs` é um sistema de arquivos virtual no Linux, montado geralmente em `/sys`. Ele foi criado para fornecer uma interface entre o kernel e o espaço do usuário, permitindo que informações sobre dispositivos, drivers e subsistemas do kernel sejam acessadas de forma organizada como arquivos e diretórios. **O `/sys` tem função específica de armazenas informações de dispositivos.**
 **dev** 
 Trantando-se de dispositivos, outro diretório muito importante é o `/dev`. Nele encontramos arquivos especiais que representam a maioria dos dispositivos do sistema, particulamente dispositivos de armazenamento. Isso quer dizer que a maioria dos dispositivos conectados no servidor é representando por um arquivo dentro do diretório `/dev`. 
